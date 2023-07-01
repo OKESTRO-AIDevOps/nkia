@@ -1,35 +1,16 @@
 package main
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+
+	"github.com/OKESTRO-AIDevOps/npia-server/server/router"
 )
 
-type healthiness struct {
-	ID     string `json:"id"`
-	Status string `json:"status"`
-}
-
-// albums slice to seed record album data.
-var healthiness_record = healthiness{
-	ID: "_healthiness_probe", Status: "Healthy",
-}
-
 func main() {
-	router := gin.Default()
 
-	router.GET("/getHealth", getHealth)
+	gin_srv := gin.Default()
 
-	router.POST("/postHealth", postHealth)
+	gin_srv = router.Init(gin_srv)
 
-	router.Run("0.0.0.0:8080")
-}
-
-func getHealth(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, healthiness_record)
-}
-
-func postHealth(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, healthiness_record)
+	gin_srv.Run("0.0.0.0:13337")
 }
