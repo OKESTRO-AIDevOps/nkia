@@ -15,8 +15,8 @@ func QueryAPI_LinearInstruction(c *gin.Context) {
 
 	ASgi := apistandard.ASgi
 
-	var req JSONMessageRequest
-	var resp JSONMessageResponse
+	var req APIMessageRequest
+	var resp APIMessageResponse
 
 	body_byte, err := io.ReadAll(c.Request.Body)
 
