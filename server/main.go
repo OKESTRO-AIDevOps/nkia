@@ -5,6 +5,7 @@ import (
 
 	"fmt"
 
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 
 	"github.com/OKESTRO-AIDevOps/npia-server/server/router"
@@ -21,6 +22,8 @@ func main() {
 	}
 
 	gin_srv := gin.Default()
+	store := sessions.NewCookieStore([]byte("secret"))
+	gin_srv.Use(sessions.Sessions("npia-session", store))
 
 	gin_srv = router.Init(gin_srv)
 

@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/OKESTRO-AIDevOps/npia-api/pkg/apistandard"
+	"github.com/OKESTRO-AIDevOps/npia-server/server/modules"
 )
 
 type APIMessageRequest struct {
@@ -11,11 +11,15 @@ type APIMessageRequest struct {
 type APIMessageResponse struct {
 	ServerMessage string `json:"server_message"`
 
-	QueryResult apistandard.API_OUTPUT `json:"query_result"`
+	QueryResult string `json:"query_result"`
 }
 
-type ClientBaseRequest struct {
-}
+// challenge_id : ASK, ANS
+// response     : NOPE
 
-type ClientBaseResponse struct {
+type AuthChallenge struct {
+	ChallengeID      string                 `json:"challenge_id"`
+	ChallengeMessage string                 `json:"challenge_message"`
+	ChallengeData    modules.ChallengRecord `json:"challenge_data"`
+	ChallengeKey     modules.KeyRecord      `json:"challenge_key"`
 }
