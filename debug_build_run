@@ -1,0 +1,9 @@
+#!/bin/bash
+
+
+go build -o app ./server
+
+./app
+
+
+rm app
