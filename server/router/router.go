@@ -12,7 +12,7 @@ func Init(gin_srv *gin.Engine) *gin.Engine {
 
 	gin_srv.POST("/auth-challenge", ctrl.AuthChallengeHandler)
 
-	// gin_srv.POST("/api/v0alpha", ctrl.QueryAPI_LinearInstruction)
+	gin_srv.POST("/api/v0alpha", ctrl.QueryAPI_LinearInstruction)
 
 	// gin_srv.POST("/multimod/v0alpha",ctrl.HandleMultiCluster_LinearInstruction)
 
