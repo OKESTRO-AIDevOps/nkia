@@ -4,6 +4,6 @@ func main() {
 
 	//request_test()
 
-	BaseFlow_Test()
+	BaseFlow_APIThenMultiMode_Test()
 
 }

@@ -20,7 +20,10 @@ import (
 	"strings"
 
 	goya "github.com/goccy/go-yaml"
-	//"github.com/OKESTRO-AIDevOps/npia-api/pkg/apistandard"
+
+	"github.com/OKESTRO-AIDevOps/npia-api/pkg/runtimefs"
+	kalfs "github.com/OKESTRO-AIDevOps/npia-multi-mode/pkg/kaleidofs"
+	"github.com/OKESTRO-AIDevOps/npia-server/src/modules"
 )
 
 type ChallengRecord map[string]map[string]string
@@ -771,6 +774,36 @@ func enc_dec_sym() {
 
 }
 
+func save_test() {
+
+	get_kubeconfig_path_command_string :=
+		`#!/bin/bash
+[[ ! -z "$KUBECONFIG" ]] && echo "$KUBECONFIG" || echo "$HOME/.kube/config"`
+
+	get_kubeconfig_path_command_b := []byte(get_kubeconfig_path_command_string)
+
+	err := os.WriteFile("srv/get_kubeconfig_path", get_kubeconfig_path_command_b, 0755)
+
+	if err != nil {
+
+		fmt.Println(err.Error())
+		return
+	}
+
+	cmd := exec.Command("srv/get_kubeconfig_path")
+
+	t, err := cmd.Output()
+
+	if err != nil {
+
+		fmt.Println(err.Error())
+		return
+	}
+
+	fmt.Println(string(t))
+
+}
+
 func VerifyCertAgainstPub() {
 
 	pub_b, err := GetContextClusterPublicKeyBytes("kind-kindcluster1")
@@ -815,6 +848,80 @@ func VerifyCertAgainstPub() {
 
 }
 
+func Save_Empty() {
+
+	challenge_records := make(modules.ChallengRecord)
+
+	key_records := make(modules.KeyRecord)
+
+	multi_record := make(kalfs.MultiAppOrigin)
+
+	var single_record runtimefs.AppOrigin
+
+	var record runtimefs.RecordInfo
+
+	var repo runtimefs.RepoInfo
+
+	var reg runtimefs.RegInfo
+
+	challenge_records["test"] = map[string]string{
+		"test": "test",
+	}
+
+	key_records["test"] = "test"
+
+	single_record.RECORDS = append(single_record.RECORDS, record)
+
+	single_record.REPOS = append(single_record.REPOS, repo)
+
+	single_record.REGS = append(single_record.REGS, reg)
+
+	multi_record["_INIT"] = single_record
+
+	challenge_records_b, err := json.Marshal(challenge_records)
+
+	if err != nil {
+
+		fmt.Println(err.Error())
+
+		return
+	}
+
+	err = os.WriteFile("challenge.json", challenge_records_b, 0644)
+
+	key_records_b, err := json.Marshal(key_records)
+
+	if err != nil {
+
+		fmt.Println(err.Error())
+		return
+	}
+
+	err = os.WriteFile("key.json", key_records_b, 0644)
+
+	multi_record_b, err := json.Marshal(multi_record)
+
+	if err != nil {
+
+		fmt.Println(err.Error())
+
+		return
+	}
+
+	single_record_b, err := json.Marshal(single_record)
+
+	if err != nil {
+
+		fmt.Println(err.Error())
+
+		return
+	}
+
+	err = os.WriteFile("multi.json", multi_record_b, 0644)
+
+	err = os.WriteFile("single.json", single_record_b, 0644)
+}
+
 func main() {
 
 	//	ASgi := apistandard.ASgi
@@ -849,5 +956,9 @@ func main() {
 
 	// enc_dec_sym()
 
-	VerifyCertAgainstPub()
+	// VerifyCertAgainstPub()
+
+	// save_test()
+
+	Save_Empty()
 }
