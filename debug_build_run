@@ -1,9 +1,7 @@
 #!/bin/bash
 
 
-go build -o app ./server
+go build -o app ./src
 
 ./app
 
-
-rm app

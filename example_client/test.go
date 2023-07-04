@@ -11,7 +11,7 @@ import (
 	"os"
 
 	"github.com/OKESTRO-AIDevOps/npia-api/pkg/apistandard"
-	"github.com/OKESTRO-AIDevOps/npia-server/server/modules"
+	"github.com/OKESTRO-AIDevOps/npia-server/src/modules"
 
 	goya "github.com/goccy/go-yaml"
 )

@@ -9,8 +9,7 @@ import (
 	"github.com/OKESTRO-AIDevOps/npia-api/pkg/apistandard"
 	"github.com/gin-gonic/gin"
 
-	"github.com/OKESTRO-AIDevOps/npia-server/server/modules"
-	_ "github.com/OKESTRO-AIDevOps/npia-server/server/modules"
+	"github.com/OKESTRO-AIDevOps/npia-server/src/modules"
 )
 
 func QueryAPI_LinearInstruction(c *gin.Context) {
