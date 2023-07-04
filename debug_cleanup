@@ -1,0 +1,8 @@
+#!/bin/bash
+
+sudo rm -r .etc
+sudo rm -r .usr
+sudo rm -r .kaleido
+sudo rm -r lib
+sudo rm -r srv
+sudo rm -r app

@@ -3,8 +3,11 @@ module github.com/OKESTRO-AIDevOps/npia-server
 go 1.20
 
 require (
-	github.com/OKESTRO-AIDevOps/npia-api v0.0.0-20230701082751-f60c2a3b09fb
+	github.com/OKESTRO-AIDevOps/npia-api v0.0.0-20230704081533-6ef6d122a907
+	github.com/OKESTRO-AIDevOps/npia-multi-mode v0.0.0-20230704064107-4fdccfc802a8
+	github.com/gin-gonic/contrib v0.0.0-20221130124618-7e01895a63f2
 	github.com/gin-gonic/gin v1.9.1
+	github.com/goccy/go-yaml v1.11.0
 )
 
 require (
@@ -15,12 +18,10 @@ require (
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/gin-gonic/contrib v0.0.0-20221130124618-7e01895a63f2 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.14.1 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
-	github.com/goccy/go-yaml v1.11.0 // indirect
 	github.com/gomodule/redigo v2.0.0+incompatible // indirect
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
