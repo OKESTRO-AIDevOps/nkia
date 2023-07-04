@@ -117,7 +117,9 @@ func AuthChallenge_Test(c *gin.Context) {
 
 	case "ASK":
 
-		chal_rec, err := modules.GenerateChallenge()
+		client_ca_pub_key := req.ChallengeData
+
+		chal_rec, err := modules.GenerateChallenge(client_ca_pub_key)
 
 		if err != nil {
 			resp.ChallengeID = "NOPE"

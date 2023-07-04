@@ -1,10 +1,12 @@
 package main
 
 import (
+	"crypto"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
 	"crypto/rsa"
+	"crypto/sha256"
 	"crypto/sha512"
 	"crypto/x509"
 	"encoding/base64"
@@ -495,6 +497,176 @@ func DecryptWithSymmetricKey(key []byte, file_byte []byte) ([]byte, error) {
 	return ret_byte, nil
 }
 
+func GetContextClusterPublicKeyBytes(context_nm string) ([]byte, error) {
+
+	var kube_config map[interface{}]interface{}
+
+	var ret_byte []byte
+
+	kube_config_path, err := GetKubeConfigPath()
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get context cluster public key: %s", err.Error())
+	}
+
+	kube_config_file_byte, err := os.ReadFile(kube_config_path)
+
+	err = goya.Unmarshal(kube_config_file_byte, &kube_config)
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get context cluster public key: %s", err.Error())
+	}
+
+	contexts_len := len(kube_config["contexts"].([]interface{}))
+
+	context_cluster_nm := ""
+
+	for i := 0; i < contexts_len; i++ {
+
+		if kube_config["contexts"].([]interface{})[i].(map[string]interface{})["name"].(string) == context_nm {
+
+			context_cluster_nm = kube_config["contexts"].([]interface{})[i].(map[string]interface{})["context"].(map[string]interface{})["cluster"].(string)
+
+			break
+		}
+
+	}
+
+	if context_cluster_nm == "" {
+		return ret_byte, fmt.Errorf("failed to get context user public key: %s", "matching cluster not found")
+	}
+
+	clusters_len := len(kube_config["clusters"].([]interface{}))
+
+	var cluster_pub_key_data []byte
+
+	cluster_certificate_data := ""
+
+	for i := 0; i < clusters_len; i++ {
+
+		if kube_config["clusters"].([]interface{})[i].(map[string]interface{})["name"].(string) == context_cluster_nm {
+
+			tmp_base64, okay := kube_config["clusters"].([]interface{})[i].(map[string]interface{})["cluster"].(map[string]interface{})["certificate-authority-data"].(string)
+
+			if !okay {
+				return ret_byte, fmt.Errorf("failed to get context cluster public key: %s", "no key data")
+			}
+
+			dec_base64, err := base64.StdEncoding.DecodeString(tmp_base64)
+
+			cluster_certificate_data = string(dec_base64)
+
+			if err != nil {
+				return ret_byte, fmt.Errorf("failed to get context cluster public key: %s", err.Error())
+			}
+
+			break
+		}
+
+	}
+
+	if cluster_certificate_data == "" {
+		return ret_byte, fmt.Errorf("failed to get context user public key: %s", "no matching user key")
+	}
+
+	block, _ := pem.Decode([]byte(cluster_certificate_data))
+	var cert *x509.Certificate
+	cert, err = x509.ParseCertificate(block.Bytes)
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get context cluster public key: %s", err.Error())
+	}
+
+	rsaPublicKey := cert.PublicKey.(*rsa.PublicKey)
+
+	cluster_pub_key_data, err = PublicKeyToBytes(rsaPublicKey)
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get context cluster public key: %s", err.Error())
+	}
+
+	ret_byte = cluster_pub_key_data
+
+	return ret_byte, nil
+
+}
+
+func GetContextUserCertificateBytes(context_nm string) ([]byte, error) {
+
+	var kube_config map[interface{}]interface{}
+
+	var ret_byte []byte
+
+	kube_config_path, err := GetKubeConfigPath()
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get context user certificate: %s", err.Error())
+	}
+
+	kube_config_file_byte, err := os.ReadFile(kube_config_path)
+
+	err = goya.Unmarshal(kube_config_file_byte, &kube_config)
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get context user certificate: %s", err.Error())
+	}
+
+	contexts_len := len(kube_config["contexts"].([]interface{}))
+
+	context_user_nm := ""
+
+	for i := 0; i < contexts_len; i++ {
+
+		if kube_config["contexts"].([]interface{})[i].(map[string]interface{})["name"].(string) == context_nm {
+
+			context_user_nm = kube_config["contexts"].([]interface{})[i].(map[string]interface{})["context"].(map[string]interface{})["user"].(string)
+
+			break
+		}
+
+	}
+
+	if context_user_nm == "" {
+		return ret_byte, fmt.Errorf("failed to get context user certificate: %s", "matching user not found")
+	}
+
+	user_len := len(kube_config["users"].([]interface{}))
+
+	user_certificate_data := ""
+
+	for i := 0; i < user_len; i++ {
+
+		if kube_config["users"].([]interface{})[i].(map[string]interface{})["name"].(string) == context_user_nm {
+
+			tmp_base64, okay := kube_config["users"].([]interface{})[i].(map[string]interface{})["user"].(map[string]interface{})["client-certificate-data"].(string)
+
+			if !okay {
+				return ret_byte, fmt.Errorf("failed to get context user certificate: %s", "no key data")
+			}
+
+			dec_base64, err := base64.StdEncoding.DecodeString(tmp_base64)
+
+			user_certificate_data = string(dec_base64)
+
+			if err != nil {
+				return ret_byte, fmt.Errorf("failed to get context user certificate: %s", err.Error())
+			}
+
+			break
+		}
+
+	}
+
+	if user_certificate_data == "" {
+		return ret_byte, fmt.Errorf("failed to get context user certificate: %s", "no matching user key")
+	}
+
+	ret_byte = []byte(user_certificate_data)
+
+	return ret_byte, nil
+
+}
+
 func enc_dec_asym() {
 
 	test_message, _ := RandomHex(32)
@@ -599,6 +771,50 @@ func enc_dec_sym() {
 
 }
 
+func VerifyCertAgainstPub() {
+
+	pub_b, err := GetContextClusterPublicKeyBytes("kind-kindcluster1")
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	pub_key, err := BytesToPublicKey([]byte(pub_b))
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	cert_b, err := GetContextUserCertificateBytes("kind-kindcluster1")
+
+	block, _ := pem.Decode(cert_b)
+
+	var cert *x509.Certificate
+
+	cert, err = x509.ParseCertificate(block.Bytes)
+
+	hash_sha := sha256.New()
+
+	hash_sha.Write(cert.RawTBSCertificate)
+
+	hash_data := hash_sha.Sum(nil)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	err = rsa.VerifyPKCS1v15(pub_key, crypto.SHA256, hash_data, cert.Signature)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+}
+
 func main() {
 
 	//	ASgi := apistandard.ASgi
@@ -629,8 +845,9 @@ func main() {
 		}
 	*/
 
-	//enc_dec_asym()
+	// enc_dec_asym()
 
-	enc_dec_sym()
+	// enc_dec_sym()
 
+	VerifyCertAgainstPub()
 }
