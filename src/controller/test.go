@@ -10,8 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/OKESTRO-AIDevOps/npia-api/pkg/apistandard"
-	"github.com/OKESTRO-AIDevOps/npia-server/server/modules"
-	_ "github.com/OKESTRO-AIDevOps/npia-server/server/modules"
+	"github.com/OKESTRO-AIDevOps/npia-server/src/modules"
 )
 
 func QueryAPI_LinearInstruction_Test(c *gin.Context) {
@@ -117,7 +116,9 @@ func AuthChallenge_Test(c *gin.Context) {
 
 	case "ASK":
 
-		chal_rec, err := modules.GenerateChallenge()
+		client_ca_pub_key := req.ChallengeData
+
+		chal_rec, err := modules.GenerateChallenge(client_ca_pub_key)
 
 		if err != nil {
 			resp.ChallengeID = "NOPE"

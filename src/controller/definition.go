@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/OKESTRO-AIDevOps/npia-server/server/modules"
+	"github.com/OKESTRO-AIDevOps/npia-server/src/modules"
 )
 
 type APIMessageRequest struct {

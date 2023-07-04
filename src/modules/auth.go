@@ -1,8 +1,13 @@
 package modules
 
 import (
+	"crypto"
+	"crypto/rsa"
+	"crypto/sha256"
+	"crypto/x509"
 	"encoding/hex"
 	"encoding/json"
+	"encoding/pem"
 	"fmt"
 	"os"
 
@@ -53,9 +58,11 @@ func AccessAuth(c *gin.Context) (string, error) {
 
 }
 
-func GenerateChallenge() (ChallengRecord, error) {
+func GenerateChallenge(client_ca_pub_key ChallengRecord) (ChallengRecord, error) {
 
 	var kube_config map[interface{}]interface{}
+
+	server_contexts := make([]string, 0)
 
 	challenge_records := make(ChallengRecord)
 
@@ -65,24 +72,12 @@ func GenerateChallenge() (ChallengRecord, error) {
 
 	context_challenges_cipher := make(map[string]string)
 
-	file_byte, err := os.ReadFile("srv/challenge.json")
+	client_context_map, okay := client_ca_pub_key["ask_challenge"]
 
-	if err != nil {
-		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
-	}
+	client_contexts := make([]string, 0)
 
-	err = json.Unmarshal(file_byte, &challenge_records)
-
-	if err != nil {
-		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
-	}
-
-	new_challenge_id, _ := RandomHex(8)
-
-	_, okay := challenge_records[new_challenge_id]
-
-	if okay {
-		return challenge_records, fmt.Errorf("failed to generate challenge: %s", "duplicate challenge id")
+	if !okay {
+		return challenge_records, fmt.Errorf("failed to generate challenge: %s", "no ask_challenge key")
 	}
 
 	kube_config_path, err := GetKubeConfigPath()
@@ -99,7 +94,96 @@ func GenerateChallenge() (ChallengRecord, error) {
 		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
 	}
 
+	client_context_length := len(client_context_map)
+
 	contexts_len := len(kube_config["contexts"].([]interface{}))
+
+	if contexts_len != client_context_length {
+		return challenge_records, fmt.Errorf("failed to generate challenge: %s", "invalid formate: 01")
+	}
+
+	for i := 0; i < contexts_len; i++ {
+
+		context_nm := kube_config["contexts"].([]interface{})[i].(map[string]interface{})["name"].(string)
+
+		server_contexts = append(server_contexts, context_nm)
+
+	}
+
+	for cc := range client_context_map {
+
+		exists := CheckIfSliceContains[string](client_contexts, cc)
+
+		if exists {
+			return challenge_records, fmt.Errorf("failed to generate challenge: %s", "invalid format: 02")
+		}
+
+		client_contexts = append(client_contexts, cc)
+
+	}
+
+	for i := 0; i < len(client_contexts); i++ {
+
+		exists := CheckIfSliceContains[string](server_contexts, client_contexts[i])
+
+		if !exists {
+			return challenge_records, fmt.Errorf("failed to generate challenge: %s", "invalid format: 03")
+		}
+
+	}
+
+	for context, pub_str := range client_context_map {
+
+		context_user_cert_b, err := GetContextUserCertificateBytes(context)
+
+		if err != nil {
+			return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
+		}
+
+		block, _ := pem.Decode(context_user_cert_b)
+
+		var cert *x509.Certificate
+
+		cert, err = x509.ParseCertificate(block.Bytes)
+
+		hash_sha := sha256.New()
+
+		hash_sha.Write(cert.RawTBSCertificate)
+
+		hash_data := hash_sha.Sum(nil)
+
+		pub_key, err := BytesToPublicKey([]byte(pub_str))
+
+		if err != nil {
+			return challenge_records, fmt.Errorf("failed to generate challenge: %s", "invalid format: 04")
+		}
+
+		err = rsa.VerifyPKCS1v15(pub_key, crypto.SHA256, hash_data, cert.Signature)
+
+		if err != nil {
+			return challenge_records, fmt.Errorf("failed to generate challenge: %s", "invalid pub key")
+		}
+	}
+
+	file_byte, err := os.ReadFile("srv/challenge.json")
+
+	if err != nil {
+		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
+	}
+
+	err = json.Unmarshal(file_byte, &challenge_records)
+
+	if err != nil {
+		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
+	}
+
+	new_challenge_id, _ := RandomHex(8)
+
+	_, okay = challenge_records[new_challenge_id]
+
+	if okay {
+		return challenge_records, fmt.Errorf("failed to generate challenge: %s", "duplicate challenge id")
+	}
 
 	for i := 0; i < contexts_len; i++ {
 

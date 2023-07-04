@@ -239,6 +239,176 @@ func GetContextUserPublicKeyBytes(context_nm string) ([]byte, error) {
 
 }
 
+func GetContextClusterPublicKeyBytes(context_nm string) ([]byte, error) {
+
+	var kube_config map[interface{}]interface{}
+
+	var ret_byte []byte
+
+	kube_config_path, err := GetKubeConfigPath()
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get context cluster public key: %s", err.Error())
+	}
+
+	kube_config_file_byte, err := os.ReadFile(kube_config_path)
+
+	err = goya.Unmarshal(kube_config_file_byte, &kube_config)
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get context cluster public key: %s", err.Error())
+	}
+
+	contexts_len := len(kube_config["contexts"].([]interface{}))
+
+	context_cluster_nm := ""
+
+	for i := 0; i < contexts_len; i++ {
+
+		if kube_config["contexts"].([]interface{})[i].(map[string]interface{})["name"].(string) == context_nm {
+
+			context_cluster_nm = kube_config["contexts"].([]interface{})[i].(map[string]interface{})["context"].(map[string]interface{})["cluster"].(string)
+
+			break
+		}
+
+	}
+
+	if context_cluster_nm == "" {
+		return ret_byte, fmt.Errorf("failed to get context user public key: %s", "matching cluster not found")
+	}
+
+	clusters_len := len(kube_config["clusters"].([]interface{}))
+
+	var cluster_pub_key_data []byte
+
+	cluster_certificate_data := ""
+
+	for i := 0; i < clusters_len; i++ {
+
+		if kube_config["clusters"].([]interface{})[i].(map[string]interface{})["name"].(string) == context_cluster_nm {
+
+			tmp_base64, okay := kube_config["clusters"].([]interface{})[i].(map[string]interface{})["cluster"].(map[string]interface{})["certificate-authority-data"].(string)
+
+			if !okay {
+				return ret_byte, fmt.Errorf("failed to get context cluster public key: %s", "no key data")
+			}
+
+			dec_base64, err := base64.StdEncoding.DecodeString(tmp_base64)
+
+			cluster_certificate_data = string(dec_base64)
+
+			if err != nil {
+				return ret_byte, fmt.Errorf("failed to get context cluster public key: %s", err.Error())
+			}
+
+			break
+		}
+
+	}
+
+	if cluster_certificate_data == "" {
+		return ret_byte, fmt.Errorf("failed to get context user public key: %s", "no matching user key")
+	}
+
+	block, _ := pem.Decode([]byte(cluster_certificate_data))
+	var cert *x509.Certificate
+	cert, err = x509.ParseCertificate(block.Bytes)
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get context cluster public key: %s", err.Error())
+	}
+
+	rsaPublicKey := cert.PublicKey.(*rsa.PublicKey)
+
+	cluster_pub_key_data, err = PublicKeyToBytes(rsaPublicKey)
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get context cluster public key: %s", err.Error())
+	}
+
+	ret_byte = cluster_pub_key_data
+
+	return ret_byte, nil
+
+}
+
+func GetContextUserCertificateBytes(context_nm string) ([]byte, error) {
+
+	var kube_config map[interface{}]interface{}
+
+	var ret_byte []byte
+
+	kube_config_path, err := GetKubeConfigPath()
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get context user certificate: %s", err.Error())
+	}
+
+	kube_config_file_byte, err := os.ReadFile(kube_config_path)
+
+	err = goya.Unmarshal(kube_config_file_byte, &kube_config)
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get context user certificate: %s", err.Error())
+	}
+
+	contexts_len := len(kube_config["contexts"].([]interface{}))
+
+	context_user_nm := ""
+
+	for i := 0; i < contexts_len; i++ {
+
+		if kube_config["contexts"].([]interface{})[i].(map[string]interface{})["name"].(string) == context_nm {
+
+			context_user_nm = kube_config["contexts"].([]interface{})[i].(map[string]interface{})["context"].(map[string]interface{})["user"].(string)
+
+			break
+		}
+
+	}
+
+	if context_user_nm == "" {
+		return ret_byte, fmt.Errorf("failed to get context user certificate: %s", "matching user not found")
+	}
+
+	user_len := len(kube_config["users"].([]interface{}))
+
+	user_certificate_data := ""
+
+	for i := 0; i < user_len; i++ {
+
+		if kube_config["users"].([]interface{})[i].(map[string]interface{})["name"].(string) == context_user_nm {
+
+			tmp_base64, okay := kube_config["users"].([]interface{})[i].(map[string]interface{})["user"].(map[string]interface{})["client-certificate-data"].(string)
+
+			if !okay {
+				return ret_byte, fmt.Errorf("failed to get context user certificate: %s", "no key data")
+			}
+
+			dec_base64, err := base64.StdEncoding.DecodeString(tmp_base64)
+
+			user_certificate_data = string(dec_base64)
+
+			if err != nil {
+				return ret_byte, fmt.Errorf("failed to get context user certificate: %s", err.Error())
+			}
+
+			break
+		}
+
+	}
+
+	if user_certificate_data == "" {
+		return ret_byte, fmt.Errorf("failed to get context user certificate: %s", "no matching user key")
+	}
+
+	ret_byte = []byte(user_certificate_data)
+
+	return ret_byte, nil
+
+}
+
 func GenerateKeyPair(bits int) (*rsa.PrivateKey, *rsa.PublicKey, error) {
 
 	var pubkey *rsa.PublicKey
