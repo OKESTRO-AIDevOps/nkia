@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 
-	"github.com/OKESTRO-AIDevOps/npia-server/server/router"
+	"github.com/OKESTRO-AIDevOps/npia-server/src/router"
 )
 
 func main() {
