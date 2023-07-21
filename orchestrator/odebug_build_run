@@ -1,0 +1,17 @@
+#!/bin/bash
+
+./amalgamate_bin/amalgamate
+
+go run amalgamate_bin/amalgamate.go
+
+rm config.amld.raw
+
+cp config.amld odb/config.amld
+
+rm config.amld
+
+cp okey osock/okey
+
+rm okey
+
+sudo docker-compose up --build
