@@ -7,3 +7,17 @@ services:
                 container_name: npiaorchestratordb
                 ports:
                         - "3306:3306"
+
+
+        npiaorchestratorfront:
+                build: ./ofront
+                container_name: npiaorchestratorfront
+                ports:
+                        - "1337:1337"
+
+
+        npiaorchestratorsock:
+                build: ./osock
+                container_name: npiaorchestratorsock
+                ports:
+                        - "7331:7331"

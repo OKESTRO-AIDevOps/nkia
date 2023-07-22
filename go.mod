@@ -7,10 +7,15 @@ require (
 	github.com/OKESTRO-AIDevOps/npia-multi-mode v0.0.0-20230704064107-4fdccfc802a8
 	github.com/gin-gonic/contrib v0.0.0-20221130124618-7e01895a63f2
 	github.com/gin-gonic/gin v1.9.1
+	github.com/go-sql-driver/mysql v1.7.1
 	github.com/goccy/go-yaml v1.11.0
+	github.com/gorilla/websocket v1.5.0
+	golang.org/x/oauth2 v0.10.0
 )
 
 require (
+	cloud.google.com/go/compute v1.20.1 // indirect
+	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	github.com/Jeffail/gabs/v2 v2.7.0 // indirect
 	github.com/boj/redistore v0.0.0-20180917114910-cd5dcc76aeff // indirect
 	github.com/bytedance/sonic v1.9.2 // indirect
@@ -41,7 +46,6 @@ require (
 	golang.org/x/arch v0.3.0 // indirect
 	golang.org/x/crypto v0.11.0 // indirect
 	golang.org/x/net v0.12.0 // indirect
-	golang.org/x/oauth2 v0.10.0 // indirect
 	golang.org/x/sys v0.10.0 // indirect
 	golang.org/x/text v0.11.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect

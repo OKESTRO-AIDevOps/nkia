@@ -1,8 +1,8 @@
 #!/bin/bash
 
-./amalgamate_bin/amalgamate
+./debug_amalgamate_bin/amalgamate
 
-go run amalgamate_bin/amalgamate.go
+go run ./debug_amalgamate_bin/amalgamate.go
 
 rm config.amld.raw
 
@@ -13,5 +13,9 @@ rm config.amld
 cp okey osock/okey
 
 rm okey
+
+go build -o ./ofront/ofront ./ofront/.
+
+go build -o ./osock/osock ./osock/.
 
 sudo docker-compose up --build
