@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FILES="amalgamate_config/*"
+FILES="debug_amalgamate_config/*"
 KUBECONFIG=""
 
 i=0

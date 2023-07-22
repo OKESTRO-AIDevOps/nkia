@@ -6,14 +6,13 @@ CREATE DATABASE orchestrator;
 
 USE orchestrator;
 
-CREATE TABLE orchestrator_pair (email_entry VARCHAR(100), amalgamated_config TEXT);
-
+CREATE TABLE orchestrator_record (email VARCHAR(100), config TEXT, signed TINYINT);
 
 
 SET @config_amld_enc = LOAD_FILE("/var/lib/mysql-files/config.amld");
 
 
-INSERT INTO orchestrator_pair(email_entry, amalgamated_config) VALUES("seantywork@gmail.com",@config_amld_enc);
+INSERT INTO orchestrator_record(email, config) VALUES("seantywork@gmail.com",@config_amld_enc);
 
 
 
