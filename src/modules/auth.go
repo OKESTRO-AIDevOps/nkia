@@ -58,6 +58,36 @@ func AccessAuth(c *gin.Context) (string, error) {
 
 }
 
+func AccessAuth_Detached(key_id string) (string, error) {
+
+	var session_sym_key string
+
+	var key_records KeyRecord
+
+	file_byte, err := os.ReadFile("srv/key.json")
+
+	if err != nil {
+		return "", fmt.Errorf("access auth failed: %s", err.Error())
+	}
+
+	err = json.Unmarshal(file_byte, &key_records)
+
+	if err != nil {
+		return "", fmt.Errorf("access auth failed: %s", err.Error())
+	}
+
+	ssk, okay := key_records[key_id]
+
+	if !okay {
+		return "", fmt.Errorf("access auth failed: %s", "session not found")
+	}
+
+	session_sym_key = ssk
+
+	return session_sym_key, nil
+
+}
+
 func GenerateChallenge(client_ca_pub_key ChallengRecord) (ChallengRecord, error) {
 
 	var kube_config map[interface{}]interface{}
