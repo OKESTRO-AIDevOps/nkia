@@ -13,6 +13,7 @@ import (
 
 	"github.com/OKESTRO-AIDevOps/npia-server/src/modules"
 	"github.com/OKESTRO-AIDevOps/npia-server/src/router"
+	"github.com/OKESTRO-AIDevOps/npia-server/src/sock"
 )
 
 func InitNpiaServer() error {
@@ -98,6 +99,11 @@ func main() {
 
 	}
 
+	if len(os.Args) < 2 {
+		fmt.Println("Error: wrong arguments")
+		return
+	}
+
 	if _, err := os.Stat("srv"); err != nil {
 
 		if err_init := InitNpiaServer(); err_init != nil {
@@ -110,11 +116,48 @@ func main() {
 
 	}
 
-	gin_srv := gin.Default()
-	store := sessions.NewCookieStore([]byte("secret"))
-	gin_srv.Use(sessions.Sessions("npia-session", store))
+	option := os.Args[1]
 
-	gin_srv = router.Init(gin_srv)
+	if option == "attached" {
+		gin_srv := gin.Default()
+		store := sessions.NewCookieStore([]byte("secret"))
+		gin_srv.Use(sessions.Sessions("npia-session", store))
 
-	gin_srv.Run("0.0.0.0:13337")
+		gin_srv = router.Init(gin_srv)
+
+		gin_srv.Run("0.0.0.0:13337")
+
+	} else if option == "detached" {
+
+		if len(os.Args) != 3 {
+			fmt.Println("Error: wrong arguments")
+			return
+		}
+
+		address := os.Args[2]
+
+		if err := sock.DetachedServerCommunicator(address); err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+	} else if option == "detached-test" {
+
+		if len(os.Args) != 3 {
+			fmt.Println("Error: wrong arguments")
+			return
+		}
+
+		address := os.Args[2]
+
+		if err := sock.DetachedServerCommunicator_Test(address); err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+	} else {
+		fmt.Println("Error: wrong option")
+		return
+	}
+
 }

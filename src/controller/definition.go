@@ -23,3 +23,17 @@ type AuthChallenge struct {
 	ChallengeData    modules.ChallengRecord `json:"challenge_data"`
 	ChallengeKey     modules.KeyRecord      `json:"challenge_key"`
 }
+
+type OrchestratorRequest struct {
+	RequestKey string `json:"request_key"`
+
+	RequestTarget string `json:"request_target"`
+
+	Query string `json:"query"`
+}
+
+type OrchestratorResponse struct {
+	ServerMessage string `json:"server_message"`
+
+	QueryResult []byte `json:"query_result"`
+}

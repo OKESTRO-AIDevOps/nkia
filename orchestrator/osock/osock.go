@@ -31,7 +31,9 @@ var FRONT_CONNECTION = make(map[string]*websocket.Conn)
 
 var SERVER_CONNECTION = make(map[string]*websocket.Conn)
 
-var SERVER_KEY_ENTRY = make(map[string]string)
+var SERVER_CONNECTION_KEY = make(map[*websocket.Conn]string)
+
+var SERVER_CONNECTION_FRONT = make(map[*websocket.Conn]string)
 
 func O_Init() error {
 	challenge_records := make(modules.ChallengRecord)
@@ -112,6 +114,7 @@ func main() {
 
 	flag.Parse()
 	log.SetFlags(0)
+	http.HandleFunc("/osock/server-test", ServerHandler_Test)
 	http.HandleFunc("/osock/server", ServerHandler)
 	http.HandleFunc("/osock/front", FrontHandler)
 	log.Fatal(http.ListenAndServe(*ADDR, nil))

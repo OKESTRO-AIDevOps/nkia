@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-func ServerHandler(w http.ResponseWriter, r *http.Request) {
+func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 	EventLogger("Server access")
 
