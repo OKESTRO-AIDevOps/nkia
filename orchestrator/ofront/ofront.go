@@ -3,11 +3,15 @@ package main
 import (
 	"github.com/OKESTRO-AIDevOps/npia-server/orchestrator/ofront/orouter"
 
+	"github.com/OKESTRO-AIDevOps/npia-server/orchestrator/ofront/omodels"
+
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+
+	omodels.DbEstablish()
 
 	gin_srv := gin.Default()
 	store := sessions.NewCookieStore([]byte("secret"))

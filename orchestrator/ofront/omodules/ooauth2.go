@@ -18,6 +18,13 @@ const OauthGoogleUrlAPI = "https://www.googleapis.com/oauth2/v2/userinfo?access_
 
 var CONFIG_JSON = GetConfig()
 
+type OAuthStruct struct {
+	ID             string `json:"id"`
+	EMAIL          string `json:"email"`
+	VERIFIED_EMAIL bool   `json:"verified_email"`
+	PICTURE        string `json:"picture"`
+}
+
 var GoogleOauthConfig = &oauth2.Config{
 	RedirectURL:  "http://localhost:1337/oauth2/google/callback",
 	ClientID:     CONFIG_JSON["GOOGLE_OAUTH_CLIENT_ID"],

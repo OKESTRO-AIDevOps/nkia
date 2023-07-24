@@ -100,15 +100,7 @@ func OkeyDecryptor(stream []byte) ([]byte, error) {
 
 	var ret_byte []byte
 
-	file_byte, err := os.ReadFile("okey")
-
-	if err != nil {
-		return ret_byte, fmt.Errorf("okey failed: %s", err.Error())
-	}
-
-	file_str := string(file_byte)
-
-	okey_b, err := hex.DecodeString(file_str)
+	okey_b, err := os.ReadFile("okey")
 
 	if err != nil {
 		return ret_byte, fmt.Errorf("okey failed: %s", err.Error())
