@@ -129,28 +129,32 @@ func main() {
 
 	} else if option == "detached" {
 
-		if len(os.Args) != 3 {
+		if len(os.Args) != 4 {
 			fmt.Println("Error: wrong arguments")
 			return
 		}
 
 		address := os.Args[2]
 
-		if err := sock.DetachedServerCommunicator(address); err != nil {
+		email := os.Args[3]
+
+		if err := sock.DetachedServerCommunicator(address, email); err != nil {
 			fmt.Println(err.Error())
 			return
 		}
 
 	} else if option == "detached-test" {
 
-		if len(os.Args) != 3 {
+		if len(os.Args) != 4 {
 			fmt.Println("Error: wrong arguments")
 			return
 		}
 
 		address := os.Args[2]
 
-		if err := sock.DetachedServerCommunicator_Test(address); err != nil {
+		email := os.Args[3]
+
+		if err := sock.DetachedServerCommunicator_Test(address, email); err != nil {
 			fmt.Println(err.Error())
 			return
 		}

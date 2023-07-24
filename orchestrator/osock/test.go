@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/hex"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -36,6 +37,8 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 	for auth_flag == 0 {
 
+		req = ctrl.AuthChallenge{}
+
 		if iter_count > 5 {
 			err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 			if err != nil {
@@ -59,6 +62,8 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 		case "ASK":
 
 			email_context := req.ChallengeMessage
+
+			EventLogger(email_context)
 
 			email_context_list := strings.Split(email_context, ":")
 
@@ -211,6 +216,13 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 	var res_server ctrl.APIMessageResponse
 	var res_orchestrator ctrl.OrchestratorResponse
+
+	fmt.Println("server connection ---------- ")
+	fmt.Println(SERVER_CONNECTION)
+	fmt.Println("server connection key ------ ")
+	fmt.Println(SERVER_CONNECTION_KEY)
+	fmt.Println("server connection front ---- ")
+	fmt.Println(SERVER_CONNECTION_FRONT)
 
 	for {
 

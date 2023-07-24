@@ -21,6 +21,7 @@ do
 
 done
 
+export KUBECONFIG
 
 kubectl config view --flatten > config.amld.raw
 
