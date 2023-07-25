@@ -463,7 +463,7 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 		req_server.Query = query_hex
 
-		fmt.Println("******* serer side")
+		fmt.Println("******* server side")
 		fmt.Println("written")
 		fmt.Println(req_server)
 
