@@ -4,19 +4,68 @@ import (
 	"github.com/OKESTRO-AIDevOps/npia-server/orchestrator/ofront/omodels"
 	"github.com/OKESTRO-AIDevOps/npia-server/orchestrator/ofront/omodules"
 
-	ctrl "github.com/OKESTRO-AIDevOps/npia-server/src/controller"
-
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 )
 
 func IndexFeed(c *gin.Context) {
 
+	session := sessions.Default(c)
+
+	var session_id string
+
+	v := session.Get("OSID")
+
+	if v != nil {
+		session_id = v.(string)
+
+		_, err := omodels.FrontAccessAuth(session_id)
+
+		if err == nil {
+			c.Redirect(302, "/orchestrator")
+			return
+		}
+
+	}
+
 	c.HTML(200, "index.html", gin.H{
-		"title": "index test",
+		"title": "Index",
+	})
+
+}
+
+func OrchestratorFeed(c *gin.Context) {
+
+	session := sessions.Default(c)
+
+	var session_id string
+
+	v := session.Get("OSID")
+
+	if v == nil {
+		fmt.Printf("access auth failed: %s", "session id not found")
+		c.String(403, "forbidden")
+		return
+	} else {
+		session_id = v.(string)
+	}
+
+	request_key, err := omodels.FrontAccessAuth(session_id)
+
+	if err != nil {
+		fmt.Printf("access auth failed: %s", "request key not found")
+		c.String(403, "forbidden")
+		return
+	}
+
+	req_code_b64 := base64.StdEncoding.EncodeToString([]byte(request_key))
+
+	c.HTML(200, "orchestrator.tmpl", gin.H{
+		"request_key": req_code_b64,
 	})
 
 }
@@ -74,8 +123,6 @@ func OauthGoogleCallback(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(string(data))
-
 	var oauth_struct omodules.OAuthStruct
 
 	err = json.Unmarshal(data, &oauth_struct)
@@ -92,7 +139,7 @@ func OauthGoogleCallback(c *gin.Context) {
 		return
 	}
 
-	request_key, err := omodels.RegisterOsidAndRequestKey(session_id, oauth_struct)
+	_, err = omodels.RegisterOsidAndRequestKey(session_id, oauth_struct)
 
 	if err != nil {
 		fmt.Printf("access auth failed: %s", err.Error())
@@ -100,15 +147,7 @@ func OauthGoogleCallback(c *gin.Context) {
 		return
 	}
 
-	var server_response ctrl.OrchestratorResponse
-
-	server_response.ServerMessage = "SUCCESS"
-
-	server_response.QueryResult = []byte(request_key)
-
-	fmt.Println(request_key)
-
-	c.IndentedJSON(200, server_response)
+	c.Redirect(302, "/orchestrate")
 
 	return
 }

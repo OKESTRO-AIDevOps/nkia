@@ -25,7 +25,7 @@ type AuthChallenge struct {
 }
 
 type OrchestratorRequest struct {
-	RequestKey string `json:"request_key"`
+	RequestOption string `json:"request_option"`
 
 	RequestTarget string `json:"request_target"`
 

@@ -29,6 +29,8 @@ var UPGRADER = websocket.Upgrader{} // use default options
 
 var FRONT_CONNECTION = make(map[string]*websocket.Conn)
 
+var FRONT_CONNECTION_FRONT = make(map[*websocket.Conn]string)
+
 var SERVER_CONNECTION = make(map[string]*websocket.Conn)
 
 var SERVER_CONNECTION_KEY = make(map[*websocket.Conn]string)
@@ -116,6 +118,7 @@ func main() {
 	log.SetFlags(0)
 	http.HandleFunc("/osock/server-test", ServerHandler_Test)
 	http.HandleFunc("/osock/server", ServerHandler)
+	http.HandleFunc("/osock/front-test", FrontHandler_Test)
 	http.HandleFunc("/osock/front", FrontHandler)
 	log.Fatal(http.ListenAndServe(*ADDR, nil))
 

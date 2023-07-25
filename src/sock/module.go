@@ -21,20 +21,21 @@ func ServerAuth_ReaderChannel(c *websocket.Conn, ch_read chan ctrl.AuthChallenge
 
 	var resp_body ctrl.AuthChallenge
 
-	for READ == 0 {
-
-		err := c.ReadJSON(&resp_body)
-		if err != nil {
-			panic("auth reader:" + err.Error())
-		}
-
-		ch_read <- resp_body
-
-		if READ != 0 {
-			break
-		}
-
+	err := c.ReadJSON(&resp_body)
+	if err != nil {
+		panic("auth reader1:" + err.Error())
 	}
+
+	ch_read <- resp_body
+
+	resp_body = ctrl.AuthChallenge{}
+
+	err = c.ReadJSON(&resp_body)
+	if err != nil {
+		panic("auth reader2:" + err.Error())
+	}
+
+	ch_read <- resp_body
 
 }
 
@@ -45,6 +46,7 @@ func SockCommunicationHandler_ReaderChannel(c *websocket.Conn, ch_read chan ctrl
 	for READ == 0 {
 
 		err := c.ReadJSON(&req_body)
+
 		if err != nil {
 			panic("auth reader:" + err.Error())
 		}
@@ -188,8 +190,6 @@ func ServerAuthChallenge(c *websocket.Conn, email string) error {
 	req_body.ChallengeMessage = email + ":" + context_nm
 
 	req_body.ChallengeData = challenge_map
-
-	fmt.Println(req_body)
 
 	err = c.WriteJSON(&req_body)
 

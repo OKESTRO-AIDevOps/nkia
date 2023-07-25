@@ -1,0 +1,9 @@
+#!/bin/bash
+
+rm odb/config.amld
+
+rm osock/okey
+
+rm ./ofront/ofront 
+
+rm ./osock/osock
