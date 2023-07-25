@@ -124,6 +124,9 @@ func SockCommunicationHandler_LinearInstruction_PrintOnly_Test(c *websocket.Conn
 
 			*/
 
+			fmt.Println("******client side")
+			fmt.Println(linear_instruction)
+
 			var api_out apistandard.API_OUTPUT
 
 			api_out.BODY = linear_instruction

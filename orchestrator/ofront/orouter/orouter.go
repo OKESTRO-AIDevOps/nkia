@@ -7,7 +7,9 @@ import (
 
 func Init(gin_srv *gin.Engine) *gin.Engine {
 
-	gin_srv.GET("/", octrl.IndexFeed_Test)
+	gin_srv.GET("/", octrl.IndexFeed)
+
+	gin_srv.GET("/orchestrate", octrl.OrchestratorFeed)
 
 	gin_srv.GET("/oauth2/google/login", octrl.OauthGoogleLogin)
 

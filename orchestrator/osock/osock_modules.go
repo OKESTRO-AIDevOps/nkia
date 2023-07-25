@@ -36,16 +36,20 @@ func EventLogger(msg string) {
 	L.Print(msg)
 }
 
-type OrchestratorRecord struct {
+type OrchestratorRecord_EmailConfig struct {
 	email  string
 	config string
+}
+
+type OrchestratorRecord_Email struct {
+	email string
 }
 
 func GetKubeconfigByEmail(email string) ([]byte, error) {
 
 	var config []byte
 
-	var result_container []OrchestratorRecord
+	var result_container []OrchestratorRecord_EmailConfig
 
 	query := "SELECT email, config FROM orchestrator_record WHERE email = ?"
 
@@ -59,7 +63,7 @@ func GetKubeconfigByEmail(email string) ([]byte, error) {
 
 	for res.Next() {
 
-		var or OrchestratorRecord
+		var or OrchestratorRecord_EmailConfig
 
 		err = res.Scan(&or.email, &or.config)
 
@@ -114,4 +118,47 @@ func OkeyDecryptor(stream []byte) ([]byte, error) {
 
 	return dec_b, nil
 
+}
+
+func CheckSessionAndGetEmailByRequestKey(request_key string) (string, error) {
+
+	var email string
+
+	var result_container []OrchestratorRecord_Email
+
+	q := "SELECT email FROM orchestrator_record WHERE osid != 'N' AND request_key = ?"
+
+	a := []any{request_key}
+
+	res, err := DbQuery(q, a)
+
+	if err != nil {
+
+		return "", fmt.Errorf("failed to check session: %s", err.Error())
+
+	}
+
+	for res.Next() {
+
+		var or OrchestratorRecord_Email
+
+		err = res.Scan(&or.email)
+
+		if err != nil {
+
+			return "", fmt.Errorf("failed to check session: %s", err.Error())
+
+		}
+
+		result_container = append(result_container, or)
+
+	}
+
+	if len(result_container) != 1 {
+		return "", fmt.Errorf("failed to check session: %s", "wrong length")
+	}
+
+	email = result_container[0].email
+
+	return email, nil
 }

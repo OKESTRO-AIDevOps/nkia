@@ -12,7 +12,7 @@ CREATE TABLE orchestrator_record (email VARCHAR(100), config TEXT, osid VARCHAR(
 SET @config_amld_enc = LOAD_FILE("/var/lib/mysql-files/config.amld");
 
 
-INSERT INTO orchestrator_record(email, config) VALUES("seantywork@gmail.com",@config_amld_enc);
+INSERT INTO orchestrator_record(email, config, osid, request_key) VALUES("seantywork@gmail.com",@config_amld_enc, "N","N");
 
 
 

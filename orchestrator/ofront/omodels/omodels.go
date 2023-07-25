@@ -49,6 +49,49 @@ func DbQuery(query string, args []any) (*sql.Rows, error) {
 
 }
 
+func FrontAccessAuth(session_id string) (string, error) {
+
+	var request_key string
+
+	var result_container_request_key []OrchestratorRecord_RequestKey
+
+	q := "SELECT request_key FROM orchestrator_record WHERE osid = ?"
+
+	a := []any{session_id}
+
+	res, err := DbQuery(q, a)
+
+	if err != nil {
+		return "", fmt.Errorf("failed to get access: %s", err.Error())
+	}
+
+	for res.Next() {
+
+		var or OrchestratorRecord_RequestKey
+
+		err = res.Scan(&or.request_key)
+
+		if err != nil {
+
+			return "", fmt.Errorf("failed to register: %s", err.Error())
+
+		}
+
+		result_container_request_key = append(result_container_request_key, or)
+
+	}
+
+	if len(result_container_request_key) != 1 {
+		return "", fmt.Errorf("failed to get access: %s", "duplicate")
+	}
+
+	request_key = result_container_request_key[0].request_key
+
+	res.Close()
+
+	return request_key, nil
+}
+
 func RegisterOsidAndRequestKey(session_id string, oauth_struct omodules.OAuthStruct) (string, error) {
 
 	var request_key string
