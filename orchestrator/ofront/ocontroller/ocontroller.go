@@ -26,7 +26,7 @@ func IndexFeed(c *gin.Context) {
 		_, err := omodels.FrontAccessAuth(session_id)
 
 		if err == nil {
-			c.Redirect(302, "/orchestrator")
+			c.Redirect(302, "/orchestrate")
 			return
 		}
 
