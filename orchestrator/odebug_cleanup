@@ -7,3 +7,5 @@ rm osock/okey
 rm ./ofront/ofront 
 
 rm ./osock/osock
+
+sudo rm -r /root/.kube/config

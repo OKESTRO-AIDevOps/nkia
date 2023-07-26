@@ -6,3 +6,4 @@ sudo rm -r .kaleido
 sudo rm -r lib
 sudo rm -r srv
 sudo rm -r app
+sudo rm -r /root/.kube/config
