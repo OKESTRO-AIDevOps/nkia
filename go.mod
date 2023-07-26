@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/OKESTRO-AIDevOps/npia-api v0.0.0-20230704081533-6ef6d122a907
-	github.com/OKESTRO-AIDevOps/npia-multi-mode v0.0.0-20230704064107-4fdccfc802a8
+	github.com/OKESTRO-AIDevOps/npia-multi-mode v0.0.0-20230705000839-8f29930fd028
 	github.com/gin-gonic/contrib v0.0.0-20221130124618-7e01895a63f2
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-sql-driver/mysql v1.7.1

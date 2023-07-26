@@ -11,5 +11,7 @@ cat <<EOF > .etc/ADM_origin.json
 {"RECORDS":[{}],"REPOS":[{}],"REGS":[{}]}
 EOF
 
-sudo ./app
+sudo /bin/cp -rf ./debug_bin/config /root/.kube/config
+
+sudo ./app attached
 

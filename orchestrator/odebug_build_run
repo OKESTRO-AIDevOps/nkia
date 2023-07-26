@@ -18,4 +18,6 @@ go build -o ./ofront/ofront ./ofront/.
 
 go build -o ./osock/osock ./osock/.
 
+sudo /bin/cp -rf ./debug_amalgamate_config/config2 /root/.kube/config
+
 sudo docker-compose up --build
