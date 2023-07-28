@@ -8,4 +8,4 @@ with or without external reverse proxy managing https or wss
 
 # Documentation
 
-Refer to [/docs]()
+Refer to [/docs](https://okestro-aidevops.github.io/npia-server/)
