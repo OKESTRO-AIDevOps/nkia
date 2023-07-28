@@ -31,7 +31,7 @@ interfaces to interact with npia-api. Each system is as follows.
 
 The blueprint for the repository is as follows.
 
-![npia-server]()
+![npia-server](img/npia-server-blueprint.png)
 
 The tree structure for the repository is as follows
 
@@ -196,6 +196,7 @@ you could just run it yourself.
   Is a kubeconfig file that holds the information of two kind clusters that doesn't exist\
   on earth anymore.
 
+> Examples
 
 ### orchestrator
 
@@ -211,6 +212,7 @@ you could just run it yourself.
 - odebug_cleanup\
   Removes all the environments created using orchestrator/odebug_build_run
   
+> Examples
 
 ### orchestrator debug_amalgamate_bin
 
@@ -222,6 +224,7 @@ you could just run it yourself.
   Is a program that generates AES GCM key and consumes merged kubeconfig file to output \
   both the symmetric key and finally the encrypted kubeconfig file. 
 
+> Examples
 
 ### orchestrator debug_amalgamate_config
 
@@ -260,13 +263,16 @@ you could just run it yourself.
 - ofront.go\
   Is a main entry for creating and running the Go Gin server that serves the front user.
 
+> Examples
+
 ### orchestrator ofront ocontroller
 
 - ocontroller.go\
   Has functions for serving index html file and /orchestrator template page, redirecting\
-  to /orchstrate if session is present and authenticated, and Google oauth initiation along\
-  with callback  
+  to and managing access to /orchstrate if session is present and authenticated,\
+  and Google oauth initiation along with callback  
 
+> Examples
 
 ### orchestrator ofront omodels
 
@@ -274,7 +280,7 @@ you could just run it yourself.
   Has functions to handle database query and check access authenticity, register front-user\
   session id with socket request key if the user has successfully passed oauth process. 
 
-
+> Examples
 
 ### orchestrator ofront omodules
 
@@ -288,6 +294,7 @@ you could just run it yourself.
   Also it has data structures to hold the oauth2 configuration and Google oauth result to\
   check if the oauth process has been successful.
 
+> Examples
 
 ### orchestrator ofront orouter
 
@@ -295,6 +302,7 @@ you could just run it yourself.
   Has paths for front user to access which are main landing page, and another page \
   where orchestrator call is made, and two others for conducting oauth2 authentication. 
 
+> Examples
 
 ### orchestrator ofront oview
 
@@ -305,61 +313,131 @@ you could just run it yourself.
   Is where, after the authentication, the front user makes call to the orchestrator hub to \
   retrieve api processing result from the npia-server sock agent.
 
+> Examples
 
 ### orchestrator osock
 
-- Dockerfile
+- Dockerfile\
+  Defines how the orchestrator socket image should be built and run inside a container.
 
-- osock_front.go
+- osock_front.go\
+  Has a function to handle the initial authentication challenge from the front user web socket\
+  connection and maintain the connection if the authentication is successful. \
+  Upon successful authentication, it keeps a runtime mapped record for a websocket \
+  connection identifier along with a corresponding user id.
 
-- osock_modules.go
+- osock_modules.go\
+  Has functions for orchestrator/osock system to interact with orchestrator/odb and \
+  checking session before returning corresponding user email against a submitted \
+  request key, decrypting the user's amalgamated kubeconfig file stored inside the \
+  database.
+   
+- osock_server.go\
+  Has a function to handle the initial authentication challenge from the server sock agent\
+  web socket connection and maintain the connection if the authentication is successful.\
+  Upon successful authentication, it keeps a runtime mapped record for a websocket \
+  connection identifier along with a sysmmetric key used for secure communication and also,\
+  the front user socket search key for finding the web socket to send the api result to.
 
-- osock_server.go
 
-- osock.go
+- osock.go\
+  Defines database connection information and socket endpoint address for both the front\
+  user and the server sock agent to connect to, and the dynamically mapped records that\
+  will hold the bidirectional reference for both the front user and server sock agent\
+  socket connection.\
+  Also, it has a function to initiate the base environment for orchestrator/osock to\
+  properly run
 
+> Examples
 
 ### src
 
-- main.go
+- main.go\
+  Is a main entry for npia-server to be up and running either as a single terminal \
+  transfer communication mode or a multi terminal socket communication mode.\
+  Along with that, it checks and sets up the base environment for npia-server to \
+  properly run.  
 
+> Examples
 
 ### src controller
 
-- api.go
+- api.go\
+  Is the core interface to relay the user-sent query to the npia-api when the server is\
+  in single terminal transfer communication mode.\
+  It receives the query content delivered inside the request body, decrypts it, formats it\
+  to send to npia-api, retrieves the result, and finally encrypts the byte format result\
+  then sends it back.
 
-- auth.go
+- auth.go\
+  Has a function to handle the entire single terminal transfer challenge process.
 
-- check.go
+- check.go\
+  Checks status.
 
-- definition.go
+- definition.go\
+  Has all fundamental data blocks for communicating with npia-server components and \
+  within components. It defines how the api request/response data sent to/from npia-server\
+  should look like, and how the challenge protocol data should be formatted, and finally\
+  when using multi terminal socket communication mode, how the data sent to/from the \
+  orchestrator should look like.
 
-- multimode.go
+- multimode.go\
+  Implements npia-multi-mode handler on the server side as api callable structure
 
+> Examples
 
 ### src modules
 
-- auth.go
+- auth.go\
+  Holds all functions that uphold the single terminal transfer challenge and \
+  the multi terminal socket challenge.
+  Not only that, it also contains function for generating the challenges and verifying\
+  them for both single terminal transfer communication mode and multi terminal socket\
+  communication mode. 
+  
+- definition.go\
+  Has the baseline data structures for the sttc and mtsc protocol.
 
-- definition.go
-
-- utils.go
+- utils.go\
+  Holds all building blocks that make up the challenge functions which include \
+  public key and private key encoding, extraction of those from the kubeconfig\
+  and asymmetric, symmetric encryption, secure random byte generation,\
+  certicate verification, etc.
+  
+> Examples 
 
 ### src router
 
-- router.go
+- router.go\
+  Defines main entries to which npia-go-client or whatever that is compliant with the\
+  apistandard and KCXD Challenge Protocol can access and send data
+
+> Examples
 
 ### src sock
 
-- module.go
+- module.go\
+  Defines and implements Go routine read channels for sequential challenge-then-listen,\
+  and write channel for interacting with orchestrator challenge signals and front-user\
+  query sent through it.
 
-- sock.go
+- sock.go\
+  Has an entry logic for running the multi terminal socket commuincation mode and the \
+  storage to keep the symmetric key to encrypt/decrypt the message after the successful \
+  authentication  
 
+> Examples
 
 ### test kindcluster
 
-- kindcluster.sh
+- kindcluster.sh\
+  Is a Bash script for up and running kind Kubernetes clusters for testing purpose.
 
-- kindcluster1.yaml
+- kindcluster1.yaml\
+  Is a yaml config file for the first test-purpose kind Kubernetes cluster
 
-- kindcluster2.yaml
+- kindcluster2.yaml\
+  Is a yaml config file for the second test-purpose kind Kubernetes cluster
+
+  
