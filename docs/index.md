@@ -2,10 +2,10 @@
 
 ## Table of Contents
 
+- [Security (yep, that KCXD-challenge-protocol-thing)](security.md)
 - [Description](#description)
 - [Project Overview](#project-overview)
 - [Details and Examples](#details-and-examples)
-- [Security](security.md)
 - [Scenario](scenario.md)
 
 ## Description
