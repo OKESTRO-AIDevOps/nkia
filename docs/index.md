@@ -5,7 +5,7 @@
 - [Security (yep, that KCXD-challenge-protocol-thing)](security.md)
 - [Description](#description)
 - [Project Overview](#project-overview)
-- [Details and Examples](#details-and-examples)
+- [Details](#details)
 - [Scenario](scenario.md)
 
 ## Description
@@ -180,7 +180,7 @@ Let me guide you through the each entrypoint briefly.
 
 
 
-## Details and Examples
+## Details
 
 This section dives into the details of each entry point.
 
@@ -193,10 +193,8 @@ you could just run it yourself.
 ### debug_bin
 
 - config\
-  Is a kubeconfig file that holds the information of two kind clusters that doesn't exist\
+  Is a kubeconfig file that holds the information of two kind clusters that don't exist\
   on earth anymore.
-
-> Examples
 
 ### orchestrator
 
@@ -212,7 +210,6 @@ you could just run it yourself.
 - odebug_cleanup\
   Removes all the environments created using orchestrator/odebug_build_run
   
-> Examples
 
 ### orchestrator debug_amalgamate_bin
 
@@ -224,7 +221,6 @@ you could just run it yourself.
   Is a program that generates AES GCM key and consumes merged kubeconfig file to output \
   both the symmetric key and finally the encrypted kubeconfig file. 
 
-> Examples
 
 ### orchestrator debug_amalgamate_config
 
@@ -263,7 +259,6 @@ you could just run it yourself.
 - ofront.go\
   Is a main entry for creating and running the Go Gin server that serves the front user.
 
-> Examples
 
 ### orchestrator ofront ocontroller
 
@@ -272,7 +267,7 @@ you could just run it yourself.
   to and managing access to /orchstrate if session is present and authenticated,\
   and Google oauth initiation along with callback  
 
-> Examples
+
 
 ### orchestrator ofront omodels
 
@@ -280,7 +275,6 @@ you could just run it yourself.
   Has functions to handle database query and check access authenticity, register front-user\
   session id with socket request key if the user has successfully passed oauth process. 
 
-> Examples
 
 ### orchestrator ofront omodules
 
@@ -294,7 +288,7 @@ you could just run it yourself.
   Also it has data structures to hold the oauth2 configuration and Google oauth result to\
   check if the oauth process has been successful.
 
-> Examples
+
 
 ### orchestrator ofront orouter
 
@@ -302,7 +296,7 @@ you could just run it yourself.
   Has paths for front user to access which are main landing page, and another page \
   where orchestrator call is made, and two others for conducting oauth2 authentication. 
 
-> Examples
+
 
 ### orchestrator ofront oview
 
@@ -313,7 +307,7 @@ you could just run it yourself.
   Is where, after the authentication, the front user makes call to the orchestrator hub to \
   retrieve api processing result from the npia-server sock agent.
 
-> Examples
+
 
 ### orchestrator osock
 
@@ -348,7 +342,7 @@ you could just run it yourself.
   Also, it has a function to initiate the base environment for orchestrator/osock to\
   properly run
 
-> Examples
+
 
 ### src
 
@@ -358,7 +352,7 @@ you could just run it yourself.
   Along with that, it checks and sets up the base environment for npia-server to \
   properly run.  
 
-> Examples
+
 
 ### src controller
 
@@ -385,7 +379,7 @@ you could just run it yourself.
 - multimode.go\
   Implements npia-multi-mode handler on the server side as api callable structure
 
-> Examples
+
 
 ### src modules
 
@@ -405,7 +399,7 @@ you could just run it yourself.
   and asymmetric, symmetric encryption, secure random byte generation,\
   certicate verification, etc.
   
-> Examples 
+ 
 
 ### src router
 
@@ -413,7 +407,7 @@ you could just run it yourself.
   Defines main entries to which npia-go-client or whatever that is compliant with the\
   apistandard and KCXD Challenge Protocol can access and send data
 
-> Examples
+
 
 ### src sock
 
@@ -427,7 +421,7 @@ you could just run it yourself.
   storage to keep the symmetric key to encrypt/decrypt the message after the successful \
   authentication  
 
-> Examples
+
 
 ### test kindcluster
 
