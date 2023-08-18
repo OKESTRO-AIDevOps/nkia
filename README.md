@@ -1,5 +1,7 @@
 # nkia
 
+Don't get me wrong. I love Kubernetes. It's just that it might get easier to use (or not!)
+
 ## Offcially: eNabling Kubernetes Integration Architecture
 
 ## Unofficially: No Kube In the A**
