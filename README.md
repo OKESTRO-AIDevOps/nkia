@@ -1,6 +1,6 @@
 # nkia
 
-Don't get me wrong. I love Kubernetes. It's just that it might get easier to use (or not!)
+don't get me wrong. I love Kubernetes. it's just that i have a lot of spare time.
 
 # Offcially: eNabling Kubernetes Integration Architecture
 
