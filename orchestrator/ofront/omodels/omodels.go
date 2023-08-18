@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/OKESTRO-AIDevOps/npia-server/orchestrator/ofront/omodules"
-	"github.com/OKESTRO-AIDevOps/npia-server/src/modules"
+	"github.com/OKESTRO-AIDevOps/npia/orchestrator/ofront/omodules"
+	"github.com/OKESTRO-AIDevOps/npia/src/modules"
 	_ "github.com/go-sql-driver/mysql"
 )
 

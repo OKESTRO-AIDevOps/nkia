@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/OKESTRO-AIDevOps/npia-server/src/modules"
+	"github.com/OKESTRO-AIDevOps/npia/src/modules"
 )
 
 var DB *sql.DB

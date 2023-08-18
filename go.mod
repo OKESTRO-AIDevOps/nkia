@@ -1,4 +1,4 @@
-module github.com/OKESTRO-AIDevOps/npia-server
+module github.com/OKESTRO-AIDevOps/npia
 
 go 1.20
 

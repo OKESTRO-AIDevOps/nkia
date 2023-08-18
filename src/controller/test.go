@@ -12,7 +12,7 @@ import (
 
 	"github.com/OKESTRO-AIDevOps/npia-api/pkg/apistandard"
 	kalfs "github.com/OKESTRO-AIDevOps/npia-multi-mode/pkg/kaleidofs"
-	"github.com/OKESTRO-AIDevOps/npia-server/src/modules"
+	"github.com/OKESTRO-AIDevOps/npia/src/modules"
 )
 
 func QueryAPI_LinearInstruction_Test(c *gin.Context) {

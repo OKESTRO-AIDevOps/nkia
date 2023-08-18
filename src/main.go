@@ -11,9 +11,9 @@ import (
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 
-	"github.com/OKESTRO-AIDevOps/npia-server/src/modules"
-	"github.com/OKESTRO-AIDevOps/npia-server/src/router"
-	"github.com/OKESTRO-AIDevOps/npia-server/src/sock"
+	"github.com/OKESTRO-AIDevOps/npia/src/modules"
+	"github.com/OKESTRO-AIDevOps/npia/src/router"
+	"github.com/OKESTRO-AIDevOps/npia/src/sock"
 )
 
 func InitNpiaServer() error {

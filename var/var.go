@@ -23,7 +23,7 @@ import (
 
 	"github.com/OKESTRO-AIDevOps/npia-api/pkg/runtimefs"
 	kalfs "github.com/OKESTRO-AIDevOps/npia-multi-mode/pkg/kaleidofs"
-	"github.com/OKESTRO-AIDevOps/npia-server/src/modules"
+	"github.com/OKESTRO-AIDevOps/npia/src/modules"
 )
 
 type ChallengRecord map[string]map[string]string

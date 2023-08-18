@@ -1,7 +1,7 @@
 package orouter
 
 import (
-	octrl "github.com/OKESTRO-AIDevOps/npia-server/orchestrator/ofront/ocontroller"
+	octrl "github.com/OKESTRO-AIDevOps/npia/orchestrator/ofront/ocontroller"
 	"github.com/gin-gonic/gin"
 )
 

@@ -3,7 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 
-	ctrl "github.com/OKESTRO-AIDevOps/npia-server/src/controller"
+	ctrl "github.com/OKESTRO-AIDevOps/npia/src/controller"
 )
 
 func Init(gin_srv *gin.Engine) *gin.Engine {
