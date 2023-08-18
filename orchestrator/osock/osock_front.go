@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	ctrl "github.com/OKESTRO-AIDevOps/npia-server/src/controller"
-	"github.com/OKESTRO-AIDevOps/npia-server/src/modules"
+	ctrl "github.com/OKESTRO-AIDevOps/nkia/src/controller"
+	"github.com/OKESTRO-AIDevOps/nkia/src/modules"
 	_ "github.com/gorilla/websocket"
 )
 

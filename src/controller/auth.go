@@ -5,7 +5,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/OKESTRO-AIDevOps/npia-server/src/modules"
+	"github.com/OKESTRO-AIDevOps/nkia/src/modules"
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
