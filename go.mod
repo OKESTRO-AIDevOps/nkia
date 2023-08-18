@@ -1,4 +1,4 @@
-module github.com/OKESTRO-AIDevOps/npia
+module github.com/OKESTRO-AIDevOps/nkia
 
 go 1.20
 

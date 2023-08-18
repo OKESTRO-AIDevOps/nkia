@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 	"os"
 
-	"github.com/OKESTRO-AIDevOps/npia/src/modules"
+	"github.com/OKESTRO-AIDevOps/nkia/src/modules"
 )
 
 func main() {

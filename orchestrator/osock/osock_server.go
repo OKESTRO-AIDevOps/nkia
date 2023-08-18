@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	ctrl "github.com/OKESTRO-AIDevOps/npia/src/controller"
-	"github.com/OKESTRO-AIDevOps/npia/src/modules"
+	ctrl "github.com/OKESTRO-AIDevOps/nkia/src/controller"
+	"github.com/OKESTRO-AIDevOps/nkia/src/modules"
 	"github.com/gorilla/websocket"
 )
 

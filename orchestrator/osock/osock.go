@@ -15,7 +15,7 @@ import (
 	_ "os"
 	_ "time"
 
-	"github.com/OKESTRO-AIDevOps/npia/src/modules"
+	"github.com/OKESTRO-AIDevOps/nkia/src/modules"
 	"github.com/gorilla/websocket"
 
 	"database/sql"

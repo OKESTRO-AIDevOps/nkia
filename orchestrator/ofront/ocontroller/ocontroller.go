@@ -1,8 +1,8 @@
 package ocontroller
 
 import (
-	"github.com/OKESTRO-AIDevOps/npia/orchestrator/ofront/omodels"
-	"github.com/OKESTRO-AIDevOps/npia/orchestrator/ofront/omodules"
+	"github.com/OKESTRO-AIDevOps/nkia/orchestrator/ofront/omodels"
+	"github.com/OKESTRO-AIDevOps/nkia/orchestrator/ofront/omodules"
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
