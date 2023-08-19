@@ -4,10 +4,6 @@ cloud.google.com/go/compute/metadata v0.2.3 h1:mg4jlk7mCAj6xXp9UJ4fjI9VUI5rubuGB
 cloud.google.com/go/compute/metadata v0.2.3/go.mod h1:VAV5nSsACxMJvgaAuX6Pk2AawlZn8kiOGuCv6gTkwuA=
 github.com/Jeffail/gabs/v2 v2.7.0 h1:Y2edYaTcE8ZpRsR2AtmPu5xQdFDIthFG0jYhu5PY8kg=
 github.com/Jeffail/gabs/v2 v2.7.0/go.mod h1:dp5ocw1FvBBQYssgHsG7I1WYsiLRtkUaB1FEtSwvNUw=
-github.com/OKESTRO-AIDevOps/npia-api v0.0.0-20230704081533-6ef6d122a907 h1:8g16Ul2JnOqhioi96zHGD8SfDn95zGoshAA5MySU1bQ=
-github.com/OKESTRO-AIDevOps/npia-api v0.0.0-20230704081533-6ef6d122a907/go.mod h1:OxitQVem5tC0oZ9seQUPtzhmCx10bNKNIICUD9Z5RTk=
-github.com/OKESTRO-AIDevOps/npia-multi-mode v0.0.0-20230705000839-8f29930fd028 h1:90i2Bs1snMQfe+1j0fIXIh+EctOQUpsoTMBOF5U5tik=
-github.com/OKESTRO-AIDevOps/npia-multi-mode v0.0.0-20230705000839-8f29930fd028/go.mod h1:Q4wJfnc0qRADwK/PLx9CO5eTzD/EZt3d8o/uCeEsYeQ=
 github.com/boj/redistore v0.0.0-20180917114910-cd5dcc76aeff h1:RmdPFa+slIr4SCBg4st/l/vZWVe9QJKMXGO60Bxbe04=
 github.com/boj/redistore v0.0.0-20180917114910-cd5dcc76aeff/go.mod h1:+RTT1BOk5P97fT2CiHkbFQwkK3mjsFAP6zCYV2aXtjw=
 github.com/bytedance/sonic v1.5.0/go.mod h1:ED5hyg4y6t3/9Ku1R6dU/4KyJ48DZ4jPhfY1O2AihPM=

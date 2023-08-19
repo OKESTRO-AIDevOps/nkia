@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"strings"
 
+	kalfs "github.com/OKESTRO-AIDevOps/nkia/pkg/kaleidofs"
 	"github.com/OKESTRO-AIDevOps/nkia/src/modules"
-	kalfs "github.com/OKESTRO-AIDevOps/npia-multi-mode/pkg/kaleidofs"
 	"github.com/gin-gonic/gin"
 )
 

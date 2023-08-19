@@ -21,9 +21,9 @@ import (
 
 	goya "github.com/goccy/go-yaml"
 
+	kalfs "github.com/OKESTRO-AIDevOps/nkia/pkg/kaleidofs"
+	"github.com/OKESTRO-AIDevOps/nkia/pkg/runtimefs"
 	"github.com/OKESTRO-AIDevOps/nkia/src/modules"
-	"github.com/OKESTRO-AIDevOps/npia-api/pkg/runtimefs"
-	kalfs "github.com/OKESTRO-AIDevOps/npia-multi-mode/pkg/kaleidofs"
 )
 
 type ChallengRecord map[string]map[string]string

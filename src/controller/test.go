@@ -10,9 +10,9 @@ import (
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 
+	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
+	kalfs "github.com/OKESTRO-AIDevOps/nkia/pkg/kaleidofs"
 	"github.com/OKESTRO-AIDevOps/nkia/src/modules"
-	"github.com/OKESTRO-AIDevOps/npia-api/pkg/apistandard"
-	kalfs "github.com/OKESTRO-AIDevOps/npia-multi-mode/pkg/kaleidofs"
 )
 
 func QueryAPI_LinearInstruction_Test(c *gin.Context) {

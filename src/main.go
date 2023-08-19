@@ -12,8 +12,8 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/OKESTRO-AIDevOps/nkia/src/modules"
+	sock "github.com/OKESTRO-AIDevOps/nkia/src/oagent"
 	"github.com/OKESTRO-AIDevOps/nkia/src/router"
-	"github.com/OKESTRO-AIDevOps/nkia/src/sock"
 )
 
 func InitNpiaServer() error {
