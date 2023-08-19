@@ -9,6 +9,11 @@ don't get me wrong. I love Kubernetes. it's just that i have a lot of spare time
 
 ## nkia api
 
+Here, kubernetes api has been abstracted and auxiliary functions needed to interact with them\
+are bundled so that the nkia server or orchestrator agent can easily communicate with\
+the abstraction layer
+
+
 ## secure server & orchestrator (http/https/ws/wss)
 
 Here, nkia-api is wrapped within a server that implements \
@@ -20,7 +25,12 @@ with or without external reverse proxy managing https or wss
 
 ## secure client (http/https/ws/wss)
 
+Here, client can be either a command line executable that communicates with the\
+nkia http/https server or a orchestrator agent & browser js that communicate with\
+the nkia ws/wss orchestrator 
+
 
 # Documentation
 
-Refer to [/docs](https://okestro-aidevops.github.io/npia-server/)
+Refer to [nkia-api /docs](https://okestro-aidevops.github.io/nkia-api/)
+Refer to [nkia-server /docs](https://okestro-aidevops.github.io/nkia-server/)

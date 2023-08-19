@@ -1,0 +1,8 @@
+#!/bin/bash
+
+
+rm appcli
+
+sudo rm -r srv
+
+rm -r ~/.kube/config

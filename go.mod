@@ -3,20 +3,20 @@ module github.com/OKESTRO-AIDevOps/nkia
 go 1.20
 
 require (
-	github.com/OKESTRO-AIDevOps/npia-api v0.0.0-20230704081533-6ef6d122a907
-	github.com/OKESTRO-AIDevOps/npia-multi-mode v0.0.0-20230705000839-8f29930fd028
+	github.com/Jeffail/gabs/v2 v2.7.0
 	github.com/gin-gonic/contrib v0.0.0-20221130124618-7e01895a63f2
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/goccy/go-yaml v1.11.0
 	github.com/gorilla/websocket v1.5.0
+	github.com/guptarohit/asciigraph v0.5.6
 	golang.org/x/oauth2 v0.10.0
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
 	cloud.google.com/go/compute v1.20.1 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
-	github.com/Jeffail/gabs/v2 v2.7.0 // indirect
 	github.com/boj/redistore v0.0.0-20180917114910-cd5dcc76aeff // indirect
 	github.com/bytedance/sonic v1.9.2 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
@@ -32,7 +32,6 @@ require (
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/gorilla/sessions v1.2.1 // indirect
-	github.com/guptarohit/asciigraph v0.5.6 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.5 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
@@ -51,5 +50,4 @@ require (
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

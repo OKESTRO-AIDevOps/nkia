@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/OKESTRO-AIDevOps/npia-api/pkg/apistandard"
+	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
 	"github.com/gin-gonic/gin"
 
 	"github.com/OKESTRO-AIDevOps/nkia/src/modules"
