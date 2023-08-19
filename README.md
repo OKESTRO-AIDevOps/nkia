@@ -32,4 +32,11 @@ the nkia ws/wss orchestrator
 
 # Documentation
 
-Refer to [/docs](https://okestro-aidevops.github.io/nkia/)
+Refer to /docs 
+
+or you can visit pages
+
+
+[nkia-api](https://okestro-aidevops.github.io/nkia-api/)
+
+[nkia-server](https://okestro-aidevops.github.io/nkia-api/)
