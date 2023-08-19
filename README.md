@@ -39,4 +39,4 @@ or you can visit pages
 
 [nkia-api](https://okestro-aidevops.github.io/nkia-api/)
 
-[nkia-server](https://okestro-aidevops.github.io/nkia-api/)
+[nkia-server](https://okestro-aidevops.github.io/nkia-server/)
