@@ -40,7 +40,7 @@ func AdminInitNPIA() {
 		return
 	}
 
-	cmd := exec.Command("curl", "-L", "https://github.com/OKESTRO-AIDevOps/npia-api/releases/download/npia-api-lib/lib.tgz", "-o", "lib.tgz")
+	cmd := exec.Command("curl", "-L", "https://github.com/OKESTRO-AIDevOps/nkia/releases/download/v1.0.0/lib.tgz", "-o", "lib.tgz")
 
 	cmd.Stdout = outfile
 
