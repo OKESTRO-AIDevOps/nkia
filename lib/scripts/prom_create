@@ -21,6 +21,6 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 
 helm repo update  
 
-helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack --version 45.29.0
+helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack --version 42.2.0
 
 portforwardrunner >/dev/null &

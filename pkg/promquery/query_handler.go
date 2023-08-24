@@ -27,7 +27,7 @@ func PQ_PodScheduled(ns string) ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, POD)
 
 	if err != nil {
 
@@ -61,7 +61,7 @@ func PQ_PodUnscheduled(ns string) ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, POD)
 
 	if err != nil {
 
@@ -95,7 +95,7 @@ func PQ_ContainerCPUUsage(ns string) ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, POD)
 
 	if err != nil {
 
@@ -129,7 +129,7 @@ func PQ_ContainerMemUsage(ns string) ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, POD)
 
 	if err != nil {
 
@@ -163,7 +163,7 @@ func PQ_ContainerFSRead(ns string) ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, POD)
 
 	if err != nil {
 
@@ -197,7 +197,7 @@ func PQ_ContainerFSWrite(ns string) ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, POD)
 
 	if err != nil {
 
@@ -231,7 +231,7 @@ func PQ_ContainerNetworkReceive(ns string) ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, POD)
 
 	if err != nil {
 
@@ -265,7 +265,7 @@ func PQ_ContainerNetworkTransmit(ns string) ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, POD)
 
 	if err != nil {
 
@@ -293,7 +293,7 @@ func PQ_KubeletVolumeAvailable() ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, PVC)
 
 	if err != nil {
 
@@ -321,7 +321,7 @@ func PQ_KubeletVolumeCapacity() ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, PVC)
 
 	if err != nil {
 
@@ -349,7 +349,7 @@ func PQ_KubeletVolumeUsed() ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, PVC)
 
 	if err != nil {
 
@@ -379,7 +379,7 @@ func PQ_NodeTemperatureCelsius() ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, SENSOR)
 
 	if err != nil {
 
@@ -409,7 +409,7 @@ func PQ_NodeTemperatureCelsiusChange() ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, SENSOR)
 
 	if err != nil {
 
@@ -439,7 +439,7 @@ func PQ_NodeTemperatureCelsiusAverage() ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, SENSOR)
 
 	if err != nil {
 
@@ -469,7 +469,7 @@ func PQ_NodeProcessRunning() ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, INSTANCE)
 
 	if err != nil {
 
@@ -497,7 +497,7 @@ func PQ_NodeCPUCores() ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, NODE)
 
 	if err != nil {
 
@@ -527,7 +527,7 @@ func PQ_NodeMemActive() ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, INSTANCE)
 
 	if err != nil {
 
@@ -557,7 +557,7 @@ func PQ_NodeMemTotal() ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, INSTANCE)
 
 	if err != nil {
 
@@ -587,7 +587,7 @@ func PQ_NodeDiskRead() ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, INSTANCE)
 
 	if err != nil {
 
@@ -617,7 +617,7 @@ func PQ_NodeDiskWrite() ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, INSTANCE)
 
 	if err != nil {
 
@@ -647,7 +647,7 @@ func PQ_NodeNetworkReceive() ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, INSTANCE)
 
 	if err != nil {
 
@@ -677,7 +677,7 @@ func PQ_NodeNetworkTransmit() ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, INSTANCE)
 
 	if err != nil {
 
@@ -707,7 +707,7 @@ func PQ_NodeDiskWrittenTotal() ([]PQOutputFormat, error) {
 
 	}
 
-	ret_data, err := PromQueryStandardizer(body_bytes)
+	ret_data, err := PromQueryStandardizer(body_bytes, INSTANCE)
 
 	if err != nil {
 

@@ -38,7 +38,7 @@ func PromQueryPost(query string) ([]byte, error) {
 
 }
 
-func PromQueryStandardizer(raw_query_bytes []byte) ([]PQOutputFormat, error) {
+func PromQueryStandardizer(raw_query_bytes []byte, metric_key string) ([]PQOutputFormat, error) {
 
 	var ret_batch []PQOutputFormat
 
@@ -56,11 +56,15 @@ func PromQueryStandardizer(raw_query_bytes []byte) ([]PQOutputFormat, error) {
 
 		metric_values := metric.Path("values.*")
 
-		metric_pod := metric.Path("metric.pod").String()
+		metric_pod := metric.Path("metric." + metric_key).String()
 
 		numbering_i := strconv.Itoa(i)
 
 		metric_pod = strings.ReplaceAll(metric_pod, "\"", "")
+
+		metric_pod = strings.ReplaceAll(metric_pod, ".", "-")
+
+		metric_pod = strings.ReplaceAll(metric_pod, ":", "-")
 
 		id_metric_pod := numbering_i + "-" + metric_pod
 

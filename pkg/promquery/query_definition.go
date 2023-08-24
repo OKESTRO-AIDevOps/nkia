@@ -6,6 +6,12 @@ type PQOutputFormat struct {
 	Values    []float64
 }
 
+var POD = "pod"
+var INSTANCE = "instance"
+var NODE = "node"
+var PVC = "persistentvolumeclaim"
+var SENSOR = "sensor"
+
 var PROM_COMM_URL = "http://localhost:9090/api/v1/query"
 
 var Q_POD_SCHEDULED = "count_over_time(kube_pod_status_scheduled{namespace=***}[5m])[24h:1h]"
