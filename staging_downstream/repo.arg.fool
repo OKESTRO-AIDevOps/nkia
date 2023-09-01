@@ -1,0 +1,31 @@
+NKIA_API=https://github.com/OKESTRO-AIDevOps/nkia-api.git
+  - DOWNSTREAM_ROOT=nkia-api
+  - SOURCE_TARGET=docs/nkia-api,docs
+                  lib,lib
+                  pkg,pkg
+  - DOWNSTREAM_TARGET_IGNORE=pkg/kaleidofs
+NKIA_SERVER=https://github.com/OKESTRO-AIDevOps/nkia-server.git
+  - DOWNSTREAM_ROOT=nkia-server
+  - SOURCE_TARGET=docs/nkia-server,docs
+                  debug_bin,debug_bin
+                  orchestrator,orchestrator
+                  src,src
+                  test/kindcluster,test/kindcluster
+  - DOWNSTREAM_TARGET_IGNORE=
+NKIA_GOCLIENT=https://github.com/OKESTRO-AIDevOps/nkia-go-client.git
+  - DOWNSTREAM_ROOT=nkia-go-client
+  - SOURCE_TARGET=cmd/cmd,cmd
+                  cmd/debug_bin,debug_bin
+                  cmd/goclient,goclient
+                  cmd/config.yaml,config.yaml 
+                  cmd/debug_build_run,debug_build_run 
+                  cmd/debug_cleanup,debug_cleanup                
+  - DOWNSTREAM_TARGET_IGNORE=
+NKIA_MULTIMODE=https://github.com/OKESTRO-AIDevOps/nkia-multi-mode.git
+  - DOWNSTREAM_ROOT=nkia-multi-mode
+  - SOURCE_TARGET=pkg/kaleidofs,pkg/kaleidofs
+  - DOWNSTREAM_TARGET_IGNORE=
+NKIA_ORCHESTRATORCLIENT=https://github.com/OKESTRO-AIDevOps/nkia-orchestrator-client.git
+  - DOWNSTREAM_ROOT=nkia-orchestrator-client
+  - SOURCE_TARGET=js,js
+  - DOWNSTREAM_TARGET_IGNORE=
