@@ -81,6 +81,8 @@ def merge_push_by_args(repo_address, git_dir, source_target, target_ignore):
 
         target_effective = target_git_dir + target
 
+        _ = subprocess.run(['rm','-rf',target_effective])
+
         _ = subprocess.run(['/bin/cp','-Rf',source_effective, target_effective])
 
     for i in range(len(target_ignore)):
