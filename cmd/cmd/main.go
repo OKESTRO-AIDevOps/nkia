@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 
+	_ "github.com/OKESTRO-AIDevOps/nkia/cmd/goadmin"
 	"github.com/OKESTRO-AIDevOps/nkia/cmd/goclient"
 	_ "github.com/OKESTRO-AIDevOps/nkia/cmd/goclient"
 )
@@ -93,6 +94,10 @@ func RunInteractive() {
 
 }
 
+func RunAdmin() {
+
+}
+
 func main() {
 
 	err := InitGoClient()
@@ -107,6 +112,11 @@ func main() {
 		goclient.BaseFlow_APIThenMultiMode_Test()
 	} else if mode == "release" {
 		RunInteractive()
+
+	} else if mode == "admin" {
+
+		RunAdmin()
+
 	} else {
 		fmt.Println("wrong mode")
 	}
