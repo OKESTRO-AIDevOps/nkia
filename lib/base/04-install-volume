@@ -1,0 +1,31 @@
+#!/bin/bash
+
+apt-get update
+
+apt-get install -y nfs-kernel-server
+
+apt-get install -y nfs-common
+
+apt-get install -y jq
+
+mkdir -p /vol_data
+
+chown -R root:root /vol_data
+
+chmod -R 777 /vol_data
+
+
+
+local_ip=$1
+
+IP=$local_ip
+
+cat << EOF > /etc/exports
+
+/vol_data $IP/24(rw,sync,no_subtree_check,no_root_squash) 10.10.0.0/16(rw,sync,no_subtree_check,no_root_squash)
+
+EOF
+
+exportfs -a
+
+systemctl restart nfs-kernel-server

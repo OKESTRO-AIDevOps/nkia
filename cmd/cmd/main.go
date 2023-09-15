@@ -12,8 +12,6 @@ import (
 	_ "github.com/OKESTRO-AIDevOps/nkia/cmd/goclient"
 )
 
-var mode = goclient.CONFIG_YAML["MODE"]
-
 func InitGoClient() error {
 
 	cmd := exec.Command("mkdir", "-p", "srv")
@@ -42,7 +40,7 @@ func InitGoClient() error {
 
 }
 
-func RunInteractive() {
+func RunClientInteractive() {
 
 	var in_raw_query string
 
@@ -94,7 +92,11 @@ func RunInteractive() {
 
 }
 
-func RunAdmin() {
+func RunAdminInteractive() {
+
+}
+
+func RunAdminFork() {
 
 }
 
@@ -108,14 +110,25 @@ func main() {
 		return
 	}
 
+	if len(os.Args) <= 1 {
+		fmt.Println("error: no args specified")
+		return
+	}
+
+	mode := os.Args[1]
+
 	if mode == "test" {
 		goclient.BaseFlow_APIThenMultiMode_Test()
-	} else if mode == "release" {
-		RunInteractive()
+	} else if mode == "client" {
+		RunClientInteractive()
 
 	} else if mode == "admin" {
 
-		RunAdmin()
+		RunAdminInteractive()
+
+	} else if mode == "admin-fork" {
+
+		RunAdminFork()
 
 	} else {
 		fmt.Println("wrong mode")
