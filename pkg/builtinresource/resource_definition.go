@@ -234,3 +234,18 @@ type DeploymentVol_Containers_VolumeMounts struct {
 	MountPath string `yaml:"mountPath"`
 	Name      string `yaml:"name"`
 }
+
+type StorageClass struct {
+	Kind       string `yaml:"kind"`
+	APIVersion string `yaml:"apiVersion"`
+	Metadata   struct {
+		Annotations struct {
+			StorageclassKubernetesIoIsDefaultClass string `yaml:"storageclass.kubernetes.io/is-default-class"`
+		} `yaml:"annotations"`
+		Name string `yaml:"name"`
+	} `yaml:"metadata"`
+	Provisioner          string `yaml:"provisioner"`
+	ReclaimPolicy        string `yaml:"reclaimPolicy"`
+	AllowVolumeExpansion bool   `yaml:"allowVolumeExpansion"`
+	VolumeBindingMode    string `yaml:"volumeBindingMode"`
+}
