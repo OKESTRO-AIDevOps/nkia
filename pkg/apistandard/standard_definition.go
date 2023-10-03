@@ -17,10 +17,10 @@ type API_STD map[string][]string
 var API_DEFINITION string = "" +
 	//            id          :       keys
 	"ADMIN-INSTENV            :id, localip                                                                                " + "\n" +
-	"ADMIN-INSTCTRL           :id, localip, kubev, osnm, cv                                                               " + "\n" +
+	"ADMIN-INSTCTRL           :id, localip, osnm, cv                                                                      " + "\n" +
 	"ADMIN-INSTANCTRLOL       :id, targetip, targetid, targetpw                                                           " + "\n" +
-	"ADMIN-INSTANCTRLOR       :id, targetip, targetid, targetpw, localip, kubev, osnm, cv, token, nrole, nid              " + "\n" +
-	"ADMIN-INSTWK             :id, targetip, targetid, targetpw, localip, kubev, osnm, cv, token, nrole, nid              " + "\n" +
+	"ADMIN-INSTANCTRLOR       :id, targetip, targetid, targetpw, localip, osnm, cv, token, nrole, nid                     " + "\n" +
+	"ADMIN-INSTWK             :id, targetip, targetid, targetpw, localip, osnm, cv, token, nrole, nid                     " + "\n" +
 	"ADMIN-INSTVOLOR          :id, targetip, targetid, targetpw, localip                                                  " + "\n" +
 	"ADMIN-INSTVOLOL          :id, targetip                                                                               " + "\n" +
 	"ADMIN-INSTTK             :id                                                                                         " + "\n" +
