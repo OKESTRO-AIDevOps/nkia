@@ -25,12 +25,28 @@ type OAuthStruct struct {
 	PICTURE        string `json:"picture"`
 }
 
-var GoogleOauthConfig = &oauth2.Config{
-	RedirectURL:  "http://localhost:1337/oauth2/google/callback",
-	ClientID:     CONFIG_JSON["GOOGLE_OAUTH_CLIENT_ID"],
-	ClientSecret: CONFIG_JSON["GOOGLE_OAUTH_CLIENT_SECRET"],
-	Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email"},
-	Endpoint:     google.Endpoint,
+var GoogleOauthConfig = GenerateGoogleOauthConfig()
+
+func GenerateGoogleOauthConfig() *oauth2.Config {
+
+	google_oauth_config := &oauth2.Config{
+		ClientID:     CONFIG_JSON["GOOGLE_OAUTH_CLIENT_ID"],
+		ClientSecret: CONFIG_JSON["GOOGLE_OAUTH_CLIENT_SECRET"],
+		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email"},
+		Endpoint:     google.Endpoint,
+	}
+
+	if CONFIG_JSON["DEBUG"] == "TRUE" {
+
+		google_oauth_config.RedirectURL = CONFIG_JSON["REDIRECT_URL_DEBUG"]
+
+	} else {
+
+		google_oauth_config.RedirectURL = CONFIG_JSON["REDIRECT_URL"]
+	}
+
+	return google_oauth_config
+
 }
 
 func GenerateStateOauthCookie(c *gin.Context) string {
