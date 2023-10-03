@@ -7,7 +7,7 @@ func InstallEnvironment(localip string) ([]byte, error) {
 
 }
 
-func InstallControlPlane(localip string, kubeversion string, osnm string, cversion string) ([]byte, error) {
+func InstallControlPlane(localip string, osnm string, cversion string) ([]byte, error) {
 	var ret_byte []byte
 
 	return ret_byte, nil
@@ -19,13 +19,13 @@ func InstallAnotherControlPlaneOnLocal(targetip string, targetid string, targetp
 	return ret_byte, nil
 }
 
-func InstallAnotherControlPlaneOnRemote(targetip string, targetid string, targetpw string, localip string, kubev string, osnm string, cv string, token string, nrole string, nid string) ([]byte, error) {
+func InstallAnotherControlPlaneOnRemote(targetip string, targetid string, targetpw string, localip string, osnm string, cv string, token string, nrole string, nid string) ([]byte, error) {
 	var ret_byte []byte
 
 	return ret_byte, nil
 }
 
-func InstallWorker(targetip string, targetid string, targetpw string, localip string, kubev string, osnm string, cv string, token string, nrole string, nid string) ([]byte, error) {
+func InstallWorker(targetip string, targetid string, targetpw string, localip string, osnm string, cv string, token string, nrole string, nid string) ([]byte, error) {
 	var ret_byte []byte
 
 	return ret_byte, nil

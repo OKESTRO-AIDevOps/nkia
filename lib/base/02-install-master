@@ -6,10 +6,6 @@ set -euxo pipefail
 ######## wj
 
 
-#KUBERNETES_VERSION="1.25.3-00"
-
-KUBERNETES_VERSION="$2"
-
 HOME="/root" 
 
 
@@ -23,11 +19,11 @@ sudo apt-get update -y
 
 #OS="xUbuntu_20.04"
 
-OS="$3"
+OS="$2"
 
-#VERSION="1.23"
+#VERSION="1.25"
 
-VERSION="$4"
+VERSION="$3"
 
 cat <<EOF | sudo tee /etc/modules-load.d/crio.conf
 overlay
@@ -70,11 +66,13 @@ sudo apt-get install -y apt-transport-https ca-certificates curl
 
 sudo mkdir -p /etc/apt/keyrings
 
-sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://dl.k8s.io/apt/doc/apt-key.gpg
 
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+sudo curl -fsSL "https://pkgs.k8s.io/core:/stable:/v$VERSION/deb/Release.key" | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v$VERSION/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
 sudo apt-get update -y
-sudo apt-get install -y kubelet="$KUBERNETES_VERSION" kubectl="$KUBERNETES_VERSION" kubeadm="$KUBERNETES_VERSION"
+sudo apt-get install -y kubelet kubectl kubeadm
 sudo apt-get update -y
 sudo apt-get install -y jq
 
@@ -112,5 +110,3 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main
 
 
 kubectl label node $NODENAME ingress-ready=true 
-
-

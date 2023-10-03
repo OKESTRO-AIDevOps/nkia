@@ -8,17 +8,17 @@ environment :
   - "-FApplyHAConfig:-fhacfg,-vLOCAL_IP"
   - "01-apply-hacfg"
 controlplane:
-  - "02-install-master:-vLOCAL_IP,-vKUBERNETES_VERSION,-vOS,-vVERSION"
+  - "02-install-master:-vLOCAL_IP,-vOS,-vVERSION"
 anothercontrolplane-onlocal:
   - "-FDistributeAdminConfig:-vTARGET_IP,-vTARGET_ID,-vTARGET_PW"
   - "-FAddHARecord:-vTARGET_IP"
   - "-Csystemctl,restart,haporxy"
 anothercontrolplane-onremote:
   - "-FApplyDistributedAdminConfig"
-  - "03-install-node:-vLOCAL_IP,-vKUBERNETES_VERSION,-vOS,-vVERSION"
+  - "03-install-node:-vLOCAL_IP,-vOS,-vVERSION"
   - "-FJoinCluster:-vJOIN_TOKEN,-vNODE_ROLE,-vNODE_ID"
 worker:
-  - "03-install-node:-vLOCAL_IP,-vKUBERNETES_VERSION,-vOS,-vVERSION"
+  - "03-install-node:-vLOCAL_IP,-vOS,-vVERSION"
   - "-FJoinCluster:-vJOIN_TOKEN,-vNODE_ROLE,-vNODE_ID"
 volume-onremote:
   - "04-install-volume:-vLOCAL_IP"  
