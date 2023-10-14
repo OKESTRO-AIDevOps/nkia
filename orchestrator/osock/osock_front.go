@@ -1,9 +1,13 @@
 package main
 
 import (
+	"crypto/x509"
 	b64 "encoding/base64"
 	"encoding/hex"
+	"encoding/pem"
+	"fmt"
 	"net/http"
+
 	"time"
 
 	ctrl "github.com/OKESTRO-AIDevOps/nkia/src/controller"
@@ -75,6 +79,8 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 
 		req_server = ctrl.APIMessageRequest{}
 
+		res_orchestrator := ctrl.OrchestratorResponse{}
+
 		err := c.ReadJSON(&req_orchestrator)
 
 		if err != nil {
@@ -92,6 +98,32 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		email_context := email + ":" + target
+
+		req_option := req_orchestrator.RequestOption
+
+		query_str := req_orchestrator.Query
+
+		if req_option == "ADM" {
+
+			ret, err := AdminRequest(email, query_str)
+
+			if err != nil {
+				res_orchestrator.ServerMessage = err.Error()
+
+				c.WriteJSON(&res_orchestrator)
+
+				return
+			}
+
+			res_orchestrator.ServerMessage = "SUCCESS"
+
+			res_orchestrator.QueryResult = ret
+
+			c.WriteJSON(&res_orchestrator)
+
+			continue
+
+		}
 
 		server_c, okay := SERVER_CONNECTION[email_context]
 
@@ -113,8 +145,6 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 			EventLogger("read front: " + err.Error())
 			return
 		}
-
-		query_str := req_orchestrator.Query
 
 		query_b := []byte(query_str)
 
@@ -138,4 +168,53 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 
 	}
 
+}
+
+func AdminRequest(email string, query string) ([]byte, error) {
+
+	var ret []byte
+
+	switch query {
+
+	case "keygen":
+
+		privkey, pubkey, err := modules.GenerateKeyPair(4096)
+
+		if err != nil {
+			return ret, fmt.Errorf("admin req: %s", err.Error())
+		}
+
+		priv_pem := pem.EncodeToMemory(
+			&pem.Block{
+				Type:  "RSA PRIVATE KEY",
+				Bytes: x509.MarshalPKCS1PrivateKey(privkey),
+			},
+		)
+
+		pub_pem := pem.EncodeToMemory(
+			&pem.Block{
+				Type:  "RSA PUBLIC KEY",
+				Bytes: x509.MarshalPKCS1PublicKey(pubkey),
+			},
+		)
+
+		pub_pem_str := string(pub_pem)
+
+		err = UpdatePubkeyByEmail(email, pub_pem_str)
+
+		if err != nil {
+			return ret, fmt.Errorf("admin req: %s", err.Error())
+		}
+
+		ret = priv_pem
+
+	// case "signout" :
+
+	default:
+
+		return ret, fmt.Errorf("admin req: %s", "no matching operand")
+
+	}
+
+	return ret, nil
 }

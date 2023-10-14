@@ -160,5 +160,25 @@ func CheckSessionAndGetEmailByRequestKey(request_key string) (string, error) {
 
 	email = result_container[0].email
 
+	res.Close()
+
 	return email, nil
+}
+
+func UpdatePubkeyByEmail(email string, pubkey string) error {
+
+	q := "UPDATE orchestrator_record SET pubkey = ? WHERE email = ?"
+
+	a := []any{pubkey, email}
+
+	res, err := DbQuery(q, a)
+
+	if err != nil {
+		return fmt.Errorf("failed to update pubkey: %s", err.Error())
+	}
+
+	res.Close()
+
+	return nil
+
 }

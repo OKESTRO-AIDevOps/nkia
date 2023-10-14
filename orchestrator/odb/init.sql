@@ -6,15 +6,11 @@ CREATE DATABASE orchestrator;
 
 USE orchestrator;
 
-CREATE TABLE orchestrator_record (email VARCHAR(100), config TEXT, osid VARCHAR(50), request_key VARCHAR(100));
+CREATE TABLE orchestrator_record (email VARCHAR(100), pubkey TEXT, osid VARCHAR(50), request_key VARCHAR(100), PRIMARY KEY(email));
 
+CREATE TABLE orchestrator_cluster_record (email VARCHAR(100), cluster_id VARCHAR(100), config TEXT, PRIMARY KEY(email, cluster_id));
 
-SET @config_amld_enc = LOAD_FILE("/var/lib/mysql-files/config.amld");
-
-
-INSERT INTO orchestrator_record(email, config, osid, request_key) VALUES("seantywork@gmail.com",@config_amld_enc, "N","N");
-
-
+-- SET @config_amld_enc = LOAD_FILE("/var/lib/mysql-files/config.amld");
 
 
 COMMIT;

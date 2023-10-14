@@ -15,6 +15,10 @@ func Init(gin_srv *gin.Engine) *gin.Engine {
 
 	gin_srv.GET("/oauth2/google/callback", octrl.OauthGoogleCallback)
 
+	gin_srv.POST("/keyauth/login", octrl.KeyAuthLogin)
+
+	gin_srv.POST("/keyauth/callback", octrl.KeyAuthCallback)
+
 	//	gin_srv.GET("/auth2/google/callback", octrl.OauthGoogleCallback_Test)
 
 	return gin_srv

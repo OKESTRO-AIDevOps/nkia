@@ -49,7 +49,7 @@ func GenerateGoogleOauthConfig() *oauth2.Config {
 
 }
 
-func GenerateStateOauthCookie(c *gin.Context) string {
+func GenerateStateAuthCookie(c *gin.Context) string {
 
 	b := make([]byte, 16)
 	rand.Read(b)

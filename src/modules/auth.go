@@ -546,6 +546,65 @@ func GenerateChallenge_Detached(config_b []byte, client_ca_pub_key ChallengRecor
 	return new_challenge_records, nil
 }
 
+func GenerateChallenge_Key(email string, pub_str string) (ChallengRecord, error) {
+
+	challenge_records := make(ChallengRecord)
+
+	new_challenge_records := make(ChallengRecord)
+
+	context_challenges := make(map[string]string)
+
+	context_challenges_cipher := make(map[string]string)
+
+	pub_key, err := BytesToPublicKey([]byte(pub_str))
+
+	if err != nil {
+		return challenge_records, fmt.Errorf("failed to generate challenge: %s", "invalid format: 04")
+	}
+
+	file_byte, err := os.ReadFile("srv/challenge.json")
+
+	if err != nil {
+		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
+	}
+
+	err = json.Unmarshal(file_byte, &challenge_records)
+
+	if err != nil {
+		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
+	}
+
+	new_challenge_id, _ := RandomHex(8)
+
+	_, okay := challenge_records[new_challenge_id]
+
+	if okay {
+		return challenge_records, fmt.Errorf("failed to generate challenge: %s", "duplicate challenge id")
+	}
+
+	new_challenge_val, _ := RandomHex(32)
+
+	context_challenges[email] = new_challenge_val
+
+	chal_val_enc, err := EncryptWithPublicKey([]byte(new_challenge_val), pub_key)
+
+	context_challenges_cipher[email] = hex.EncodeToString(chal_val_enc)
+
+	challenge_records[new_challenge_id] = context_challenges
+
+	new_challenge_records[new_challenge_id] = context_challenges_cipher
+
+	challenge_records_byte, err := json.Marshal(challenge_records)
+
+	if err != nil {
+		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
+	}
+
+	err = os.WriteFile("srv/challenge.json", challenge_records_byte, 0644)
+
+	return new_challenge_records, nil
+}
+
 func VerifyChallange_Detached(config_b []byte, answer ChallengRecord) (string, KeyRecord, error) {
 
 	answer_key := ""
@@ -683,5 +742,73 @@ func VerifyChallange_Detached(config_b []byte, answer ChallengRecord) (string, K
 	new_key_record[matching_context] = hex.EncodeToString(new_sym_key_enc)
 
 	return gen_key, new_key_record, nil
+
+}
+
+func VerifyChallange_Key(answer ChallengRecord) (string, error) {
+
+	answer_key := ""
+
+	email := ""
+
+	answer_map := make(map[string]string)
+
+	challenge_records := make(ChallengRecord)
+
+	challenge_file_byte, err := os.ReadFile("srv/challenge.json")
+
+	if err != nil {
+		return email, fmt.Errorf("failed to verify challenge: %s", err.Error())
+	}
+
+	err = json.Unmarshal(challenge_file_byte, &challenge_records)
+
+	if err != nil {
+		return email, fmt.Errorf("failed to verify challenge: %s", err.Error())
+	}
+
+	if len(answer) != 1 {
+		return email, fmt.Errorf("failed to verify challenge: %s", "invalid format: 01")
+	}
+
+	for ak := range answer {
+		answer_key = ak
+	}
+
+	challenge_map, okay := challenge_records[answer_key]
+
+	if !okay {
+		return email, fmt.Errorf("failed to verify challenge: %s", "invalid key")
+	}
+
+	answer_map, okay = answer[answer_key]
+
+	if !okay {
+		return email, fmt.Errorf("failed to verify challenge: %s", "invalid format: 02")
+	}
+
+	for chal_map_k := range challenge_map {
+
+		email = chal_map_k
+
+	}
+
+	ans, okay := challenge_map[email]
+
+	if !okay {
+		return email, fmt.Errorf("failed to verify challenge: %s", "invalid format: 05")
+	}
+
+	submit_ans, okay := answer_map[email]
+
+	if !okay {
+		return email, fmt.Errorf("failed to verify challenge: %s", "invalid format: 06")
+	}
+
+	if ans != submit_ans {
+		return email, fmt.Errorf("failed to verify challenge: %s", "wrong value")
+	}
+
+	return email, nil
 
 }

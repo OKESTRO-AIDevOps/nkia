@@ -3,7 +3,8 @@ package ocontroller
 import (
 	"github.com/OKESTRO-AIDevOps/nkia/orchestrator/ofront/omodels"
 	"github.com/OKESTRO-AIDevOps/nkia/orchestrator/ofront/omodules"
-
+	ctrl "github.com/OKESTRO-AIDevOps/nkia/src/controller"
+	"github.com/OKESTRO-AIDevOps/nkia/src/modules"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 
@@ -64,7 +65,7 @@ func OrchestratorFeed(c *gin.Context) {
 
 	req_code_b64 := base64.StdEncoding.EncodeToString([]byte(request_key))
 
-	c.HTML(200, "orchestrator.tmpl", gin.H{
+	c.HTML(200, "orchestrator.html", gin.H{
 		"request_key": req_code_b64,
 	})
 
@@ -80,7 +81,7 @@ func IndexFeed_Test(c *gin.Context) {
 
 func OauthGoogleLogin(c *gin.Context) {
 
-	oauth_state := omodules.GenerateStateOauthCookie(c)
+	oauth_state := omodules.GenerateStateAuthCookie(c)
 
 	u := omodules.GoogleOauthConfig.AuthCodeURL(oauth_state)
 
@@ -139,7 +140,7 @@ func OauthGoogleCallback(c *gin.Context) {
 		return
 	}
 
-	_, err = omodels.RegisterOsidAndRequestKey(session_id, oauth_struct)
+	_, err = omodels.RegisterOsidAndRequestKeyByOAuth(session_id, oauth_struct)
 
 	if err != nil {
 		fmt.Printf("access auth failed: %s", err.Error())
@@ -202,4 +203,174 @@ func OauthGoogleCallback_Test(c *gin.Context) {
 	fmt.Println(oauth_struct)
 
 	return
+}
+
+func KeyAuthLogin(c *gin.Context) {
+
+	var req_orchestrator = ctrl.OrchestratorRequest{}
+	var res_orchestrator = ctrl.OrchestratorResponse{}
+
+	err := c.BindJSON(&req_orchestrator)
+
+	if err != nil {
+		fmt.Printf("login failed: %s", err.Error())
+
+		res_orchestrator.ServerMessage = err.Error()
+
+		c.JSON(403, res_orchestrator)
+
+		return
+	}
+
+	email := req_orchestrator.Query
+
+	pubkey, err := omodels.GetPubkeyByEmail(email)
+
+	if err != nil {
+
+		fmt.Printf("login failed: %s", err.Error())
+
+		res_orchestrator.ServerMessage = err.Error()
+
+		c.JSON(403, res_orchestrator)
+
+		return
+
+	}
+
+	chal_rec, err := modules.GenerateChallenge_Key(email, pubkey)
+
+	if err != nil {
+
+		fmt.Printf("login failed: %s", err.Error())
+
+		res_orchestrator.ServerMessage = err.Error()
+
+		c.JSON(500, res_orchestrator)
+
+		return
+
+	}
+
+	chal_rec_b, err := json.Marshal(chal_rec)
+
+	if err != nil {
+
+		fmt.Printf("login failed: %s", err.Error())
+
+		res_orchestrator.ServerMessage = err.Error()
+
+		c.JSON(500, res_orchestrator)
+
+		return
+
+	}
+
+	_ = omodules.GenerateStateAuthCookie(c)
+
+	res_orchestrator.ServerMessage = "SUCCESS"
+
+	res_orchestrator.QueryResult = chal_rec_b
+
+	c.JSON(200, res_orchestrator)
+
+	return
+
+}
+
+func KeyAuthCallback(c *gin.Context) {
+
+	var req_orchestrator = ctrl.OrchestratorRequest{}
+	var res_orchestrator = ctrl.OrchestratorResponse{}
+
+	var answer modules.ChallengRecord
+
+	session := sessions.Default(c)
+
+	var session_id string
+
+	v := session.Get("OSID")
+
+	if v == nil {
+		fmt.Printf("login callback failed: %s", "no session")
+
+		res_orchestrator.ServerMessage = "no session"
+
+		c.JSON(403, res_orchestrator)
+
+		return
+	} else {
+		session_id = v.(string)
+	}
+
+	err := c.BindJSON(&req_orchestrator)
+
+	if err != nil {
+		fmt.Printf("login callback failed: %s", err.Error())
+
+		res_orchestrator.ServerMessage = err.Error()
+
+		c.JSON(403, res_orchestrator)
+
+		return
+	}
+
+	answer_json_b64 := req_orchestrator.Query
+
+	answer_json_b, err := base64.StdEncoding.DecodeString(answer_json_b64)
+
+	if err != nil {
+		fmt.Printf("login callback failed: %s", err.Error())
+
+		res_orchestrator.ServerMessage = err.Error()
+
+		c.JSON(403, res_orchestrator)
+
+		return
+	}
+
+	err = json.Unmarshal(answer_json_b, &answer)
+
+	if err != nil {
+		fmt.Printf("login callback failed: %s", err.Error())
+
+		res_orchestrator.ServerMessage = err.Error()
+
+		c.JSON(403, res_orchestrator)
+
+		return
+	}
+
+	email, err := modules.VerifyChallange_Key(answer)
+
+	if err != nil {
+		fmt.Printf("login callback failed: %s", err.Error())
+
+		res_orchestrator.ServerMessage = err.Error()
+
+		c.JSON(403, res_orchestrator)
+
+		return
+	}
+
+	req_key, err := omodels.RegisterOsidAndRequestKeyByEmail(email, session_id)
+
+	if err != nil {
+		fmt.Printf("login callback failed: %s", err.Error())
+
+		res_orchestrator.ServerMessage = err.Error()
+
+		c.JSON(500, res_orchestrator)
+
+		return
+	}
+
+	res_orchestrator.ServerMessage = "SUCCESS"
+
+	res_orchestrator.QueryResult = []byte(req_key)
+
+	c.JSON(200, res_orchestrator)
+
+	return
+
 }
