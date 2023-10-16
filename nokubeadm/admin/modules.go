@@ -1,1 +1,1 @@
-package goadmin
+package admin

@@ -1,4 +1,4 @@
-package debug
+package client
 
 import (
 	"os"
@@ -44,15 +44,10 @@ func _ConstructURL(url_path string) string {
 
 var CONFIG_YAML = _LoadConfigYaml()
 
-var SESSION_SYM_KEY = ""
+var COMM_URL = _ConstructURL("/osock/front")
 
-var COMM_URL = _ConstructURL("/api/v0alpha")
+var COMM_URL_AUTH = _ConstructURL("/keyauth/login")
 
-var COMM_URL_AUTH = _ConstructURL("/auth-challenge")
-
-var COMM_URL_MULTIMODE = _ConstructURL("/multimode/v0alpha")
+var COMM_URL_AUTH_CALLBACK = _ConstructURL("/keyauth/callback")
 
 var ASgi_CliRef = apistandard.ASgi
-
-// challenge_id : ASK, ANS
-// response     : NOPE
