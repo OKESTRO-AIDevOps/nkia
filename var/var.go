@@ -22,9 +22,9 @@ import (
 
 	goya "github.com/goccy/go-yaml"
 
+	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	kalfs "github.com/OKESTRO-AIDevOps/nkia/pkg/kaleidofs"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/runtimefs"
-	"github.com/OKESTRO-AIDevOps/nkia/src/modules"
 
 	"golang.org/x/crypto/ssh"
 )
