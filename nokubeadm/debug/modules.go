@@ -1,4 +1,4 @@
-package goclient
+package debug
 
 import (
 	"bytes"

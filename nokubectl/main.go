@@ -11,6 +11,8 @@ import (
 
 func RunClientInteractive() {
 
+	var email string
+
 	var in_raw_query string
 
 	var err error
@@ -25,11 +27,15 @@ func RunClientInteractive() {
 
 	}
 
+	fmt.Println("email: ")
+
+	fmt.Scanln(&email)
+
 	client := &http.Client{
 		Jar: jar,
 	}
 
-	c, err := nkctlclient.KeyAuthConn(client)
+	c, err := nkctlclient.KeyAuthConn(client, email)
 
 	if err != nil {
 
