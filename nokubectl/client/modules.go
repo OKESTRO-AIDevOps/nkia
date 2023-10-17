@@ -182,7 +182,7 @@ func RequestHandler_LinearInstruction_PrintOnly(c *websocket.Conn, target string
 
 		case result := <-recv:
 
-			fmt.Println("print result: ")
+			fmt.Printf("\nprint result: \n")
 
 			fmt.Println(result)
 
@@ -192,9 +192,15 @@ func RequestHandler_LinearInstruction_PrintOnly(c *websocket.Conn, target string
 
 			counter += 1
 
+			if counter%10 == 0 {
+				fmt.Printf(". \n")
+			} else {
+				fmt.Printf(". ")
+			}
+
 			if counter > 100 {
 
-				fmt.Println("request timeout")
+				fmt.Printf("\nrequest timeout\n")
 
 				return
 			}

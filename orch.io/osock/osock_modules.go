@@ -45,15 +45,15 @@ type OrchestratorRecord_Email struct {
 	email string
 }
 
-func GetKubeconfigByEmail(email string) ([]byte, error) {
+func GetKubeconfigByEmailAndClusterID(email string, cluster_id string) ([]byte, error) {
 
 	var config []byte
 
 	var result_container []OrchestratorRecord_EmailConfig
 
-	query := "SELECT email, config FROM orchestrator_record WHERE email = ?"
+	query := "SELECT email, config FROM orchestrator_record WHERE email = ? AND cluster_id = ?"
 
-	params := []any{email}
+	params := []any{email, cluster_id}
 
 	res, err := DbQuery(query, params)
 
@@ -98,6 +98,26 @@ func GetKubeconfigByEmail(email string) ([]byte, error) {
 	}
 
 	return config, nil
+}
+
+func OkeyEncryptor(stream []byte) ([]byte, error) {
+
+	var ret_byte []byte
+
+	okey_b, err := os.ReadFile("okey")
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("okey failed: %s", err.Error())
+	}
+
+	enc_b, err := modules.EncryptWithSymmetricKey(okey_b, stream)
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("okey failed: %s", err.Error())
+	}
+
+	return enc_b, nil
+
 }
 
 func OkeyDecryptor(stream []byte) ([]byte, error) {
@@ -181,4 +201,16 @@ func UpdatePubkeyByEmail(email string, pubkey string) error {
 
 	return nil
 
+}
+
+func CreateClusterByEmail(email string, cluster_id string) (string, error) {
+
+	var token string
+
+	return token, nil
+}
+
+func AttachClusterByEmailAndClusterID(email string, cluster_id string, config string) error {
+
+	return nil
 }

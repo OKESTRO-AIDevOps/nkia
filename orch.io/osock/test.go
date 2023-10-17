@@ -80,7 +80,9 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 			email := email_context_list[0]
 
-			config_b, err := GetKubeconfigByEmail(email)
+			cluster_id := email_context_list[1]
+
+			config_b, err := GetKubeconfigByEmailAndClusterID(email, cluster_id)
 
 			if err != nil {
 				err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
@@ -139,7 +141,9 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 			email := email_context_list[0]
 
-			config_b, err := GetKubeconfigByEmail(email)
+			cluster_id := email_context_list[1]
+
+			config_b, err := GetKubeconfigByEmailAndClusterID(email, cluster_id)
 
 			if err != nil {
 				err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
