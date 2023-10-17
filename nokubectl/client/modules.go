@@ -2,10 +2,14 @@ package client
 
 import (
 	"bytes"
+	"crypto/rsa"
+	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"time"
 
 	ctrl "github.com/OKESTRO-AIDevOps/nkia/nokubelet/controller"
@@ -58,15 +62,98 @@ func KeyAuthConn(client *http.Client, email string) (*websocket.Conn, error) {
 		return c, fmt.Errorf("auth: %s", err.Error())
 	}
 
-	// get privkey from srv/key.json
+	// get privkey from srv/.priv
+
+	priv_key, err := LoadKeyAuthCredential()
+
+	if err != nil {
+		return c, fmt.Errorf("auth: %s", err.Error())
+	}
 
 	// decrypt the challenge
 
-	// send back
+	chal_id := ""
 
-	// receive the token
+	for k := range chal_rec {
 
-	// establish web socket connection
+		chal_id = k
+
+	}
+
+	cipher_txt := chal_rec[chal_id][email]
+
+	cipher_b, err := hex.DecodeString(cipher_txt)
+
+	if err != nil {
+		return c, fmt.Errorf("auth: %s", err.Error())
+	}
+
+	ans, err := modules.DecryptWithPrivateKey(cipher_b, priv_key)
+
+	if err != nil {
+		return c, fmt.Errorf("auth: %s", err.Error())
+	}
+
+	ans_str := string(ans)
+
+	chal_rec[chal_id][email] = ans_str
+
+	query_b, err := json.Marshal(chal_rec)
+
+	query_base64 := base64.StdEncoding.EncodeToString(query_b)
+
+	req_orchestrator = ctrl.OrchestratorRequest{
+		Query: query_base64,
+	}
+
+	req_b, err = json.Marshal(req_orchestrator)
+
+	resp, err = client.Post(COMM_URL_AUTH_CALLBACK, "application/json", bytes.NewBuffer(req_b))
+
+	if err != nil {
+		return c, fmt.Errorf("auth: %s", err.Error())
+	}
+
+	resp_orchestrator = ctrl.OrchestratorResponse{}
+
+	body_bytes, err = io.ReadAll(resp.Body)
+	if err != nil {
+		return c, fmt.Errorf("auth: %s", err.Error())
+	}
+
+	resp.Body.Close()
+
+	err = json.Unmarshal(body_bytes, &resp_orchestrator)
+
+	if err != nil {
+		return c, fmt.Errorf("auth: %s", err.Error())
+	}
+
+	if resp_orchestrator.ServerMessage != "SUCCESS" {
+		return c, fmt.Errorf("auth: %s", resp_orchestrator.ServerMessage)
+	}
+
+	req_key := resp_orchestrator.QueryResult
+
+	req_key_b64 := base64.StdEncoding.EncodeToString(req_key)
+
+	req_orchestrator = ctrl.OrchestratorRequest{
+		RequestOption: req_key_b64,
+	}
+
+	fmt.Println("connecting to the command channel...")
+
+	c, _, err = websocket.DefaultDialer.Dial(COMM_URL, nil)
+
+	if err != nil {
+		return c, fmt.Errorf("auth conn: %s", err.Error())
+	}
+
+	err = c.WriteJSON(req_orchestrator)
+
+	if err != nil {
+		return c, fmt.Errorf("auth conn: %s", err.Error())
+	}
 
 	return c, nil
 }
@@ -130,4 +217,23 @@ func RequestHandler_ReadChannel(c *websocket.Conn, recv chan ctrl.OrchestratorRe
 
 	recv <- resp_body
 
+}
+
+func LoadKeyAuthCredential() (*rsa.PrivateKey, error) {
+
+	var ret_key *rsa.PrivateKey
+
+	key_b, err := os.ReadFile("srv/.priv")
+
+	if err != nil {
+		return ret_key, fmt.Errorf("failed to load cred: %s", err.Error())
+	}
+
+	ret_key, err = modules.BytesToPrivateKey(key_b)
+
+	if err != nil {
+		return ret_key, fmt.Errorf("failed to load cred: %s", err.Error())
+	}
+
+	return ret_key, nil
 }

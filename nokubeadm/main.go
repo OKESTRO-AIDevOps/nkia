@@ -12,7 +12,7 @@ import (
 	nkadmdebug "github.com/OKESTRO-AIDevOps/nkia/nokubeadm/debug"
 )
 
-func InitGoClient() error {
+func InitAdm() error {
 
 	cmd := exec.Command("mkdir", "-p", "srv")
 
@@ -102,7 +102,7 @@ func RunAdmin() {
 
 func main() {
 
-	err := InitGoClient()
+	err := InitAdm()
 
 	if err != nil {
 

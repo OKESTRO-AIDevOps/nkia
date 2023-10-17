@@ -7,6 +7,7 @@ import (
 	"encoding/pem"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"time"
 
@@ -103,7 +104,7 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 
 		query_str := req_orchestrator.Query
 
-		if req_option == "ADM" {
+		if req_option == "admin" {
 
 			ret, err := AdminRequest(email, query_str)
 
@@ -174,9 +175,17 @@ func AdminRequest(email string, query string) ([]byte, error) {
 
 	var ret []byte
 
-	switch query {
+	OP, args, err := AdminRequestParser_Linear(query)
 
-	case "keygen":
+	if err != nil {
+		return ret, fmt.Errorf("admin req: %s", err.Error())
+	}
+
+	_ = args
+
+	switch OP {
+
+	case "KEYGEN":
 
 		privkey, pubkey, err := modules.GenerateKeyPair(4096)
 
@@ -208,7 +217,9 @@ func AdminRequest(email string, query string) ([]byte, error) {
 
 		ret = priv_pem
 
-	// case "signout" :
+	case "ADDCLUSTER":
+
+	// case "SIGNOUT" :
 
 	default:
 
@@ -217,4 +228,24 @@ func AdminRequest(email string, query string) ([]byte, error) {
 	}
 
 	return ret, nil
+}
+
+func AdminRequestParser_Linear(query string) (string, []string, error) {
+
+	var operand string
+
+	args := make([]string, 0)
+
+	linear_list := strings.Split(query, ":")
+
+	operand = linear_list[0]
+
+	if len(linear_list) != 2 {
+		return operand, args, fmt.Errorf("parsing linear inst: %s", "length")
+	}
+
+	args = append(args, strings.Split(linear_list[1], ",")...)
+
+	return operand, args, nil
+
 }

@@ -5,9 +5,44 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"os"
+	"os/exec"
 
 	nkctlclient "github.com/OKESTRO-AIDevOps/nkia/nokubectl/client"
 )
+
+func InitCtl() error {
+
+	var priv_loc string
+
+	var file_b []byte
+
+	cmd := exec.Command("mkdir", "-p", "srv")
+
+	err := cmd.Run()
+
+	if err != nil {
+
+		return fmt.Errorf("failed to init: %s", err.Error())
+	}
+
+	fmt.Println("enter privkey filepath: ")
+
+	fmt.Scanln(&priv_loc)
+
+	file_b, err = os.ReadFile(priv_loc)
+
+	if err != nil {
+		return fmt.Errorf("failed to init: %s", err.Error())
+	}
+
+	err = os.WriteFile("srv/.priv", file_b, 0644)
+
+	if err != nil {
+		return fmt.Errorf("failed to init: %s", err.Error())
+	}
+
+	return nil
+}
 
 func RunClientInteractive() {
 
@@ -83,6 +118,13 @@ func RunClient() {
 }
 
 func main() {
+
+	err := InitCtl()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 
 	if len(os.Args) <= 1 {
 		fmt.Println("error: no args specified")
