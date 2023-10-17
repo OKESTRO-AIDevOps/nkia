@@ -32,6 +32,8 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 	iter_count := 0
 
+	var ANSWER string
+
 	defer c.Close()
 
 	for auth_flag == 0 {
@@ -55,6 +57,199 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 		chal_id := req.ChallengeID
 
 		switch chal_id {
+
+		case "UPDATE":
+
+			ANSWER, _ = modules.RandomHex(128)
+
+			email_context := req.ChallengeMessage
+
+			email_context_list := strings.Split(email_context, ":")
+
+			if len(email_context_list) != 2 {
+				err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+				if err != nil {
+					EventLogger("auth update write close:" + err.Error())
+					return
+				}
+				EventLogger("auth update: wrong format")
+				return
+			}
+
+			email := email_context_list[0]
+
+			cluster_id := email_context_list[1]
+
+			token, err := GetConfigChallengeByEmailAndClusterID(email, cluster_id)
+
+			if err != nil {
+				err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+				if err != nil {
+					EventLogger("auth update write close:" + err.Error())
+					return
+				}
+				EventLogger("auth update: wrong format")
+				return
+			}
+
+			token_b := []byte(token)
+
+			QUEST, err := modules.DecryptWithSymmetricKey(token_b, []byte(ANSWER))
+
+			if err != nil {
+				err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+				if err != nil {
+					EventLogger("auth update write close:" + err.Error())
+					return
+				}
+				EventLogger("auth update: wrong format")
+				return
+			}
+
+			quest_hex := hex.EncodeToString(QUEST)
+
+			resp.ChallengeID = "UPDATE"
+
+			resp.ChallengeMessage = quest_hex
+
+			err = c.WriteJSON(resp)
+
+			if err != nil {
+				err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+				if err != nil {
+					EventLogger("auth update write close:" + err.Error())
+					return
+				}
+				EventLogger("auth update: wrong format")
+				return
+			}
+
+		case "ROTATE":
+
+			email_context := req.ChallengeMessage
+
+			email_context_list := strings.Split(email_context, ":")
+
+			if len(email_context_list) != 4 {
+				err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+				if err != nil {
+					EventLogger("auth update write close:" + err.Error())
+					return
+				}
+				EventLogger("auth update: wrong format")
+				return
+			}
+
+			email := email_context_list[0]
+
+			cluster_id := email_context_list[1]
+
+			answer := email_context_list[2]
+
+			config := email_context_list[3]
+
+			token, err := GetConfigChallengeByEmailAndClusterID(email, cluster_id)
+
+			if err != nil {
+				err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+				if err != nil {
+					EventLogger("auth rotate write close:" + err.Error())
+					return
+				}
+				EventLogger("auth rotate: wrong format")
+				return
+			}
+
+			token_b := []byte(token)
+
+			answer_b, err := hex.DecodeString(answer)
+
+			if err != nil {
+				err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+				if err != nil {
+					EventLogger("auth rotate write close:" + err.Error())
+					return
+				}
+				EventLogger("auth rotate: wrong format")
+				return
+			}
+
+			submit_ans, err := modules.DecryptWithSymmetricKey(token_b, answer_b)
+
+			if err != nil {
+				err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+				if err != nil {
+					EventLogger("auth rotate write close:" + err.Error())
+					return
+				}
+				EventLogger("auth rotate: wrong format")
+				return
+			}
+
+			if ANSWER != string(submit_ans) {
+
+				err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+				if err != nil {
+					EventLogger("auth rotate write close:" + err.Error())
+					return
+				}
+				EventLogger("auth rotate: wrong format")
+				return
+			}
+
+			config_hex, err := hex.DecodeString(config)
+
+			if err != nil {
+				err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+				if err != nil {
+					EventLogger("auth rotate write close:" + err.Error())
+					return
+				}
+				EventLogger("auth rotate: wrong format")
+				return
+			}
+
+			config_dec, err := modules.DecryptWithSymmetricKey(token_b, config_hex)
+
+			if err != nil {
+				err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+				if err != nil {
+					EventLogger("auth rotate write close:" + err.Error())
+					return
+				}
+				EventLogger("auth rotate: wrong format")
+				return
+			}
+
+			config_dec_string := string(config_dec)
+
+			err = AddClusterByEmailAndClusterID(email, cluster_id, config_dec_string)
+
+			if err != nil {
+				err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+				if err != nil {
+					EventLogger("auth rotate write close:" + err.Error())
+					return
+				}
+				EventLogger("auth rotate: wrong format")
+				return
+			}
+
+			resp.ChallengeID = "ROTATE"
+
+			resp.ChallengeMessage = "SUCCESS"
+
+			err = c.WriteJSON(resp)
+
+			if err != nil {
+				err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+				if err != nil {
+					EventLogger("auth rotate write close:" + err.Error())
+					return
+				}
+				EventLogger("auth rotate: wrong format")
+				return
+			}
 
 		case "ASK":
 
