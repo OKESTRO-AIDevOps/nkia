@@ -13,6 +13,7 @@ import (
 
 	ctrl "github.com/OKESTRO-AIDevOps/nkia/nokubelet/controller"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
+
 	_ "github.com/gorilla/websocket"
 )
 
@@ -218,6 +219,16 @@ func AdminRequest(email string, query string) ([]byte, error) {
 		ret = priv_pem
 
 	case "ADDCLUSTER":
+
+		cluster_id := args[0]
+
+		token, err := CreateClusterByEmail(email, cluster_id)
+
+		if err != nil {
+			return ret, fmt.Errorf("admin req: %s", err.Error())
+		}
+
+		ret = []byte(token)
 
 	// case "SIGNOUT" :
 

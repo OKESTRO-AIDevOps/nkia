@@ -193,9 +193,9 @@ func RequestHandler_LinearInstruction_PrintOnly(c *websocket.Conn, target string
 			counter += 1
 
 			if counter%10 == 0 {
-				fmt.Printf(". \n")
+				fmt.Printf(". . .\n")
 			} else {
-				fmt.Printf(". ")
+				fmt.Printf(". . . ")
 			}
 
 			if counter > 100 {
