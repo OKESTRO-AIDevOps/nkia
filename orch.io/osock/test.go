@@ -413,6 +413,8 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 		req_server = ctrl.APIMessageRequest{}
 
+		res_orchestrator := ctrl.OrchestratorResponse{}
+
 		err := c.ReadJSON(&req_orchestrator)
 
 		if err != nil {
@@ -426,10 +428,38 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 		if !okay {
 			EventLogger("read front: no connected front name")
+			fmt.Println("front conntction front ------ ")
+			fmt.Println(FRONT_CONNECTION_FRONT)
 			return
 		}
 
 		email_context := email + ":" + target
+
+		req_option := req_orchestrator.RequestOption
+
+		query_str := req_orchestrator.Query
+
+		if req_option == "admin" {
+
+			ret, err := AdminRequest(email, query_str)
+
+			if err != nil {
+				res_orchestrator.ServerMessage = err.Error()
+
+				c.WriteJSON(&res_orchestrator)
+
+				return
+			}
+
+			res_orchestrator.ServerMessage = "SUCCESS"
+
+			res_orchestrator.QueryResult = ret
+
+			c.WriteJSON(&res_orchestrator)
+
+			continue
+
+		}
 
 		server_c, okay := SERVER_CONNECTION[email_context]
 
@@ -452,8 +482,6 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		query_str := req_orchestrator.Query
-
 		query_b := []byte(query_str)
 
 		query_enc, err := modules.EncryptWithSymmetricKey([]byte(session_sym_key), query_b)
@@ -466,10 +494,6 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 		query_hex := hex.EncodeToString(query_enc)
 
 		req_server.Query = query_hex
-
-		fmt.Println("******* server side")
-		fmt.Println("written")
-		fmt.Println(req_server)
 
 		err = server_c.WriteJSON(&req_server)
 
