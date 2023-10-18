@@ -11,7 +11,7 @@ func _LoadConfigYaml() map[string]string {
 
 	var config_yaml map[string]string
 
-	file_byte, err := os.ReadFile("config.yaml")
+	file_byte, err := os.ReadFile(".npia/config.yaml")
 
 	if err != nil {
 		panic(err.Error())
@@ -42,12 +42,20 @@ func _ConstructURL(url_path string) string {
 
 }
 
+func _ConstructURL_NoCalc(url_path string) string {
+
+	return CONFIG_YAML["BASE_URL"] + url_path
+
+}
+
 var CONFIG_YAML = _LoadConfigYaml()
 
 var COMM_URL = _ConstructURL("/osock/front")
 
-var COMM_URL_AUTH = _ConstructURL("/keyauth/login")
+var COMM_URL_AUTH = _ConstructURL_NoCalc("/keyauth/login")
 
-var COMM_URL_AUTH_CALLBACK = _ConstructURL("/keyauth/callback")
+var COMM_URL_AUTH_CALLBACK = _ConstructURL_NoCalc("/keyauth/callback")
+
+var EMAIL = CONFIG_YAML["EMAIL"]
 
 var ASgi_CliRef = apistandard.ASgi
