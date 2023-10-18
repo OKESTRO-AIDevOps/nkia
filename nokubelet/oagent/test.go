@@ -12,14 +12,14 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-func DetachedServerCommunicator_Test(address string, email string) error {
+func DetachedServerCommunicator_Test(address string, email string, cluster_id string) error {
 	c, _, err := websocket.DefaultDialer.Dial(address, nil)
 	if err != nil {
 		return fmt.Errorf("comm failed: %s", err.Error())
 	}
 	defer c.Close()
 
-	err = ServerAuthChallenge(c, email)
+	err = ServerAuthChallenge(c, email, cluster_id)
 
 	if err != nil {
 		return fmt.Errorf("comm failed: %s", err.Error())

@@ -19,6 +19,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"syscall"
 
 	goya "github.com/goccy/go-yaml"
 
@@ -27,6 +28,8 @@ import (
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/runtimefs"
 
 	"golang.org/x/crypto/ssh"
+
+	"golang.org/x/term"
 )
 
 type ChallengRecord map[string]map[string]string
@@ -1039,6 +1042,27 @@ func remote_shell_test() {
 	}
 }
 
+func getPasswd() {
+
+	var test_pass string
+
+	fmt.Println("password?: ")
+
+	byte_passwd, err := term.ReadPassword(int(syscall.Stdin))
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	token_str := string(byte_passwd)
+
+	test_pass = strings.TrimSpace(token_str)
+
+	fmt.Println(test_pass)
+
+}
+
 func main() {
 
 	//	ASgi := apistandard.ASgi
@@ -1078,5 +1102,8 @@ func main() {
 	// save_test()
 
 	//Save_Empty()
-	remote_shell_test()
+
+	// remote_shell_test()
+
+	getPasswd()
 }
