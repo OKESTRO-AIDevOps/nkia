@@ -47,7 +47,7 @@ function Test_OrchestratorInit(){
 
     var urlbody = urlbody_trail[0]
 
-    var trail_path = '/osock/front-test'
+    var trail_path = '/osock/front/test'
 
     if (proto == 'http'){
 
