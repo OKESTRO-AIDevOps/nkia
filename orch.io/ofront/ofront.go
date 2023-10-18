@@ -19,6 +19,8 @@ func main() {
 
 	gin_srv.LoadHTMLGlob("oview/*")
 
+	gin_srv.Static("/static", "./ostatic")
+
 	gin_srv = orouter.Init(gin_srv)
 
 	gin_srv.Run("0.0.0.0:1337")

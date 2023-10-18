@@ -1,3 +1,7 @@
 config.amld
 config.json
 VENV
+_out/nokubectl
+orch.io/ofront/ofront
+orch.io/osock/osock
+orch.io/osock/okey
