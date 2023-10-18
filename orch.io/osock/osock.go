@@ -116,9 +116,9 @@ func main() {
 
 	flag.Parse()
 	log.SetFlags(0)
-	http.HandleFunc("/osock/server-test", ServerHandler_Test)
+	http.HandleFunc("/osock/server/test", ServerHandler_Test)
 	http.HandleFunc("/osock/server", ServerHandler)
-	http.HandleFunc("/osock/front-test", FrontHandler_Test)
+	http.HandleFunc("/osock/front/test", FrontHandler_Test)
 	http.HandleFunc("/osock/front", FrontHandler)
 	log.Fatal(http.ListenAndServe(*ADDR, nil))
 

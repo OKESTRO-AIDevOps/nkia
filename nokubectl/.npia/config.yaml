@@ -1,0 +1,3 @@
+MODE: test
+BASE_URL: http://localhost:1337
+EMAIL: seantywork@gmail.com

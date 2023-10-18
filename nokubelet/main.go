@@ -177,13 +177,9 @@ func main() {
 
 	var update_token string
 
-	fmt.Println("orch.io address: ")
+	address = modules.ADDRESS
 
-	fmt.Scanln(&address)
-
-	fmt.Println("orch.io user email: ")
-
-	fmt.Scanln(&email)
+	email = modules.EMAIL
 
 	fmt.Println("orch.io cluster id: ")
 

@@ -62,9 +62,7 @@ func RunClientInteractive() {
 
 	}
 
-	fmt.Println("email: ")
-
-	fmt.Scanln(&email)
+	email = nkctlclient.EMAIL
 
 	client := &http.Client{
 		Jar: jar,

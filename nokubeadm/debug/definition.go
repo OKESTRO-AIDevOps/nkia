@@ -11,7 +11,7 @@ func _LoadConfigYaml() map[string]string {
 
 	var config_yaml map[string]string
 
-	file_byte, err := os.ReadFile("config.yaml")
+	file_byte, err := os.ReadFile(".npia/config.yaml")
 
 	if err != nil {
 		panic(err.Error())
