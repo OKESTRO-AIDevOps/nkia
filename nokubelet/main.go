@@ -13,6 +13,7 @@ import (
 	_ "github.com/gin-gonic/contrib/sessions"
 	_ "github.com/gin-gonic/gin"
 
+	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/config"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	sock "github.com/OKESTRO-AIDevOps/nkia/nokubelet/oagent"
 	_ "github.com/OKESTRO-AIDevOps/nkia/nokubelet/router"
@@ -177,9 +178,9 @@ func main() {
 
 	var update_token string
 
-	address = modules.ADDRESS
+	address = config.ADDRESS
 
-	email = modules.EMAIL
+	email = config.EMAIL
 
 	fmt.Println("orch.io cluster id: ")
 

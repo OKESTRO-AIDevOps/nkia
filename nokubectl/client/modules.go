@@ -12,6 +12,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/OKESTRO-AIDevOps/nkia/nokubectl/config"
 	ctrl "github.com/OKESTRO-AIDevOps/nkia/nokubelet/controller"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	"github.com/gorilla/websocket"
@@ -33,7 +34,7 @@ func KeyAuthConn(client *http.Client, email string) (*websocket.Conn, error) {
 		return c, fmt.Errorf("auth: %s", err.Error())
 	}
 
-	resp, err := client.Post(COMM_URL_AUTH, "application/json", bytes.NewBuffer(req_b))
+	resp, err := client.Post(config.COMM_URL_AUTH, "application/json", bytes.NewBuffer(req_b))
 
 	if err != nil {
 		return c, fmt.Errorf("auth: %s", err.Error())
@@ -108,7 +109,7 @@ func KeyAuthConn(client *http.Client, email string) (*websocket.Conn, error) {
 
 	req_b, err = json.Marshal(req_orchestrator)
 
-	resp, err = client.Post(COMM_URL_AUTH_CALLBACK, "application/json", bytes.NewBuffer(req_b))
+	resp, err = client.Post(config.COMM_URL_AUTH_CALLBACK, "application/json", bytes.NewBuffer(req_b))
 
 	if err != nil {
 		return c, fmt.Errorf("auth: %s", err.Error())
@@ -143,7 +144,7 @@ func KeyAuthConn(client *http.Client, email string) (*websocket.Conn, error) {
 
 	fmt.Println("connecting to the command channel...")
 
-	c, _, err = websocket.DefaultDialer.Dial(COMM_URL, nil)
+	c, _, err = websocket.DefaultDialer.Dial(config.COMM_URL, nil)
 
 	if err != nil {
 		return c, fmt.Errorf("auth conn: %s", err.Error())

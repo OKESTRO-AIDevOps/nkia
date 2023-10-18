@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/OKESTRO-AIDevOps/nkia/nokubeadm/config"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/controller"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
@@ -70,7 +71,7 @@ func ClientAuthChallenge(client *http.Client) error {
 		return fmt.Errorf("chal: %s", err.Error())
 	}
 
-	resp, err := client.Post(COMM_URL_AUTH, "application/json", bytes.NewBuffer(req_b))
+	resp, err := client.Post(config.COMM_URL_AUTH, "application/json", bytes.NewBuffer(req_b))
 
 	if err != nil {
 		return fmt.Errorf("chal: %s", err.Error())
@@ -136,7 +137,7 @@ func ClientAuthChallenge(client *http.Client) error {
 		return fmt.Errorf("chal: %s", err.Error())
 	}
 
-	resp, err = client.Post(COMM_URL_AUTH, "application/json", bytes.NewBuffer(req_b))
+	resp, err = client.Post(config.COMM_URL_AUTH, "application/json", bytes.NewBuffer(req_b))
 
 	if err != nil {
 		return fmt.Errorf("chal: %s", err.Error())
@@ -190,7 +191,7 @@ func ClientAuthChallenge(client *http.Client) error {
 
 	}
 
-	SESSION_SYM_KEY = session_sym_key
+	config.SESSION_SYM_KEY = session_sym_key
 
 	return nil
 }
@@ -202,7 +203,7 @@ func CommunicationHandler_LinearInstruction_PrintOnly(client *http.Client, linea
 
 	query_plain := linear_insruction
 
-	query_enc, err := modules.EncryptWithSymmetricKey([]byte(SESSION_SYM_KEY), []byte(query_plain))
+	query_enc, err := modules.EncryptWithSymmetricKey([]byte(config.SESSION_SYM_KEY), []byte(query_plain))
 
 	if err != nil {
 
@@ -220,7 +221,7 @@ func CommunicationHandler_LinearInstruction_PrintOnly(client *http.Client, linea
 		return
 	}
 
-	resp, err := client.Post(COMM_URL, "application/json", bytes.NewBuffer(req_b))
+	resp, err := client.Post(config.COMM_URL, "application/json", bytes.NewBuffer(req_b))
 
 	if err != nil {
 
@@ -261,7 +262,7 @@ func CommunicationHandler_LinearInstruction_PrintOnly(client *http.Client, linea
 		return
 	}
 
-	result_b, err := modules.DecryptWithSymmetricKey([]byte(SESSION_SYM_KEY), result_enc_b)
+	result_b, err := modules.DecryptWithSymmetricKey([]byte(config.SESSION_SYM_KEY), result_enc_b)
 
 	if err != nil {
 

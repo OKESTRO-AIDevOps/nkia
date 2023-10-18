@@ -8,6 +8,7 @@ import (
 	"os/exec"
 
 	nkctlclient "github.com/OKESTRO-AIDevOps/nkia/nokubectl/client"
+	"github.com/OKESTRO-AIDevOps/nkia/nokubectl/config"
 )
 
 func InitCtl() error {
@@ -62,7 +63,7 @@ func RunClientInteractive() {
 
 	}
 
-	email = nkctlclient.EMAIL
+	email = config.EMAIL
 
 	client := &http.Client{
 		Jar: jar,
