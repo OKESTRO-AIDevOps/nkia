@@ -5,7 +5,7 @@ build:
 
 	go build -o ./osock/osock ./osock/.
 
-run: build
+run: 
 
 	go run ./_okeygen/keygen.go
 
