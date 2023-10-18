@@ -5,15 +5,19 @@ import (
 	"os"
 	"os/exec"
 	"os/user"
+	"strings"
+	"syscall"
 
 	"fmt"
 
-	"github.com/gin-gonic/contrib/sessions"
-	"github.com/gin-gonic/gin"
+	_ "github.com/gin-gonic/contrib/sessions"
+	_ "github.com/gin-gonic/gin"
 
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	sock "github.com/OKESTRO-AIDevOps/nkia/nokubelet/oagent"
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/router"
+	_ "github.com/OKESTRO-AIDevOps/nkia/nokubelet/router"
+
+	"golang.org/x/term"
 )
 
 func InitNpiaServer() error {
@@ -83,6 +87,16 @@ func InitNpiaServer() error {
 
 func main() {
 
+	MODE_DEBUG := 0
+
+	MODE_TEST := 0
+
+	MODE_UPDATE := 0
+
+	_ = MODE_DEBUG
+
+	_ = MODE_TEST
+
 	current_user, err := user.Current()
 
 	if err != nil {
@@ -99,9 +113,29 @@ func main() {
 
 	}
 
-	if len(os.Args) < 2 {
-		fmt.Println("Error: wrong arguments")
+	if len(os.Args) <= 1 {
+		fmt.Println("Error: arg not specified")
 		return
+	}
+
+	for i := 1; i < len(os.Args); i++ {
+
+		flag := os.Args[i]
+
+		if flag == "-g" || flag == "--debug" {
+
+			MODE_DEBUG = 1
+
+		} else if flag == "-t" || flag == "--test" {
+
+			MODE_TEST = 1
+
+		} else if flag == "-u" || flag == "--update" {
+
+			MODE_UPDATE = 1
+
+		}
+
 	}
 
 	if _, err := os.Stat("srv"); err != nil {
@@ -116,52 +150,72 @@ func main() {
 
 	}
 
-	option := os.Args[1]
+	/* MODE_DEBUG
+	gin_srv := gin.Default()
+	store := sessions.NewCookieStore([]byte("secret"))
+	gin_srv.Use(sessions.Sessions("npia-session", store))
 
-	if option == "attached" {
-		gin_srv := gin.Default()
-		store := sessions.NewCookieStore([]byte("secret"))
-		gin_srv.Use(sessions.Sessions("npia-session", store))
+	gin_srv = router.Init(gin_srv)
 
-		gin_srv = router.Init(gin_srv)
+	gin_srv.Run("0.0.0.0:13337")
+	*/
 
-		gin_srv.Run("0.0.0.0:13337")
+	/* MODE_TEST
 
-	} else if option == "detached" {
+	if err := sock.DetachedServerCommunicator_Test(address, email); err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 
-		if len(os.Args) != 4 {
-			fmt.Println("Error: wrong arguments")
-			return
-		}
+	*/
 
-		address := os.Args[2]
+	var address string
 
-		email := os.Args[3]
+	var email string
 
-		if err := sock.DetachedServerCommunicator(address, email); err != nil {
+	var cluster_id string
+
+	var update_token string
+
+	fmt.Println("orch.io address: ")
+
+	fmt.Scanln(&address)
+
+	fmt.Println("orch.io user email: ")
+
+	fmt.Scanln(&email)
+
+	fmt.Println("orch.io cluster id: ")
+
+	fmt.Scanln(&cluster_id)
+
+	if MODE_UPDATE == 1 {
+
+		fmt.Println("orch.io update token: ")
+
+		byte_passwd, err := term.ReadPassword(int(syscall.Stdin))
+
+		if err != nil {
 			fmt.Println(err.Error())
 			return
 		}
 
-	} else if option == "detached-test" {
+		token_str := string(byte_passwd)
 
-		if len(os.Args) != 4 {
-			fmt.Println("Error: wrong arguments")
-			return
-		}
+		update_token = strings.TrimSpace(token_str)
 
-		address := os.Args[2]
-
-		email := os.Args[3]
-
-		if err := sock.DetachedServerCommunicator_Test(address, email); err != nil {
+		if err := sock.DetachedServerCommunicatorWithUpdate(address, email, cluster_id, update_token); err != nil {
 			fmt.Println(err.Error())
 			return
 		}
 
 	} else {
-		fmt.Println("Error: wrong option")
-		return
+
+		if err := sock.DetachedServerCommunicator(address, email, cluster_id); err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
 	}
 
 }

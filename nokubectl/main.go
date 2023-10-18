@@ -135,7 +135,7 @@ func main() {
 
 	// MODE_ADMIN := 0
 
-	for i := 0; i < len(os.Args); i++ {
+	for i := 1; i < len(os.Args); i++ {
 
 		flag := os.Args[i]
 

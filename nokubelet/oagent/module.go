@@ -61,7 +61,7 @@ func SockCommunicationHandler_ReaderChannel(c *websocket.Conn, ch_read chan ctrl
 
 }
 
-func ServerAuthChallenge(c *websocket.Conn, email string) error {
+func ServerAuthChallenge(c *websocket.Conn, email string, cluster_id string) error {
 
 	ch_read := make(chan ctrl.AuthChallenge)
 
@@ -115,6 +115,10 @@ func ServerAuthChallenge(c *websocket.Conn, email string) error {
 	req_challenge_records["ask_challenge"] = client_context_map
 
 	req_body.ChallengeID = "ASK"
+
+	// TMP: blind simple replacement
+
+	context_nm = cluster_id
 
 	req_body.ChallengeMessage = email + ":" + context_nm
 
@@ -255,6 +259,124 @@ func ServerAuthChallenge(c *websocket.Conn, email string) error {
 	READ = 1
 
 	SESSION_SYM_KEY = session_sym_key
+
+	return nil
+}
+
+func ServerUpdateChallenge(c *websocket.Conn, email string, cluster_id string, token string) error {
+
+	ch_read := make(chan ctrl.AuthChallenge)
+
+	kube_config_path, err := modules.GetKubeConfigPath()
+
+	if err != nil {
+		return fmt.Errorf("update chal: %s", err.Error())
+	}
+
+	kube_config_file_byte, err := os.ReadFile(kube_config_path)
+
+	if err != nil {
+		return fmt.Errorf("update chal: %s", err.Error())
+	}
+
+	go ServerAuth_ReaderChannel(c, ch_read)
+
+	var req_body ctrl.AuthChallenge
+	var resp_body ctrl.AuthChallenge
+
+	req_body.ChallengeID = "UPDATE"
+
+	req_body.ChallengeMessage = email + ":" + cluster_id
+
+	err = c.WriteJSON(&req_body)
+
+	if err != nil {
+		return fmt.Errorf("update chal: %s", err.Error())
+	}
+
+	update_loop := 0
+	time_limit := 0
+	ticker := time.NewTicker(time.Second)
+
+	for update_loop == 0 {
+		select {
+		case <-ticker.C:
+			time_limit += 1
+			if time_limit == 10 {
+				return fmt.Errorf("update chal: %s", "update time limit exceeded")
+			}
+
+		case read_body := <-ch_read:
+			resp_body = read_body
+			ticker.Stop()
+			update_loop = 1
+			break
+		}
+	}
+
+	quest := resp_body.ChallengeMessage
+
+	quest_b, err := hex.DecodeString(quest)
+
+	if err != nil {
+		return fmt.Errorf("update chal: %s", err.Error())
+	}
+
+	ans_b, err := modules.DecryptWithSymmetricKey([]byte(token), quest_b)
+
+	if err != nil {
+
+		return fmt.Errorf("update chal: %s", err.Error())
+
+	}
+
+	ans := string(ans_b)
+
+	kube_config_enc_b, err := modules.EncryptWithSymmetricKey([]byte(token), kube_config_file_byte)
+
+	if err != nil {
+
+		return fmt.Errorf("update chal: %s", err.Error())
+
+	}
+
+	kube_config_enc_hex := hex.EncodeToString(kube_config_enc_b)
+
+	req_body.ChallengeID = "ROTATE"
+
+	req_body.ChallengeMessage = email + ":" + cluster_id + ":" + ans + ":" + kube_config_enc_hex
+
+	err = c.WriteJSON(&req_body)
+
+	if err != nil {
+		return fmt.Errorf("update chal: %s", err.Error())
+	}
+
+	rotate_loop := 0
+	time_limit = 0
+	ticker = time.NewTicker(time.Second)
+
+	for rotate_loop == 0 {
+		select {
+		case <-ticker.C:
+			time_limit += 1
+			if time_limit == 10 {
+				return fmt.Errorf("update chal: %s", "rotate time limit exceeded")
+			}
+
+		case read_body := <-ch_read:
+			resp_body = read_body
+			ticker.Stop()
+			rotate_loop = 1
+			break
+		}
+	}
+
+	check := resp_body.ChallengeMessage
+
+	if check != "SUCCESS" {
+		return fmt.Errorf("update chal: message: %s", check)
+	}
 
 	return nil
 }
