@@ -566,6 +566,10 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+		fmt.Println(session_sym_key)
+
 		query_b := []byte(query_str)
 
 		query_enc, err := modules.EncryptWithSymmetricKey([]byte(session_sym_key), query_b)
