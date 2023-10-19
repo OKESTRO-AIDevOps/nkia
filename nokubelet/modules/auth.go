@@ -482,6 +482,7 @@ func GenerateChallenge_Detached(config_b []byte, client_ca_pub_key ChallengRecor
 	pub_key, err := BytesToPublicKey([]byte(pub_str))
 
 	if err != nil {
+		fmt.Printf("ERR: %s\n", err.Error())
 		return challenge_records, fmt.Errorf("failed to generate challenge: %s", "invalid format: 04")
 	}
 
