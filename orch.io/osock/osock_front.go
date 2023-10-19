@@ -192,7 +192,7 @@ func AdminRequest(email string, query string) ([]byte, error) {
 
 		for i := 0; i < len(args); i++ {
 
-			talkback += args[i]
+			talkback += args[i] + " "
 
 		}
 
