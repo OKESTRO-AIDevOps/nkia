@@ -196,11 +196,11 @@ function Test_Delay(time) {
 
 function Test_Download(file){
 
-    const download_link = document.createElement('a')
-    const download_url = URL.createObjectURL(file)
+    var download_link = document.createElement('a')
+    var download_url = URL.createObjectURL(file)
   
-    link.href = download_url
-    link.download = file.name
+    download_link.href = download_url
+    download_link.download = file.name
     document.body.appendChild(downlaod_link)
     download_link.click()
   
