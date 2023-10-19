@@ -183,9 +183,13 @@ func RequestHandler_LinearInstruction_PrintOnly(c *websocket.Conn, target string
 
 		case result := <-recv:
 
-			fmt.Printf("\nprint result: \n")
+			fmt.Printf("\n----------> print srv message: \n")
 
-			fmt.Println(result)
+			fmt.Println(result.ServerMessage)
+
+			fmt.Printf("\n----------> print q result: \n")
+
+			fmt.Println(string(result.QueryResult))
 
 			return
 

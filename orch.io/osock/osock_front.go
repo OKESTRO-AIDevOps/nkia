@@ -186,6 +186,20 @@ func AdminRequest(email string, query string) ([]byte, error) {
 
 	switch OP {
 
+	case "CONNCHK":
+
+		var talkback string = "talking back list: "
+
+		for i := 0; i < len(args); i++ {
+
+			talkback += args[i]
+
+		}
+
+		talkback += "\n"
+
+		ret = []byte(talkback)
+
 	case "KEYGEN":
 
 		privkey, pubkey, err := modules.GenerateKeyPair(4096)

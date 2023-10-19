@@ -23,9 +23,9 @@ function Test_BodySet(){
 
     var inject = 
     `
-    <input id="test-target" type="text" value="" placeholder="test-target-name">
-    <input id="test-option" type="text" value="" placeholder="OPTION:arg,arg">
-    <input id="test-query" type="text" value="" placeholder="QUERY:arg,arg">
+    <input id="test-target" type="text" value="" placeholder="target-name">
+    <input id="test-option" type="text" value="" placeholder="option">
+    <input id="test-query" type="text" value="" placeholder="QUERY:arg1,arg2...">
     <input type="button" onclick="Test_OrchestratorQuery()" value="run">
     
     `
