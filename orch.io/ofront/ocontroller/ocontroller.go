@@ -244,8 +244,6 @@ func KeyAuthLogin(c *gin.Context) {
 
 		fmt.Printf("login failed: %s\n", err.Error())
 
-		fmt.Printf("--pubkey\n%s\n--pubkey\n", pubkey)
-
 		res_orchestrator.ServerMessage = err.Error()
 
 		c.JSON(500, res_orchestrator)
