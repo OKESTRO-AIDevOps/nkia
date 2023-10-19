@@ -201,10 +201,16 @@ func AdminRequest(email string, query string) ([]byte, error) {
 			},
 		)
 
+		pub_b, err := x509.MarshalPKIXPublicKey(pubkey)
+
+		if err != nil {
+			return ret, fmt.Errorf("admin req: %s", err.Error())
+		}
+
 		pub_pem := pem.EncodeToMemory(
 			&pem.Block{
-				Type:  "RSA PUBLIC KEY",
-				Bytes: x509.MarshalPKCS1PublicKey(pubkey),
+				Type:  "PUBLIC KEY",
+				Bytes: pub_b,
 			},
 		)
 
