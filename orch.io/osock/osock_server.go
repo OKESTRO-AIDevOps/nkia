@@ -25,9 +25,6 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 	c.SetReadDeadline(time.Time{})
 
-	var req ctrl.AuthChallenge
-	var resp ctrl.AuthChallenge
-
 	auth_flag := 0
 
 	iter_count := 0
@@ -37,6 +34,9 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 	defer c.Close()
 
 	for auth_flag == 0 {
+
+		var req = ctrl.AuthChallenge{}
+		var resp = ctrl.AuthChallenge{}
 
 		if iter_count > 5 {
 			err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
