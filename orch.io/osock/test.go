@@ -418,7 +418,7 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 		fmt.Println("************************")
 		fmt.Println("SENT TO FRONT")
-		fmt.Println(res_server)
+		fmt.Println(res_orchestrator)
 
 		if err != nil {
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
