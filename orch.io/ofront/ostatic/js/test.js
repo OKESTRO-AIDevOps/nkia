@@ -201,7 +201,7 @@ function Test_Download(file){
   
     download_link.href = download_url
     download_link.download = file.name
-    document.body.appendChild(downlaod_link)
+    document.body.appendChild(download_link)
     download_link.click()
   
     document.body.removeChild(download_link)
