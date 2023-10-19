@@ -266,6 +266,8 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 			answer := req.ChallengeData
 
+			fmt.Println(answer)
+
 			gen_key, key_rec, err := modules.VerifyChallange_Detached(config_b, answer)
 
 			if err != nil {
