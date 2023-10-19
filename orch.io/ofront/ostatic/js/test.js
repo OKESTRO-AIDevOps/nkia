@@ -171,7 +171,7 @@ async function Test_OrchestratorQuery(){
 
         var text = atob(TEST_READ_CHANNEL["query_result"])
 
-        const file = new File(text, 'priv',{
+        const file = new File([text], 'priv',{
             type: "text/plain",
         })
 
