@@ -343,6 +343,10 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		fmt.Println("************************")
+		fmt.Println("RECV SERVER")
+		fmt.Println(res_server)
+
 		key_id, okay := SERVER_CONNECTION_KEY[c]
 
 		if !okay {
@@ -411,6 +415,10 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 		res_orchestrator.QueryResult = resp_dec
 
 		err = front_c.WriteJSON(&res_orchestrator)
+
+		fmt.Println("************************")
+		fmt.Println("SENT TO FRONT")
+		fmt.Println(res_server)
 
 		if err != nil {
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
@@ -506,6 +514,10 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		fmt.Println("************************")
+		fmt.Println("RECV FRONT")
+		fmt.Println(req_orchestrator)
+
 		target := req_orchestrator.RequestTarget
 
 		email, okay := FRONT_CONNECTION_FRONT[c]
@@ -566,10 +578,6 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-
-		fmt.Println(session_sym_key)
-
 		query_b := []byte(query_str)
 
 		query_enc, err := modules.EncryptWithSymmetricKey([]byte(session_sym_key), query_b)
@@ -584,6 +592,10 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 		req_server.Query = query_hex
 
 		err = server_c.WriteJSON(&req_server)
+
+		fmt.Println("************************")
+		fmt.Println("SENT TO SOCK")
+		fmt.Println(req_server)
 
 		if err != nil {
 			EventLogger("write to server: " + err.Error())

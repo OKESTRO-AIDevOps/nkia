@@ -52,7 +52,7 @@ func DetachedServerCommunicatorWithUpdate_Test(address string, email string, clu
 		return fmt.Errorf("commwup failed: %s", err.Error())
 	}
 
-	if err := SockCommunicationHandler_LinearInstruction_PrintOnly(c); err != nil {
+	if err := SockCommunicationHandler_LinearInstruction_PrintOnly_Test(c); err != nil {
 		return fmt.Errorf("commwup failed: %s", err.Error())
 	}
 
@@ -81,6 +81,10 @@ func SockCommunicationHandler_LinearInstruction_PrintOnly_Test(c *websocket.Conn
 		select {
 
 		case read_body := <-ch_read:
+
+			fmt.Println("*********************")
+			fmt.Println("RECV")
+			fmt.Println(read_body)
 
 			req_body = read_body
 
@@ -151,7 +155,8 @@ func SockCommunicationHandler_LinearInstruction_PrintOnly_Test(c *websocket.Conn
 
 			*/
 
-			fmt.Println("******client side")
+			fmt.Println("**************************")
+			fmt.Println("INST")
 			fmt.Println(linear_instruction)
 
 			var api_out apistandard.API_OUTPUT
