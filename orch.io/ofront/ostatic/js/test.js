@@ -167,7 +167,23 @@ async function Test_OrchestratorQuery(){
 
     console.log(TEST_READ_CHANNEL["server_message"])
 
-    alert(atob(TEST_READ_CHANNEL["query_result"]))
+    if (test_option == "admin"){
+
+        var text = atob(TEST_READ_CHANNEL["query_result"])
+
+        const file = new File(text, 'priv',{
+            type: "text/plain",
+        })
+
+        Test_Download(file)
+
+        alert("priv downloaded")
+
+    }else{
+        alert(atob(TEST_READ_CHANNEL["query_result"]))    
+    }
+
+    
 
 
 }
@@ -178,6 +194,20 @@ function Test_Delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
 }
 
+function Test_Download(file){
+
+    const download_link = document.createElement('a')
+    const download_url = URL.createObjectURL(file)
+  
+    link.href = download_url
+    link.download = file.name
+    document.body.appendChild(downlaod_link)
+    download_link.click()
+  
+    document.body.removeChild(download_link)
+    window.URL.revokeObjectURL(download_url)
+
+}
 
 Test_BodySet()
 
