@@ -127,10 +127,6 @@ func main() {
 
 			MODE_DEBUG = 1
 
-		} else if flag == "-t" || flag == "--test" {
-
-			MODE_TEST = 1
-
 		} else if flag == "-u" || flag == "--update" {
 
 			MODE_UPDATE = 1
