@@ -197,6 +197,10 @@ func main() {
 
 		update_token = strings.TrimSpace(token_str)
 
+		if MODE_DEBUG == 1 {
+			fmt.Println(update_token)
+		}
+
 		if err := sock.DetachedServerCommunicatorWithUpdate(address, email, cluster_id, update_token); err != nil {
 			fmt.Println(err.Error())
 			return
