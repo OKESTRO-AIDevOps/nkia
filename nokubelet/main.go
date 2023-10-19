@@ -135,6 +135,10 @@ func main() {
 
 	}
 
+	if config.CONFIG_YAML["MODE"] == "test" {
+		MODE_TEST = 1
+	}
+
 	if _, err := os.Stat("srv"); err != nil {
 
 		if err_init := InitNpiaServer(); err_init != nil {
@@ -182,7 +186,38 @@ func main() {
 
 	fmt.Scanln(&cluster_id)
 
-	if MODE_UPDATE == 1 {
+	if MODE_UPDATE == 1 && MODE_TEST == 1 {
+
+		fmt.Println("orch.io update token: ")
+
+		byte_passwd, err := term.ReadPassword(int(syscall.Stdin))
+
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+		token_str := string(byte_passwd)
+
+		update_token = strings.TrimSpace(token_str)
+
+		if MODE_DEBUG == 1 {
+			fmt.Println(update_token)
+		}
+
+		if err := sock.DetachedServerCommunicatorWithUpdate_Test(address, email, cluster_id, update_token); err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+	} else if MODE_TEST == 1 {
+
+		if err := sock.DetachedServerCommunicator_Test(address, email, cluster_id); err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+	} else if MODE_UPDATE == 1 {
 
 		fmt.Println("orch.io update token: ")
 

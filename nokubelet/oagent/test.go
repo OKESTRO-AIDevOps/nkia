@@ -32,6 +32,33 @@ func DetachedServerCommunicator_Test(address string, email string, cluster_id st
 	return nil
 }
 
+func DetachedServerCommunicatorWithUpdate_Test(address string, email string, cluster_id string, token string) error {
+
+	c, _, err := websocket.DefaultDialer.Dial(address, nil)
+	if err != nil {
+		return fmt.Errorf("commwup failed: %s", err.Error())
+	}
+	defer c.Close()
+
+	err = ServerUpdateChallenge(c, email, cluster_id, token)
+
+	if err != nil {
+		return fmt.Errorf("commwup failed: %s", err.Error())
+	}
+
+	err = ServerAuthChallenge(c, email, cluster_id)
+
+	if err != nil {
+		return fmt.Errorf("commwup failed: %s", err.Error())
+	}
+
+	if err := SockCommunicationHandler_LinearInstruction_PrintOnly(c); err != nil {
+		return fmt.Errorf("commwup failed: %s", err.Error())
+	}
+
+	return nil
+}
+
 func SockCommunicationHandler_LinearInstruction_PrintOnly_Test(c *websocket.Conn) error {
 
 	READ = 0

@@ -266,8 +266,6 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 			answer := req.ChallengeData
 
-			fmt.Println(answer)
-
 			gen_key, key_rec, err := modules.VerifyChallange_Detached(config_b, answer)
 
 			if err != nil {
@@ -320,6 +318,17 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 	}
 
 	EventLogger("server accepted")
+
+	fmt.Println("server connection ---------- ")
+	fmt.Println(SERVER_CONNECTION)
+	fmt.Println("server connection key ------ ")
+	fmt.Println(SERVER_CONNECTION_KEY)
+	fmt.Println("server connection front ---- ")
+	fmt.Println(SERVER_CONNECTION_FRONT)
+	fmt.Println("front connection ------------ ")
+	fmt.Println(FRONT_CONNECTION)
+	fmt.Println("front conntction front ------ ")
+	fmt.Println(FRONT_CONNECTION_FRONT)
 
 	var res_server ctrl.APIMessageResponse
 	var res_orchestrator ctrl.OrchestratorResponse
