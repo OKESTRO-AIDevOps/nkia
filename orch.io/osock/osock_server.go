@@ -90,7 +90,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-				EventLogger("auth update: decrypt: " + err.Error())
+				EventLogger("auth update: encrypt: " + err.Error())
 				return
 			}
 
