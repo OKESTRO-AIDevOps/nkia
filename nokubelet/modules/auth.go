@@ -560,7 +560,7 @@ func GenerateChallenge_Key(email string, pub_str string) (ChallengRecord, error)
 	pub_key, err := BytesToPublicKey([]byte(pub_str))
 
 	if err != nil {
-		return challenge_records, fmt.Errorf("failed to generate challenge: %s", "invalid format: 04")
+		return challenge_records, fmt.Errorf("failed to generate challenge: invf 04: %s", err.Error())
 	}
 
 	file_byte, err := os.ReadFile("srv/challenge.json")
