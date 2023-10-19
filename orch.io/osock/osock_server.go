@@ -86,7 +86,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 			token_b := []byte(token)
 
-			QUEST, err := modules.DecryptWithSymmetricKey(token_b, []byte(ANSWER))
+			QUEST, err := modules.EncryptWithSymmetricKey(token_b, []byte(ANSWER))
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
