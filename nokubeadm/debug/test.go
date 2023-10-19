@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 
+	"github.com/OKESTRO-AIDevOps/nkia/nokubeadm/config"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/controller"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
@@ -40,7 +41,7 @@ func BaseFlow_API_Test() {
 
 	query_plain := "hello npia"
 
-	query_enc, err := modules.EncryptWithSymmetricKey([]byte(SESSION_SYM_KEY), []byte(query_plain))
+	query_enc, err := modules.EncryptWithSymmetricKey([]byte(config.SESSION_SYM_KEY), []byte(query_plain))
 
 	if err != nil {
 
@@ -58,7 +59,7 @@ func BaseFlow_API_Test() {
 		return
 	}
 
-	resp, err := client.Post(COMM_URL, "application/json", bytes.NewBuffer(req_b))
+	resp, err := client.Post(config.COMM_URL, "application/json", bytes.NewBuffer(req_b))
 
 	if err != nil {
 
@@ -93,7 +94,7 @@ func BaseFlow_API_Test() {
 		return
 	}
 
-	result_b, err := modules.DecryptWithSymmetricKey([]byte(SESSION_SYM_KEY), result_enc_b)
+	result_b, err := modules.DecryptWithSymmetricKey([]byte(config.SESSION_SYM_KEY), result_enc_b)
 
 	if err != nil {
 
@@ -142,7 +143,7 @@ func BaseFlow_APIThenMultiMode_Test() {
 
 	query_plain := "hello npia"
 
-	query_enc, err := modules.EncryptWithSymmetricKey([]byte(SESSION_SYM_KEY), []byte(query_plain))
+	query_enc, err := modules.EncryptWithSymmetricKey([]byte(config.SESSION_SYM_KEY), []byte(query_plain))
 
 	if err != nil {
 
@@ -160,7 +161,7 @@ func BaseFlow_APIThenMultiMode_Test() {
 		return
 	}
 
-	resp, err := client.Post(COMM_URL, "application/json", bytes.NewBuffer(req_b))
+	resp, err := client.Post(config.COMM_URL, "application/json", bytes.NewBuffer(req_b))
 
 	if err != nil {
 
@@ -195,7 +196,7 @@ func BaseFlow_APIThenMultiMode_Test() {
 		return
 	}
 
-	result_b, err := modules.DecryptWithSymmetricKey([]byte(SESSION_SYM_KEY), result_enc_b)
+	result_b, err := modules.DecryptWithSymmetricKey([]byte(config.SESSION_SYM_KEY), result_enc_b)
 
 	if err != nil {
 
@@ -221,7 +222,7 @@ func BaseFlow_APIThenMultiMode_Test() {
 
 	query_plain = "INIT:"
 
-	query_enc, err = modules.EncryptWithSymmetricKey([]byte(SESSION_SYM_KEY), []byte(query_plain))
+	query_enc, err = modules.EncryptWithSymmetricKey([]byte(config.SESSION_SYM_KEY), []byte(query_plain))
 
 	if err != nil {
 
@@ -239,7 +240,7 @@ func BaseFlow_APIThenMultiMode_Test() {
 		return
 	}
 
-	resp, err = client.Post(COMM_URL_MULTIMODE, "application/json", bytes.NewBuffer(req_b))
+	resp, err = client.Post(config.COMM_URL_MULTIMODE, "application/json", bytes.NewBuffer(req_b))
 
 	if err != nil {
 
@@ -276,7 +277,7 @@ func BaseFlow_APIThenMultiMode_Test() {
 		return
 	}
 
-	result_b, err = modules.DecryptWithSymmetricKey([]byte(SESSION_SYM_KEY), result_enc_b)
+	result_b, err = modules.DecryptWithSymmetricKey([]byte(config.SESSION_SYM_KEY), result_enc_b)
 
 	if err != nil {
 
@@ -289,7 +290,7 @@ func BaseFlow_APIThenMultiMode_Test() {
 
 	query_plain = "SWITCH:kind-kindcluster2"
 
-	query_enc, err = modules.EncryptWithSymmetricKey([]byte(SESSION_SYM_KEY), []byte(query_plain))
+	query_enc, err = modules.EncryptWithSymmetricKey([]byte(config.SESSION_SYM_KEY), []byte(query_plain))
 
 	if err != nil {
 
@@ -307,7 +308,7 @@ func BaseFlow_APIThenMultiMode_Test() {
 		return
 	}
 
-	resp, err = client.Post(COMM_URL_MULTIMODE, "application/json", bytes.NewBuffer(req_b))
+	resp, err = client.Post(config.COMM_URL_MULTIMODE, "application/json", bytes.NewBuffer(req_b))
 
 	if err != nil {
 
@@ -344,7 +345,7 @@ func BaseFlow_APIThenMultiMode_Test() {
 		return
 	}
 
-	result_b, err = modules.DecryptWithSymmetricKey([]byte(SESSION_SYM_KEY), result_enc_b)
+	result_b, err = modules.DecryptWithSymmetricKey([]byte(config.SESSION_SYM_KEY), result_enc_b)
 
 	if err != nil {
 

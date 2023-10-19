@@ -23,9 +23,9 @@ function Test_BodySet(){
 
     var inject = 
     `
-    <input id="test-target" type="text" value="" placeholder="test-target-name">
-    <input id="test-option" type="text" value="" placeholder="OPTION:arg,arg">
-    <input id="test-query" type="text" value="" placeholder="QUERY:arg,arg">
+    <input id="test-target" type="text" value="" placeholder="target-name">
+    <input id="test-option" type="text" value="" placeholder="option">
+    <input id="test-query" type="text" value="" placeholder="QUERY:arg1,arg2...">
     <input type="button" onclick="Test_OrchestratorQuery()" value="run">
     
     `
@@ -47,7 +47,7 @@ function Test_OrchestratorInit(){
 
     var urlbody = urlbody_trail[0]
 
-    var trail_path = '/osock/front-test'
+    var trail_path = '/osock/front/test'
 
     if (proto == 'http'){
 
@@ -167,7 +167,23 @@ async function Test_OrchestratorQuery(){
 
     console.log(TEST_READ_CHANNEL["server_message"])
 
-    alert(atob(TEST_READ_CHANNEL["query_result"]))
+    if (test_option == "admin"){
+
+        var text = atob(TEST_READ_CHANNEL["query_result"])
+
+        const file = new File([text], 'priv',{
+            type: "text/plain",
+        })
+
+        Test_Download(file)
+
+        alert("priv downloaded")
+
+    }else{
+        alert(atob(TEST_READ_CHANNEL["query_result"]))    
+    }
+
+    
 
 
 }
@@ -178,6 +194,20 @@ function Test_Delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
 }
 
+function Test_Download(file){
+
+    var download_link = document.createElement('a')
+    var download_url = URL.createObjectURL(file)
+  
+    download_link.href = download_url
+    download_link.download = file.name
+    document.body.appendChild(download_link)
+    download_link.click()
+  
+    document.body.removeChild(download_link)
+    window.URL.revokeObjectURL(download_url)
+
+}
 
 Test_BodySet()
 

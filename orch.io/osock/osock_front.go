@@ -186,6 +186,20 @@ func AdminRequest(email string, query string) ([]byte, error) {
 
 	switch OP {
 
+	case "CONNCHK":
+
+		var talkback string = "talking back list: "
+
+		for i := 0; i < len(args); i++ {
+
+			talkback += args[i] + " "
+
+		}
+
+		talkback += "\n"
+
+		ret = []byte(talkback)
+
 	case "KEYGEN":
 
 		privkey, pubkey, err := modules.GenerateKeyPair(4096)
@@ -201,10 +215,16 @@ func AdminRequest(email string, query string) ([]byte, error) {
 			},
 		)
 
+		pub_b, err := x509.MarshalPKIXPublicKey(pubkey)
+
+		if err != nil {
+			return ret, fmt.Errorf("admin req: %s", err.Error())
+		}
+
 		pub_pem := pem.EncodeToMemory(
 			&pem.Block{
-				Type:  "RSA PUBLIC KEY",
-				Bytes: x509.MarshalPKCS1PublicKey(pubkey),
+				Type:  "PUBLIC KEY",
+				Bytes: pub_b,
 			},
 		)
 

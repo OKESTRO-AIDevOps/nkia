@@ -25,9 +25,6 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 	c.SetReadDeadline(time.Time{})
 
-	var req ctrl.AuthChallenge
-	var resp ctrl.AuthChallenge
-
 	auth_flag := 0
 
 	iter_count := 0
@@ -37,6 +34,9 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 	defer c.Close()
 
 	for auth_flag == 0 {
+
+		var req = ctrl.AuthChallenge{}
+		var resp = ctrl.AuthChallenge{}
 
 		if iter_count > 5 {
 			err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
@@ -86,11 +86,11 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 			token_b := []byte(token)
 
-			QUEST, err := modules.DecryptWithSymmetricKey(token_b, []byte(ANSWER))
+			QUEST, err := modules.EncryptWithSymmetricKey(token_b, []byte(ANSWER))
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-				EventLogger("auth update: decrypt: " + err.Error())
+				EventLogger("auth update: encrypt: " + err.Error())
 				return
 			}
 

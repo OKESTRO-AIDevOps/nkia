@@ -48,7 +48,7 @@ func OrchestratorFeed(c *gin.Context) {
 	v := session.Get("OSID")
 
 	if v == nil {
-		fmt.Printf("access auth failed: %s", "session id not found")
+		fmt.Printf("access auth failed: %s\n", "session id not found")
 		c.String(403, "forbidden")
 		return
 	} else {
@@ -58,7 +58,7 @@ func OrchestratorFeed(c *gin.Context) {
 	request_key, err := omodels.FrontAccessAuth(session_id)
 
 	if err != nil {
-		fmt.Printf("access auth failed: %s", "request key not found")
+		fmt.Printf("access auth failed: %s\n", "request key not found")
 		c.String(403, "forbidden")
 		return
 	}
@@ -98,7 +98,7 @@ func OauthGoogleCallback(c *gin.Context) {
 	v := session.Get("OSID")
 
 	if v == nil {
-		fmt.Printf("access auth failed: %s", "session id not found")
+		fmt.Printf("access auth failed: %s\n", "session id not found")
 		return
 	} else {
 		session_id = v.(string)
@@ -107,19 +107,19 @@ func OauthGoogleCallback(c *gin.Context) {
 	state := c.Request.FormValue("state")
 
 	if state == "" {
-		fmt.Printf("access auth failed: %s", "form state not found")
+		fmt.Printf("access auth failed: %s\n", "form state not found")
 		return
 	}
 
 	if state != session_id {
-		fmt.Printf("access auth failed: %s", "value not matching")
+		fmt.Printf("access auth failed: %s\n", "value not matching")
 		c.Redirect(302, "/")
 		return
 	}
 
 	data, err := omodules.GetUserDataFromGoogle(c.Request.FormValue("code"))
 	if err != nil {
-		fmt.Printf("access auth failed: %s", err.Error())
+		fmt.Printf("access auth failed: %s\n", err.Error())
 		c.Redirect(302, "/")
 		return
 	}
@@ -129,13 +129,13 @@ func OauthGoogleCallback(c *gin.Context) {
 	err = json.Unmarshal(data, &oauth_struct)
 
 	if err != nil {
-		fmt.Printf("access auth failed: %s", err.Error())
+		fmt.Printf("access auth failed: %s\n", err.Error())
 		c.Redirect(302, "/")
 		return
 	}
 
 	if !oauth_struct.VERIFIED_EMAIL {
-		fmt.Printf("access auth failed: %s", err.Error())
+		fmt.Printf("access auth failed: %s\n", err.Error())
 		c.Redirect(302, "/")
 		return
 	}
@@ -143,7 +143,7 @@ func OauthGoogleCallback(c *gin.Context) {
 	_, err = omodels.RegisterOsidAndRequestKeyByOAuth(session_id, oauth_struct)
 
 	if err != nil {
-		fmt.Printf("access auth failed: %s", err.Error())
+		fmt.Printf("access auth failed: %s\n", err.Error())
 		c.Redirect(302, "/")
 		return
 	}
@@ -162,7 +162,7 @@ func OauthGoogleCallback_Test(c *gin.Context) {
 	v := session.Get("OSID")
 
 	if v == nil {
-		fmt.Printf("access auth failed: %s", "session id not found")
+		fmt.Printf("access auth failed: %s\n", "session id not found")
 		return
 	} else {
 		session_id = v.(string)
@@ -171,19 +171,19 @@ func OauthGoogleCallback_Test(c *gin.Context) {
 	state := c.Request.FormValue("state")
 
 	if state == "" {
-		fmt.Printf("access auth failed: %s", "form state not found")
+		fmt.Printf("access auth failed: %s\n", "form state not found")
 		return
 	}
 
 	if state != session_id {
-		fmt.Printf("access auth failed: %s", "value not matching")
+		fmt.Printf("access auth failed: %s\n", "value not matching")
 		c.Redirect(302, "/")
 		return
 	}
 
 	data, err := omodules.GetUserDataFromGoogle(c.Request.FormValue("code"))
 	if err != nil {
-		fmt.Printf("access auth failed: %s", err.Error())
+		fmt.Printf("access auth failed: %s\n", err.Error())
 		c.Redirect(302, "/")
 		return
 	}
@@ -195,7 +195,7 @@ func OauthGoogleCallback_Test(c *gin.Context) {
 	err = json.Unmarshal(data, &oauth_struct)
 
 	if err != nil {
-		fmt.Printf("access auth failed: %s", err.Error())
+		fmt.Printf("access auth failed: %s\n", err.Error())
 		c.Redirect(302, "/")
 		return
 	}
@@ -213,7 +213,7 @@ func KeyAuthLogin(c *gin.Context) {
 	err := c.BindJSON(&req_orchestrator)
 
 	if err != nil {
-		fmt.Printf("login failed: %s", err.Error())
+		fmt.Printf("login failed: %s\n", err.Error())
 
 		res_orchestrator.ServerMessage = err.Error()
 
@@ -228,7 +228,7 @@ func KeyAuthLogin(c *gin.Context) {
 
 	if err != nil {
 
-		fmt.Printf("login failed: %s", err.Error())
+		fmt.Printf("login failed: %s\n", err.Error())
 
 		res_orchestrator.ServerMessage = err.Error()
 
@@ -242,7 +242,7 @@ func KeyAuthLogin(c *gin.Context) {
 
 	if err != nil {
 
-		fmt.Printf("login failed: %s", err.Error())
+		fmt.Printf("login failed: %s\n", err.Error())
 
 		res_orchestrator.ServerMessage = err.Error()
 
@@ -256,7 +256,7 @@ func KeyAuthLogin(c *gin.Context) {
 
 	if err != nil {
 
-		fmt.Printf("login failed: %s", err.Error())
+		fmt.Printf("login failed: %s\n", err.Error())
 
 		res_orchestrator.ServerMessage = err.Error()
 
@@ -292,7 +292,7 @@ func KeyAuthCallback(c *gin.Context) {
 	v := session.Get("OSID")
 
 	if v == nil {
-		fmt.Printf("login callback failed: %s", "no session")
+		fmt.Printf("login callback failed: %s\n", "no session")
 
 		res_orchestrator.ServerMessage = "no session"
 
@@ -306,7 +306,7 @@ func KeyAuthCallback(c *gin.Context) {
 	err := c.BindJSON(&req_orchestrator)
 
 	if err != nil {
-		fmt.Printf("login callback failed: %s", err.Error())
+		fmt.Printf("login callback failed: %s\n", err.Error())
 
 		res_orchestrator.ServerMessage = err.Error()
 
@@ -320,7 +320,7 @@ func KeyAuthCallback(c *gin.Context) {
 	answer_json_b, err := base64.StdEncoding.DecodeString(answer_json_b64)
 
 	if err != nil {
-		fmt.Printf("login callback failed: %s", err.Error())
+		fmt.Printf("login callback failed: %s\n", err.Error())
 
 		res_orchestrator.ServerMessage = err.Error()
 
@@ -332,7 +332,7 @@ func KeyAuthCallback(c *gin.Context) {
 	err = json.Unmarshal(answer_json_b, &answer)
 
 	if err != nil {
-		fmt.Printf("login callback failed: %s", err.Error())
+		fmt.Printf("login callback failed: %s\n", err.Error())
 
 		res_orchestrator.ServerMessage = err.Error()
 
@@ -344,7 +344,7 @@ func KeyAuthCallback(c *gin.Context) {
 	email, err := modules.VerifyChallange_Key(answer)
 
 	if err != nil {
-		fmt.Printf("login callback failed: %s", err.Error())
+		fmt.Printf("login callback failed: %s\n", err.Error())
 
 		res_orchestrator.ServerMessage = err.Error()
 
@@ -356,7 +356,7 @@ func KeyAuthCallback(c *gin.Context) {
 	req_key, err := omodels.RegisterOsidAndRequestKeyByEmail(email, session_id)
 
 	if err != nil {
-		fmt.Printf("login callback failed: %s", err.Error())
+		fmt.Printf("login callback failed: %s\n", err.Error())
 
 		res_orchestrator.ServerMessage = err.Error()
 

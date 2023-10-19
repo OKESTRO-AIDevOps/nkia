@@ -13,6 +13,7 @@ import (
 	_ "github.com/gin-gonic/contrib/sessions"
 	_ "github.com/gin-gonic/gin"
 
+	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/config"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	sock "github.com/OKESTRO-AIDevOps/nkia/nokubelet/oagent"
 	_ "github.com/OKESTRO-AIDevOps/nkia/nokubelet/router"
@@ -126,16 +127,16 @@ func main() {
 
 			MODE_DEBUG = 1
 
-		} else if flag == "-t" || flag == "--test" {
-
-			MODE_TEST = 1
-
 		} else if flag == "-u" || flag == "--update" {
 
 			MODE_UPDATE = 1
 
 		}
 
+	}
+
+	if config.CONFIG_YAML["MODE"] == "test" {
+		MODE_TEST = 1
 	}
 
 	if _, err := os.Stat("srv"); err != nil {
@@ -177,15 +178,15 @@ func main() {
 
 	var update_token string
 
-	address = modules.ADDRESS
+	address = config.ADDRESS
 
-	email = modules.EMAIL
+	email = config.EMAIL
 
 	fmt.Println("orch.io cluster id: ")
 
 	fmt.Scanln(&cluster_id)
 
-	if MODE_UPDATE == 1 {
+	if MODE_UPDATE == 1 && MODE_TEST == 1 {
 
 		fmt.Println("orch.io update token: ")
 
@@ -199,6 +200,41 @@ func main() {
 		token_str := string(byte_passwd)
 
 		update_token = strings.TrimSpace(token_str)
+
+		if MODE_DEBUG == 1 {
+			fmt.Println(update_token)
+		}
+
+		if err := sock.DetachedServerCommunicatorWithUpdate_Test(address, email, cluster_id, update_token); err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+	} else if MODE_TEST == 1 {
+
+		if err := sock.DetachedServerCommunicator_Test(address, email, cluster_id); err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+	} else if MODE_UPDATE == 1 {
+
+		fmt.Println("orch.io update token: ")
+
+		byte_passwd, err := term.ReadPassword(int(syscall.Stdin))
+
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+		token_str := string(byte_passwd)
+
+		update_token = strings.TrimSpace(token_str)
+
+		if MODE_DEBUG == 1 {
+			fmt.Println(update_token)
+		}
 
 		if err := sock.DetachedServerCommunicatorWithUpdate(address, email, cluster_id, update_token); err != nil {
 			fmt.Println(err.Error())

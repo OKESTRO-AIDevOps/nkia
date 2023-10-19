@@ -32,6 +32,33 @@ func DetachedServerCommunicator_Test(address string, email string, cluster_id st
 	return nil
 }
 
+func DetachedServerCommunicatorWithUpdate_Test(address string, email string, cluster_id string, token string) error {
+
+	c, _, err := websocket.DefaultDialer.Dial(address, nil)
+	if err != nil {
+		return fmt.Errorf("commwup failed: %s", err.Error())
+	}
+	defer c.Close()
+
+	err = ServerUpdateChallenge(c, email, cluster_id, token)
+
+	if err != nil {
+		return fmt.Errorf("commwup failed: %s", err.Error())
+	}
+
+	err = ServerAuthChallenge(c, email, cluster_id)
+
+	if err != nil {
+		return fmt.Errorf("commwup failed: %s", err.Error())
+	}
+
+	if err := SockCommunicationHandler_LinearInstruction_PrintOnly_Test(c); err != nil {
+		return fmt.Errorf("commwup failed: %s", err.Error())
+	}
+
+	return nil
+}
+
 func SockCommunicationHandler_LinearInstruction_PrintOnly_Test(c *websocket.Conn) error {
 
 	READ = 0
@@ -54,6 +81,10 @@ func SockCommunicationHandler_LinearInstruction_PrintOnly_Test(c *websocket.Conn
 		select {
 
 		case read_body := <-ch_read:
+
+			fmt.Println("*********************")
+			fmt.Println("RECV")
+			fmt.Println(read_body)
 
 			req_body = read_body
 
@@ -124,7 +155,8 @@ func SockCommunicationHandler_LinearInstruction_PrintOnly_Test(c *websocket.Conn
 
 			*/
 
-			fmt.Println("******client side")
+			fmt.Println("**************************")
+			fmt.Println("INST")
 			fmt.Println(linear_instruction)
 
 			var api_out apistandard.API_OUTPUT

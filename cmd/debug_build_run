@@ -1,8 +1,0 @@
-#!/bin/bash
-
-
-go build -o appcli ./cmd
-
-/bin/cp -rf ./debug_bin/config ~/.kube/config 
-
-./appcli

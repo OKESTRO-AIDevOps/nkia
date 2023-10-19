@@ -8,6 +8,7 @@ import (
 	"os/exec"
 
 	_ "github.com/OKESTRO-AIDevOps/nkia/nokubeadm/admin"
+	"github.com/OKESTRO-AIDevOps/nkia/nokubeadm/config"
 	_ "github.com/OKESTRO-AIDevOps/nkia/nokubeadm/debug"
 	nkadmdebug "github.com/OKESTRO-AIDevOps/nkia/nokubeadm/debug"
 )
@@ -76,7 +77,7 @@ func RunDebugInteractive() {
 
 		case "help":
 
-			nkadmdebug.ASgi_CliRef.PrintPrettyDefinition()
+			config.ASgi_CliRef.PrintPrettyDefinition()
 
 		case "exit":
 
