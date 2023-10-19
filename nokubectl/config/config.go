@@ -30,11 +30,11 @@ func _ConstructURL(url_path string) string {
 
 	if CONFIG_YAML["MODE"] == "test" {
 
-		return CONFIG_YAML["BASE_URL"] + url_path + "/test"
+		return CONFIG_YAML["BASE_URL_SOCK"] + url_path + "/test"
 
 	} else if CONFIG_YAML["MODE"] == "release" {
 
-		return CONFIG_YAML["BASE_URL"] + url_path
+		return CONFIG_YAML["BASE_URL_SOCK"] + url_path
 
 	} else {
 		panic("mode option unavailable: " + CONFIG_YAML["MODE"])
