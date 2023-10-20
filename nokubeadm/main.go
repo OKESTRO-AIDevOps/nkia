@@ -11,6 +11,7 @@ import (
 	"github.com/OKESTRO-AIDevOps/nkia/nokubeadm/config"
 	_ "github.com/OKESTRO-AIDevOps/nkia/nokubeadm/debug"
 	nkadmdebug "github.com/OKESTRO-AIDevOps/nkia/nokubeadm/debug"
+	goya "github.com/goccy/go-yaml"
 )
 
 func InitAdm() error {
@@ -35,6 +36,87 @@ func InitAdm() error {
 	if err != nil {
 
 		return fmt.Errorf("failed init npia go client: %s", err.Error())
+	}
+
+	cmd = exec.Command("mkdir", "-p", ".npia")
+
+	err = cmd.Run()
+
+	if err != nil {
+
+		return fmt.Errorf("failed to init: %s", err.Error())
+	}
+
+	CONFIG_YAML := make(map[string]string)
+
+	if _, err := os.Stat(".npia/config.yaml"); err == nil {
+
+		file_b, err := os.ReadFile(".npia/config.yaml")
+
+		if err == nil {
+
+			err = goya.Unmarshal(file_b, CONFIG_YAML)
+
+			if err == nil {
+
+				fmt.Println("existing configuration: ")
+
+				yn := "y"
+
+				for k, v := range CONFIG_YAML {
+
+					fmt.Printf("%s: %s\n", k, v)
+
+				}
+
+				fmt.Println("use the existing conf ? : [ y | n ]")
+
+				fmt.Scanln(&yn)
+
+				if yn == "y" || yn == "Y" {
+
+					return nil
+
+				}
+
+			}
+
+		}
+
+	}
+
+	var MODE string
+	var BASE_URL string
+	var EMAIL string
+
+	fmt.Println("MODE: ")
+
+	fmt.Scanln(&MODE)
+
+	fmt.Println("BASE_URL: ")
+
+	fmt.Scanln(&BASE_URL)
+
+	fmt.Println("EMAIL: ")
+
+	fmt.Scanln(&EMAIL)
+
+	CONFIG_YAML["MODE"] = MODE
+
+	CONFIG_YAML["BASE_URL"] = BASE_URL
+
+	CONFIG_YAML["EMAIL"] = EMAIL
+
+	outconf, err := goya.Marshal(CONFIG_YAML)
+
+	if err != nil {
+		return fmt.Errorf("failed to init: %s", err.Error())
+	}
+
+	err = os.WriteFile(".npia/config.yaml", outconf, 0644)
+
+	if err != nil {
+		return fmt.Errorf("failed to init: %s", err.Error())
 	}
 
 	return nil
@@ -103,18 +185,7 @@ func RunAdmin() {
 
 func main() {
 
-	err := InitAdm()
-
-	if err != nil {
-
-		fmt.Println(err.Error())
-		return
-	}
-
-	if len(os.Args) <= 1 {
-		fmt.Println("error: no args specified")
-		return
-	}
+	INIT := 0
 
 	MODE_TEST := 0
 
@@ -127,6 +198,13 @@ func main() {
 	for i := 0; i < len(os.Args); i++ {
 
 		flag := os.Args[i]
+
+		if flag == "init" {
+
+			INIT = 1
+
+			break
+		}
 
 		if flag == "-t" || flag == "--test" {
 
@@ -141,6 +219,19 @@ func main() {
 			MODE_INTERACTIVE = 1
 		}
 
+	}
+
+	if INIT == 1 {
+
+		err := InitAdm()
+
+		if err != nil {
+
+			fmt.Println(err.Error())
+
+		}
+		fmt.Println("successfully initiated")
+		return
 	}
 
 	if (MODE_TEST + MODE_DEBUG + MODE_INTERACTIVE) > 1 {

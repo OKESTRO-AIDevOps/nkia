@@ -17,6 +17,7 @@ import (
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	sock "github.com/OKESTRO-AIDevOps/nkia/nokubelet/oagent"
 	_ "github.com/OKESTRO-AIDevOps/nkia/nokubelet/router"
+	goya "github.com/goccy/go-yaml"
 
 	"golang.org/x/term"
 )
@@ -83,10 +84,93 @@ func InitNpiaServer() error {
 		return fmt.Errorf("failed init npia server: %s", err.Error())
 	}
 
+	cmd = exec.Command("mkdir", "-p", ".npia")
+
+	err = cmd.Run()
+
+	if err != nil {
+
+		return fmt.Errorf("failed to init: %s", err.Error())
+	}
+
+	CONFIG_YAML := make(map[string]string)
+
+	if _, err := os.Stat(".npia/config.yaml"); err == nil {
+
+		file_b, err := os.ReadFile(".npia/config.yaml")
+
+		if err == nil {
+
+			err = goya.Unmarshal(file_b, CONFIG_YAML)
+
+			if err == nil {
+
+				fmt.Println("existing configuration: ")
+
+				yn := "y"
+
+				for k, v := range CONFIG_YAML {
+
+					fmt.Printf("%s: %s\n", k, v)
+
+				}
+
+				fmt.Println("use the existing conf ? : [ y | n ]")
+
+				fmt.Scanln(&yn)
+
+				if yn == "y" || yn == "Y" {
+
+					return nil
+
+				}
+
+			}
+
+		}
+
+	}
+
+	var MODE string
+	var BASE_URL string
+	var EMAIL string
+
+	fmt.Println("MODE: ")
+
+	fmt.Scanln(&MODE)
+
+	fmt.Println("BASE_URL: ")
+
+	fmt.Scanln(&BASE_URL)
+
+	fmt.Println("EMAIL: ")
+
+	fmt.Scanln(&EMAIL)
+
+	CONFIG_YAML["MODE"] = MODE
+
+	CONFIG_YAML["BASE_URL"] = BASE_URL
+
+	CONFIG_YAML["EMAIL"] = EMAIL
+
+	outconf, err := goya.Marshal(CONFIG_YAML)
+
+	if err != nil {
+		return fmt.Errorf("failed to init: %s", err.Error())
+	}
+
+	err = os.WriteFile(".npia/config.yaml", outconf, 0644)
+
+	if err != nil {
+		return fmt.Errorf("failed to init: %s", err.Error())
+	}
+
 	return nil
 }
 
 func main() {
+
+	INIT := 0
 
 	MODE_DEBUG := 0
 
@@ -114,14 +198,16 @@ func main() {
 
 	}
 
-	if len(os.Args) <= 1 {
-		fmt.Println("Error: arg not specified")
-		return
-	}
-
 	for i := 1; i < len(os.Args); i++ {
 
 		flag := os.Args[i]
+
+		if flag == "init" {
+
+			INIT = 1
+
+			break
+		}
 
 		if flag == "-g" || flag == "--debug" {
 
@@ -135,20 +221,19 @@ func main() {
 
 	}
 
-	if config.CONFIG_YAML["MODE"] == "test" {
-		MODE_TEST = 1
+	if INIT == 1 {
+		err_init := InitNpiaServer()
+
+		if err_init != nil {
+			fmt.Println(err_init.Error())
+		}
+		fmt.Println("successfully initiated")
+		return
+
 	}
 
-	if _, err := os.Stat("srv"); err != nil {
-
-		if err_init := InitNpiaServer(); err_init != nil {
-
-			fmt.Println(err_init.Error())
-
-			return
-
-		}
-
+	if config.CONFIG_YAML["MODE"] == "test" {
+		MODE_TEST = 1
 	}
 
 	/* MODE_DEBUG
