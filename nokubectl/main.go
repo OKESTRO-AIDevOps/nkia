@@ -9,6 +9,7 @@ import (
 
 	nkctlclient "github.com/OKESTRO-AIDevOps/nkia/nokubectl/client"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubectl/config"
+	goya "github.com/goccy/go-yaml"
 )
 
 func InitCtl() error {
@@ -37,6 +38,94 @@ func InitCtl() error {
 	}
 
 	err = os.WriteFile("srv/.priv", file_b, 0644)
+
+	if err != nil {
+		return fmt.Errorf("failed to init: %s", err.Error())
+	}
+
+	cmd = exec.Command("mkdir", "-p", ".npia")
+
+	err = cmd.Run()
+
+	if err != nil {
+
+		return fmt.Errorf("failed to init: %s", err.Error())
+	}
+
+	CONFIG_YAML := make(map[string]string)
+
+	if _, err := os.Stat(".npia/config.yaml"); err == nil {
+
+		file_b, err := os.ReadFile(".npia/config.yaml")
+
+		if err == nil {
+
+			err = goya.Unmarshal(file_b, CONFIG_YAML)
+
+			if err == nil {
+
+				fmt.Println("existing configuration: ")
+
+				yn := "y"
+
+				for k, v := range CONFIG_YAML {
+
+					fmt.Printf("%s: %s\n", k, v)
+
+				}
+
+				fmt.Println("use the existing conf ? : [ y | n ]")
+
+				fmt.Scanln(&yn)
+
+				if yn == "y" || yn == "Y" {
+
+					return nil
+
+				}
+
+			}
+
+		}
+
+	}
+
+	var MODE string
+	var BASE_URL string
+	var BASE_URL_SOCK string
+	var EMAIL string
+
+	fmt.Println("MODE: ")
+
+	fmt.Scanln(&MODE)
+
+	fmt.Println("BASE_URL: ")
+
+	fmt.Scanln(&BASE_URL)
+
+	fmt.Println("BASE_URL_SOCK: ")
+
+	fmt.Scanln(&BASE_URL_SOCK)
+
+	fmt.Println("EMAIL: ")
+
+	fmt.Scanln(&EMAIL)
+
+	CONFIG_YAML["MODE"] = MODE
+
+	CONFIG_YAML["BASE_URL"] = BASE_URL
+
+	CONFIG_YAML["BASE_URL_SOCK"] = BASE_URL_SOCK
+
+	CONFIG_YAML["EMAIL"] = EMAIL
+
+	outconf, err := goya.Marshal(CONFIG_YAML)
+
+	if err != nil {
+		return fmt.Errorf("failed to init: %s", err.Error())
+	}
+
+	err = os.WriteFile(".npia/config.yaml", outconf, 0644)
 
 	if err != nil {
 		return fmt.Errorf("failed to init: %s", err.Error())
@@ -118,17 +207,7 @@ func RunClient() {
 
 func main() {
 
-	err := InitCtl()
-
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-
-	if len(os.Args) <= 1 {
-		fmt.Println("error: no args specified")
-		return
-	}
+	INIT := 0
 
 	MODE_INTERACTIVE := 0
 
@@ -137,6 +216,14 @@ func main() {
 	for i := 1; i < len(os.Args); i++ {
 
 		flag := os.Args[i]
+
+		if flag == "init" {
+
+			INIT = 1
+
+			break
+
+		}
 
 		if flag == "-i" || flag == "--interactive" {
 
@@ -150,6 +237,20 @@ func main() {
 	//	fmt.Println("error: more than one option used together")
 	//	return
 	//}
+
+	if INIT == 1 {
+
+		err := InitCtl()
+
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+		fmt.Println("successfully initiated")
+		return
+
+	}
 
 	if MODE_INTERACTIVE == 1 {
 

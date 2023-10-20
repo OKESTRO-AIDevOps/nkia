@@ -6,20 +6,32 @@ import (
 	goya "github.com/goccy/go-yaml"
 )
 
+func _CheckCfg() int {
+
+	if _, err := os.Stat(".npia/config.yaml"); err != nil {
+		return 0
+	}
+	return 1
+}
+
 func _LoadConfigYaml() map[string]string {
 
 	var config_yaml map[string]string
 
-	file_byte, err := os.ReadFile(".npia/config.yaml")
+	if CFG_EXIST == 1 {
 
-	if err != nil {
-		panic(err.Error())
-	}
+		file_byte, err := os.ReadFile(".npia/config.yaml")
 
-	err = goya.Unmarshal(file_byte, &config_yaml)
+		if err != nil {
+			panic(err.Error())
+		}
 
-	if err != nil {
-		panic(err.Error())
+		err = goya.Unmarshal(file_byte, &config_yaml)
+
+		if err != nil {
+			panic(err.Error())
+		}
+
 	}
 
 	return config_yaml
@@ -27,22 +39,40 @@ func _LoadConfigYaml() map[string]string {
 
 func _ConstructURL(url_path string) string {
 
-	if CONFIG_YAML["MODE"] == "test" {
+	if CFG_EXIST == 1 {
 
-		return CONFIG_YAML["BASE_URL"] + url_path + "/test"
+		if CONFIG_YAML["MODE"] == "test" {
 
-	} else if CONFIG_YAML["MODE"] == "release" {
+			return CONFIG_YAML["BASE_URL"] + url_path + "/test"
 
-		return CONFIG_YAML["BASE_URL"] + url_path
+		} else if CONFIG_YAML["MODE"] == "release" {
+
+			return CONFIG_YAML["BASE_URL"] + url_path
+
+		} else {
+			panic("mode option unavailable: " + CONFIG_YAML["MODE"])
+		}
 
 	} else {
-		panic("mode option unavailable: " + CONFIG_YAML["MODE"])
+		return ""
 	}
 
 }
+
+func _GetEmail() string {
+
+	if CFG_EXIST == 1 {
+		return CONFIG_YAML["EMAIL"]
+	} else {
+		return ""
+	}
+
+}
+
+var CFG_EXIST = _CheckCfg()
 
 var CONFIG_YAML = _LoadConfigYaml()
 
 var ADDRESS = _ConstructURL("/osock/server")
 
-var EMAIL = CONFIG_YAML["EMAIL"]
+var EMAIL = _GetEmail()

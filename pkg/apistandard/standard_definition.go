@@ -37,14 +37,14 @@ var API_DEFINITION string = "" +
 	// "SETTING-CRTVOL            :id, ns, volserver                                                                        " + "\n" +
 	"SETTING-CRTMON           :id                                                                                         " + "\n" +
 	//  "SETTING-DELNS            :id, ns                                                                                   " + "\n" +
-	//  "SUBMIT                   :id                                                                                       " + "\n" +
-	//	"CALLME                   :id                                                                                       " + "\n" +
-	//  "GITLOG                   :id, ns, repoaddr                                                                         " + "\n" +
-	//	"PIPEHIST                 :id, ns                                                                                   " + "\n" +
-	//	"PIPE                     :id, ns, repoaddr, regaddr                                                                " + "\n" +
-	//	"PIPELOG                  :id                                                                                       " + "\n" +
-	"BUILD                    :id, ns, repoaddr, regaddr                                                                  " + "\n" +
-	"BUILDLOG                 :id                                                                                         " + "\n" +
+	//  "TOOLKIT-SUBMIT           :id                                                                                       " + "\n" +
+	//	"TOOLKIT-CALLME           :id                                                                                       " + "\n" +
+	//  "TOOLKIT-GITLOG           :id, ns, repoaddr                                                                         " + "\n" +
+	//	"TOOLKIT-PIPEHIST         :id, ns                                                                                   " + "\n" +
+	//	"TOOLKIT-PIPE             :id, ns, repoaddr, regaddr                                                                " + "\n" +
+	//	"TOOLKIT-PIPELOG          :id                                                                                       " + "\n" +
+	"TOOLKIT-BUILD            :id, ns, repoaddr, regaddr                                                                  " + "\n" +
+	"TOOLKIT-BUILDLOG         :id                                                                                         " + "\n" +
 	"RESOURCE-NDS             :id, ns                                                                                     " + "\n" +
 	"RESOURCE-PDS             :id, ns                                                                                     " + "\n" +
 	"RESOURCE-PLOG            :id, ns, podnm                                                                              " + "\n" +
@@ -94,10 +94,11 @@ var API_DEFINITION string = "" +
 	"APPLY-INGR               :id, ns, hostnm, svcnm                                                                      " + "\n" +
 	"APPLY-INGRUN             :id, ns, hostnm, svcnm                                                                      " + "\n" +
 	"APPLY-NDPORT             :id, ns, svcnm                                                                              " + "\n" +
-	"APPLY-NDPORTUN           :id, ns, svcnm                                                                              "
+	"APPLY-NDPORTUN           :id, ns, svcnm                                                                              " + "\n" +
 	//"EXIT                     :id                                                           "
+	""
 
-func _CONSTRUCT_API_INPUT() API_STD {
+func _CONSTRUCT_API_STD() API_STD {
 
 	apistd := make(API_STD)
 
@@ -106,6 +107,10 @@ func _CONSTRUCT_API_INPUT() API_STD {
 	def_list := strings.Split(sanitized_def, "\n")
 
 	for i := 0; i < len(def_list); i++ {
+
+		if def_list[i] == "" || def_list[i] == " " || def_list[i] == "\n" {
+			continue
+		}
 
 		raw_record := def_list[i]
 
@@ -123,4 +128,4 @@ func _CONSTRUCT_API_INPUT() API_STD {
 
 }
 
-var ASgi = _CONSTRUCT_API_INPUT()
+var ASgi = _CONSTRUCT_API_STD()
