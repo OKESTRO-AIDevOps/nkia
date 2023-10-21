@@ -9,34 +9,22 @@ import (
 	apistd "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
 )
 
-func (axgi API_X) BuildOrchRequestFromCommandLine() (ctrl.OrchestratorRequest, error) {
+func (axgi API_X) BuildOrchRequest(apix_id string, apix_options API_X_OPTIONS) (ctrl.OrchestratorRequest, error) {
 
 	oreq := ctrl.OrchestratorRequest{}
 
 	apistd_in := make(apistd.API_INPUT)
 
-	if len(os.Args) < 2 {
-		return oreq, fmt.Errorf("error cmd args: %s", "no args")
-	}
-
-	args := os.Args[1:]
-
-	apix_id, apix_options, err := BuildCmdIdAndOptions(args)
-
-	if err != nil {
-		return oreq, fmt.Errorf("error cmd args: %s", err.Error())
-	}
-
 	apistd_id, okay := axgi[apix_id]
 
 	if !okay {
-		return oreq, fmt.Errorf("error cmd args: %s", "no matching api std for: "+apix_id)
+		return oreq, fmt.Errorf("builder: %s", "no matching api std for: "+apix_id)
 	}
 
 	apistd_in_template, okay := apistd.ASgi[apistd_id]
 
 	if !okay {
-		return oreq, fmt.Errorf("error cmd args: %s", "no matching api std for: "+apistd_id)
+		return oreq, fmt.Errorf("builder: %s", "no matching api std for: "+apistd_id)
 	}
 
 	for k, v := range apistd_in_template {
@@ -49,7 +37,7 @@ func (axgi API_X) BuildOrchRequestFromCommandLine() (ctrl.OrchestratorRequest, e
 		input_val, okay := apix_options[v]
 
 		if !okay {
-			return oreq, fmt.Errorf("error cmd args: %s", "missing required option: "+"--"+v)
+			return oreq, fmt.Errorf("builder: %s", "missing required option: "+"--"+v)
 		}
 
 		apistd_in[v] = input_val
@@ -70,6 +58,31 @@ func (axgi API_X) BuildOrchRequestFromCommandLine() (ctrl.OrchestratorRequest, e
 
 	if as_okay {
 		oreq.RequestOption = as
+	}
+
+	return oreq, nil
+}
+
+func (axgi API_X) BuildOrchRequestFromCommandLine() (ctrl.OrchestratorRequest, error) {
+
+	oreq := ctrl.OrchestratorRequest{}
+
+	if len(os.Args) < 2 {
+		return oreq, fmt.Errorf("error cmd args: %s", "no args")
+	}
+
+	args := os.Args[1:]
+
+	apix_id, apix_options, err := BuildCmdIdAndOptions(args)
+
+	if err != nil {
+		return oreq, fmt.Errorf("error cmd args: %s", err.Error())
+	}
+
+	oreq, err = axgi.BuildOrchRequest(apix_id, apix_options)
+
+	if err != nil {
+		return oreq, fmt.Errorf("error cmd args: %s", err.Error())
 	}
 
 	return oreq, nil

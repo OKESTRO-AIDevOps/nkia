@@ -202,7 +202,7 @@ func RunClientInteractive() {
 
 }
 
-func RunClient() {
+func RunClientCmd() {
 
 	var email string
 
@@ -299,7 +299,7 @@ func main() {
 
 	} else {
 
-		RunClient()
+		RunClientCmd()
 
 	}
 
