@@ -1,0 +1,32 @@
+package main
+
+import (
+	"fmt"
+
+	apix "github.com/OKESTRO-AIDevOps/nkia/nokubectl/apix"
+)
+
+func cmdBuildTest() error {
+
+	oreq, err := apix.AXgi.BuildOrchRequestFromCommandLine()
+
+	if err != nil {
+
+		return fmt.Errorf("failed: %s", err.Error())
+	}
+
+	fmt.Println(oreq)
+
+	return nil
+
+}
+
+func main() {
+
+	if err := cmdBuildTest(); err != nil {
+		fmt.Println(err.Error())
+	} else {
+		fmt.Println("success")
+	}
+
+}

@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/OKESTRO-AIDevOps/nkia/nokubectl/apix"
 	nkctlclient "github.com/OKESTRO-AIDevOps/nkia/nokubectl/client"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubectl/config"
 	goya "github.com/goccy/go-yaml"
@@ -193,7 +194,7 @@ func RunClientInteractive() {
 
 			fmt.Scanln(&option)
 
-			nkctlclient.RequestHandler_LinearInstruction_PrintOnly(c, target, option, in_raw_query)
+			nkctlclient.RequestHandler_LinearInstruction_Persist_PrintOnly(c, target, option, in_raw_query)
 
 		}
 
@@ -202,6 +203,46 @@ func RunClientInteractive() {
 }
 
 func RunClient() {
+
+	var email string
+
+	var err error
+
+	jar, err := cookiejar.New(nil)
+
+	if err != nil {
+
+		fmt.Println(err.Error())
+
+		return
+
+	}
+
+	email = config.EMAIL
+
+	client := &http.Client{
+		Jar: jar,
+	}
+
+	c, err := nkctlclient.KeyAuthConn(client, email)
+
+	if err != nil {
+
+		fmt.Println(err.Error())
+
+		return
+	}
+
+	oreq, err := apix.AXgi.BuildOrchRequestFromCommandLine()
+
+	if err != nil {
+
+		fmt.Printf("failed: %s\n", err.Error())
+
+		return
+	}
+
+	nkctlclient.RequestHandler_APIX_Once_PrintOnly(c, oreq)
 
 }
 
