@@ -159,7 +159,7 @@ func KeyAuthConn(client *http.Client, email string) (*websocket.Conn, error) {
 	return c, nil
 }
 
-func RequestHandler_LinearInstruction_PrintOnly(c *websocket.Conn, target string, option string, linear_instruction string) {
+func RequestHandler_LinearInstruction_Persist_PrintOnly(c *websocket.Conn, target string, option string, linear_instruction string) {
 
 	var req_orchestrator ctrl.OrchestratorRequest
 
@@ -206,6 +206,52 @@ func RequestHandler_LinearInstruction_PrintOnly(c *websocket.Conn, target string
 			if counter > 100 {
 
 				fmt.Printf("\nrequest timeout\n")
+
+				return
+			}
+
+			time.Sleep(time.Millisecond * 100)
+
+		}
+	}
+
+}
+
+func RequestHandler_APIX_Once_PrintOnly(c *websocket.Conn, req_orchstrator ctrl.OrchestratorRequest) {
+
+	var req_orchestrator ctrl.OrchestratorRequest
+
+	recv := make(chan ctrl.OrchestratorResponse)
+
+	go RequestHandler_ReadChannel(c, recv)
+
+	c.WriteJSON(req_orchestrator)
+
+	counter := 0
+
+	for {
+
+		select {
+
+		case result := <-recv:
+
+			fmt.Printf("\n----------> print srv message: \n")
+
+			fmt.Println(result.ServerMessage)
+
+			fmt.Printf("\n----------> print q result: \n")
+
+			fmt.Println(string(result.QueryResult))
+
+			return
+
+		default:
+
+			counter += 1
+
+			if counter > 100 {
+
+				fmt.Println("request timeout")
 
 				return
 			}
