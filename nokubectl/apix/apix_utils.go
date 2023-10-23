@@ -9,9 +9,11 @@ import (
 
 var NN = "\n\n"
 
-var NL = "\\\n"
+var N = "\\\n"
 
-var SS30 = "                              "
+var SS8 = strings.Repeat("&nbsp;", 8)
+
+var SS16 = strings.Repeat("&nbsp;", 16)
 
 func PrintHelp() {
 
@@ -23,11 +25,21 @@ func ExportMD() {
 
 	OUTPUT_MD += "" +
 
-		"# NKIA API eXpression" + "\n\n" +
+		"# NKIA API eXpression" + NN +
+
+		"**Below are nokubectl specific flags" + NN +
+
+		""
+
+	nkctl_flags := NKCTLFlags()
+
+	OUTPUT_MD += nkctl_flags
+
+	OUTPUT_MD += "" +
 
 		"**Below are all available queries and corresponding required options**" + NN +
 
-		"queries are made of arguments and then joined by the options" + NL +
+		"queries are made of arguments and then joined by the options" + N +
 		"ex) nokubectl {arg1} {arg2} {arg3} {--option_name} {option_val}" + NN +
 
 		""
@@ -37,6 +49,22 @@ func ExportMD() {
 	OUTPUT_MD += query_and_options
 
 	_ = os.WriteFile("README.md", []byte(OUTPUT_MD), 0644)
+
+}
+
+func NKCTLFlags() string {
+
+	nkctl_flag := ""
+
+	for k, v := range NKCTLflag {
+
+		per_flag := "- " + k + ": " + v + N
+
+		nkctl_flag += per_flag
+
+	}
+
+	return nkctl_flag
 
 }
 
@@ -52,17 +80,25 @@ func QueryAndOptions() string {
 
 		options := apistd.ASgi[qid]
 
-		per_query := strings.ReplaceAll(query, "-", " ") + ": " + AXcmd[query] + NN
+		per_query := "- " + strings.ReplaceAll(query, "-", " ") + ": " + N
+
+		per_query += SS8 + "description: " + AXcmd[query] + N
+
+		per_query += SS8 + "options:" + N
 
 		for j := 0; j < len(options); j++ {
 
 			oid := options[j]
 
-			per_query += SS30 + options[j] + ": " + AXflag[oid] + NL
+			if oid == "id" {
+				continue
+			}
+
+			per_query += SS16 + "--" + options[j] + ": " + AXflag[oid] + N
 
 		}
 
-		qa += per_query
+		qa += per_query + NN
 
 	}
 

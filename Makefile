@@ -20,6 +20,22 @@ build:
 
 	cd ./orch.io && make build
 
+build-commit:
+
+	mkdir -p _out/nokubeadm
+
+	mkdir -p _out/nokubectl
+
+	mkdir -p _out/nokubelet
+
+	cd ./nokubeadm && make build
+
+	cd ./nokubectl && make build
+
+	cd ./nokubelet && make build
+
+	cd ./orch.io && make build
+
 	git pull
 
 	git add .

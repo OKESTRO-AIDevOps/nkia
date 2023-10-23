@@ -118,9 +118,7 @@ func _CONSTRUCT_API_X_COMMAND() API_X {
 
 	api_x := make(API_X)
 
-	sanitized_def := strings.ReplaceAll(APIX_COMMAND, " ", "")
-
-	def_list := strings.Split(sanitized_def, "\n")
+	def_list := strings.Split(APIX_COMMAND, "\n")
 
 	for i := 0; i < len(def_list); i++ {
 
@@ -133,6 +131,8 @@ func _CONSTRUCT_API_X_COMMAND() API_X {
 		record_list := strings.SplitN(raw_record, ":", 2)
 
 		key := record_list[0]
+
+		key = strings.ReplaceAll(key, " ", "")
 
 		api_x[key] = record_list[1]
 
@@ -145,9 +145,7 @@ func _CONSTRUCT_API_X_FLAG() API_X {
 
 	api_x := make(API_X)
 
-	sanitized_def := strings.ReplaceAll(APIX_FLAGS, " ", "")
-
-	def_list := strings.Split(sanitized_def, "\n")
+	def_list := strings.Split(APIX_FLAGS, "\n")
 
 	for i := 0; i < len(def_list); i++ {
 
@@ -160,6 +158,8 @@ func _CONSTRUCT_API_X_FLAG() API_X {
 		record_list := strings.SplitN(raw_record, ":", 2)
 
 		key := record_list[0]
+
+		key = strings.ReplaceAll(key, " ", "")
 
 		api_x[key] = record_list[1]
 
@@ -172,9 +172,7 @@ func _CONSTRUCT_NKCTL_FLAG() API_X {
 
 	api_x := make(API_X)
 
-	sanitized_def := strings.ReplaceAll(NKCTL_FLAGS, " ", "")
-
-	def_list := strings.Split(sanitized_def, "\n")
+	def_list := strings.Split(NKCTL_FLAGS, "\n")
 
 	for i := 0; i < len(def_list); i++ {
 
@@ -187,6 +185,8 @@ func _CONSTRUCT_NKCTL_FLAG() API_X {
 		record_list := strings.SplitN(raw_record, ":", 2)
 
 		key := record_list[0]
+
+		key = strings.ReplaceAll(key, " ", "")
 
 		api_x[key] = record_list[1]
 
