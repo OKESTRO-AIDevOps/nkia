@@ -8,7 +8,14 @@ import (
 
 func cmdBuildTest() error {
 
-	oreq, err := apix.AXgi.BuildOrchRequestFromCommandLine()
+	flag, args, err := apix.GetNKCTLFlagAndReduceArgs()
+
+	if flag != "" {
+		fmt.Println("nkctl: " + flag)
+		return nil
+	}
+
+	oreq, err := apix.AXgi.BuildOrchRequestFromCommandLine(args)
 
 	if err != nil {
 

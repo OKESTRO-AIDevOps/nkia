@@ -2,7 +2,6 @@ package apix
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	ctrl "github.com/OKESTRO-AIDevOps/nkia/nokubelet/controller"
@@ -63,15 +62,9 @@ func (axgi API_X) BuildOrchRequest(apix_id string, apix_options API_X_OPTIONS) (
 	return oreq, nil
 }
 
-func (axgi API_X) BuildOrchRequestFromCommandLine() (ctrl.OrchestratorRequest, error) {
+func (axgi API_X) BuildOrchRequestFromCommandLine(args []string) (ctrl.OrchestratorRequest, error) {
 
 	oreq := ctrl.OrchestratorRequest{}
-
-	if len(os.Args) < 2 {
-		return oreq, fmt.Errorf("error cmd args: %s", "no args")
-	}
-
-	args := os.Args[1:]
 
 	apix_id, apix_options, err := BuildCmdIdAndOptions(args)
 

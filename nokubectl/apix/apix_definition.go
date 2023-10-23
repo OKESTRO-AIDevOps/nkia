@@ -4,9 +4,11 @@ import "strings"
 
 type API_X map[string]string
 
+type API_X_ID []string
+
 type API_X_OPTIONS map[string]string
 
-var APIX_DEFINITION = "" +
+var APIX_QUERY_MAP = "" +
 	// front admin option
 	"conncheck                                         : CONNCHK               " + "\n" +
 	"keygen                                            : KEYGEN                " + "\n" +
@@ -81,11 +83,42 @@ var APIX_DEFINITION = "" +
 	"apply-nodeport-undo                               : APPLY-NDPORTUN        " + "\n" +
 	""
 
-func _CONSTRUCT_API_X() API_X {
+func _CONSTRUCT_API_X() (API_X, API_X_ID) {
 
 	api_x := make(API_X)
 
-	sanitized_def := strings.ReplaceAll(APIX_DEFINITION, " ", "")
+	api_x_id := make(API_X_ID, 0)
+
+	sanitized_def := strings.ReplaceAll(APIX_QUERY_MAP, " ", "")
+
+	def_list := strings.Split(sanitized_def, "\n")
+
+	for i := 0; i < len(def_list); i++ {
+
+		if def_list[i] == "" || def_list[i] == " " || def_list[i] == "\n" {
+			continue
+		}
+
+		raw_record := def_list[i]
+
+		record_list := strings.SplitN(raw_record, ":", 2)
+
+		key := record_list[0]
+
+		api_x[key] = record_list[1]
+
+		api_x_id = append(api_x_id, key)
+
+	}
+
+	return api_x, api_x_id
+}
+
+func _CONSTRUCT_API_X_COMMAND() API_X {
+
+	api_x := make(API_X)
+
+	sanitized_def := strings.ReplaceAll(APIX_COMMAND, " ", "")
 
 	def_list := strings.Split(sanitized_def, "\n")
 
@@ -108,4 +141,64 @@ func _CONSTRUCT_API_X() API_X {
 	return api_x
 }
 
-var AXgi = _CONSTRUCT_API_X()
+func _CONSTRUCT_API_X_FLAG() API_X {
+
+	api_x := make(API_X)
+
+	sanitized_def := strings.ReplaceAll(APIX_FLAGS, " ", "")
+
+	def_list := strings.Split(sanitized_def, "\n")
+
+	for i := 0; i < len(def_list); i++ {
+
+		if def_list[i] == "" || def_list[i] == " " || def_list[i] == "\n" {
+			continue
+		}
+
+		raw_record := def_list[i]
+
+		record_list := strings.SplitN(raw_record, ":", 2)
+
+		key := record_list[0]
+
+		api_x[key] = record_list[1]
+
+	}
+
+	return api_x
+}
+
+func _CONSTRUCT_NKCTL_FLAG() API_X {
+
+	api_x := make(API_X)
+
+	sanitized_def := strings.ReplaceAll(NKCTL_FLAGS, " ", "")
+
+	def_list := strings.Split(sanitized_def, "\n")
+
+	for i := 0; i < len(def_list); i++ {
+
+		if def_list[i] == "" || def_list[i] == " " || def_list[i] == "\n" {
+			continue
+		}
+
+		raw_record := def_list[i]
+
+		record_list := strings.SplitN(raw_record, ":", 2)
+
+		key := record_list[0]
+
+		api_x[key] = record_list[1]
+
+	}
+
+	return api_x
+}
+
+var AXgi, AXid = _CONSTRUCT_API_X()
+
+var AXcmd = _CONSTRUCT_API_X_COMMAND()
+
+var AXflag = _CONSTRUCT_API_X_FLAG()
+
+var NKCTLflag = _CONSTRUCT_NKCTL_FLAG()
