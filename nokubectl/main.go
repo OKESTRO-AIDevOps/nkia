@@ -202,7 +202,7 @@ func RunClientInteractive() {
 
 }
 
-func RunClientCmd() {
+func RunClientCmd(args []string) {
 
 	var email string
 
@@ -233,7 +233,7 @@ func RunClientCmd() {
 		return
 	}
 
-	oreq, err := apix.AXgi.BuildOrchRequestFromCommandLine()
+	oreq, err := apix.AXgi.BuildOrchRequestFromCommandLine(args)
 
 	if err != nil {
 
@@ -248,38 +248,25 @@ func RunClientCmd() {
 
 func main() {
 
-	INIT := 0
+	flag, args, err := apix.GetNKCTLFlagAndReduceArgs()
 
-	MODE_INTERACTIVE := 0
-
-	// MODE_ADMIN := 0
-
-	for i := 1; i < len(os.Args); i++ {
-
-		flag := os.Args[i]
-
-		if flag == "init" {
-
-			INIT = 1
-
-			break
-
-		}
-
-		if flag == "-i" || flag == "--interactive" {
-
-			MODE_INTERACTIVE = 1
-
-		}
-
+	if err != nil {
+		fmt.Println(err.Error())
+		return
 	}
 
-	//if (MODE_INTERACTIVE) > 1 {
-	//	fmt.Println("error: more than one option used together")
-	//	return
-	//}
+	if flag == "help" {
 
-	if INIT == 1 {
+	} else if flag == "apix-md" {
+
+		apix.ExportMD()
+		return
+
+	} else if flag == "apix-js" {
+
+	} else if flag == "apix-py" {
+
+	} else if flag == "init" {
 
 		err := InitCtl()
 
@@ -291,17 +278,22 @@ func main() {
 		fmt.Println("successfully initiated")
 		return
 
-	}
-
-	if MODE_INTERACTIVE == 1 {
+	} else if flag == "interactive" {
 
 		RunClientInteractive()
+		return
 
 	} else {
 
-		RunClientCmd()
+		RunClientCmd(args)
+		return
 
 	}
+
+	//if (MODE_INTERACTIVE) > 1 {
+	//	fmt.Println("error: more than one option used together")
+	//	return
+	//}
 
 	return
 }
