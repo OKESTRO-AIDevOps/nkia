@@ -55,13 +55,17 @@ func InitCtl() error {
 
 	CONFIG_YAML := make(map[string]string)
 
-	if _, err := os.Stat(".npia/config.yaml"); err == nil {
+	if _, err := os.Stat("./.npia/config.yaml"); err == nil {
 
-		file_b, err := os.ReadFile(".npia/config.yaml")
+		fmt.Println("existing configyaml has been detected")
+
+		file_b, err := os.ReadFile("./.npia/config.yaml")
 
 		if err == nil {
 
-			err = goya.Unmarshal(file_b, CONFIG_YAML)
+			fmt.Println("successfully read the existing configyaml")
+
+			err = goya.Unmarshal(file_b, &CONFIG_YAML)
 
 			if err == nil {
 
@@ -71,7 +75,7 @@ func InitCtl() error {
 
 				for k, v := range CONFIG_YAML {
 
-					fmt.Printf("%s: %s\n", k, v)
+					fmt.Printf("  %s: %s\n", k, v)
 
 				}
 
@@ -85,6 +89,8 @@ func InitCtl() error {
 
 				}
 
+			} else {
+				fmt.Println(err.Error())
 			}
 
 		}
