@@ -361,8 +361,6 @@ func SockCommunicationHandler_LinearInstruction_PrintOnly_Test_Debug(c *websocke
 			fmt.Println("INST")
 			fmt.Println(linear_instruction)
 
-			api_out.BODY = linear_instruction
-
 			api_out_b, err := json.Marshal(api_out)
 
 			if err != nil {
