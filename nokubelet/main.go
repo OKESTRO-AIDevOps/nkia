@@ -111,7 +111,7 @@ func InitNpiaServer() error {
 
 				for k, v := range CONFIG_YAML {
 
-					fmt.Printf("%s: %s\n", k, v)
+					fmt.Printf("  %s: %s\n", k, v)
 
 				}
 
