@@ -18,6 +18,8 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+var PRINT_ONLY_BODY map[string]string
+
 func KeyAuthConn(client *http.Client, email string) (*websocket.Conn, error) {
 
 	var c *websocket.Conn
@@ -217,11 +219,11 @@ func RequestHandler_LinearInstruction_Persist_PrintOnly(c *websocket.Conn, targe
 
 }
 
-func RequestHandler_APIX_Once_PrintOnly(c *websocket.Conn, req_orchstrator ctrl.OrchestratorRequest) {
-
-	var req_orchestrator ctrl.OrchestratorRequest
+func RequestHandler_APIX_Once_PrintOnly(c *websocket.Conn, req_orchestrator ctrl.OrchestratorRequest) {
 
 	recv := make(chan ctrl.OrchestratorResponse)
+
+	var body_ret = PRINT_ONLY_BODY
 
 	go RequestHandler_ReadChannel(c, recv)
 
@@ -241,7 +243,9 @@ func RequestHandler_APIX_Once_PrintOnly(c *websocket.Conn, req_orchstrator ctrl.
 
 			fmt.Printf("\n----------> print q result: \n")
 
-			fmt.Println(string(result.QueryResult))
+			_ = json.Unmarshal(result.QueryResult, &body_ret)
+
+			fmt.Println(body_ret["BODY"])
 
 			return
 
