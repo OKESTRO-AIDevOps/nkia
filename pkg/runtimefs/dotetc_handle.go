@@ -61,21 +61,9 @@ func CreateAdmOrigin() error {
 
 	var reg RegInfo
 
-	if _, err := os.Stat(".etc"); os.IsExist(err) {
-
-		return fmt.Errorf("failed to create admin origin: %s", ".etc already exists")
-
-	}
-
 	if _, err := os.Stat(".etc/ADM_origin.json"); os.IsExist(err) {
 
 		return fmt.Errorf("failed to create admin origin: %s", ".etc/ADM_origin.json already exists")
-
-	}
-
-	if err := os.Mkdir(".etc", 0755); err != nil {
-
-		return fmt.Errorf("failed to create admin origin: %s", err.Error())
 
 	}
 
