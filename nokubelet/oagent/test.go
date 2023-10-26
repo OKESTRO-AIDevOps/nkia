@@ -45,7 +45,7 @@ func DetachedServerCommunicator_Test_Debug(address string, email string, cluster
 		return fmt.Errorf("comm failed: %s", err.Error())
 	}
 
-	if err := SockCommunicationHandler_LinearInstruction_PrintOnly_Test(c); err != nil {
+	if err := SockCommunicationHandler_LinearInstruction_PrintOnly_Test_Debug(c); err != nil {
 		return fmt.Errorf("comm failed: %s", err.Error())
 	}
 
@@ -99,7 +99,7 @@ func DetachedServerCommunicatorWithUpdate_Test_Debug(address string, email strin
 		return fmt.Errorf("commwup failed: %s", err.Error())
 	}
 
-	if err := SockCommunicationHandler_LinearInstruction_PrintOnly_Test(c); err != nil {
+	if err := SockCommunicationHandler_LinearInstruction_PrintOnly_Test_Debug(c); err != nil {
 		return fmt.Errorf("commwup failed: %s", err.Error())
 	}
 
