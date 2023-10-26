@@ -7,6 +7,7 @@ import (
 	"os/user"
 	"strings"
 	"syscall"
+	"time"
 
 	"fmt"
 
@@ -17,6 +18,7 @@ import (
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	sock "github.com/OKESTRO-AIDevOps/nkia/nokubelet/oagent"
 	_ "github.com/OKESTRO-AIDevOps/nkia/nokubelet/router"
+	"github.com/OKESTRO-AIDevOps/nkia/pkg/kubebase"
 	goya "github.com/goccy/go-yaml"
 
 	"golang.org/x/term"
@@ -172,6 +174,8 @@ func main() {
 
 	INIT := 0
 
+	INIT_NPIA := 0
+
 	MODE_DEBUG := 0
 
 	MODE_TEST := 0
@@ -209,6 +213,13 @@ func main() {
 			break
 		}
 
+		if flag == "init-npia" {
+
+			INIT_NPIA = 1
+
+			break
+		}
+
 		if flag == "-g" || flag == "--debug" {
 
 			MODE_DEBUG = 1
@@ -228,6 +239,56 @@ func main() {
 			fmt.Println(err_init.Error())
 		}
 		fmt.Println("successfully initiated")
+		return
+
+	}
+
+	if INIT_NPIA == 1 {
+		err_init := InitNpiaServer()
+
+		if err_init != nil {
+			fmt.Println(err_init.Error())
+		}
+
+		go kubebase.AdminInitNPIA()
+
+		t_start := time.Now()
+
+		done := 0
+
+		for time.Now().Sub(t_start).Seconds() < 30 {
+
+			if _, err := os.Stat("npia_init_done"); err == nil {
+
+				done = 1
+				break
+
+			}
+
+		}
+
+		if done == 1 {
+			b, _ := kubebase.AdminGetInitLog()
+
+			fmt.Println("-----INITLOG-----")
+
+			fmt.Println(string(b))
+
+			fmt.Println("-----------------")
+
+			fmt.Println("successfully initiated")
+		} else {
+
+			b, _ := kubebase.AdminGetInitLog()
+
+			fmt.Println("-----FAILLOG-----")
+
+			fmt.Println(string(b))
+
+			fmt.Println("-----------------")
+
+			fmt.Println("initiation timeout")
+		}
 		return
 
 	}
@@ -288,18 +349,35 @@ func main() {
 
 		if MODE_DEBUG == 1 {
 			fmt.Println(update_token)
-		}
 
-		if err := sock.DetachedServerCommunicatorWithUpdate_Test(address, email, cluster_id, update_token); err != nil {
-			fmt.Println(err.Error())
-			return
+			if err := sock.DetachedServerCommunicatorWithUpdate_Test_Debug(address, email, cluster_id, update_token); err != nil {
+				fmt.Println(err.Error())
+				return
+			}
+
+		} else {
+			if err := sock.DetachedServerCommunicatorWithUpdate_Test(address, email, cluster_id, update_token); err != nil {
+				fmt.Println(err.Error())
+				return
+			}
 		}
 
 	} else if MODE_TEST == 1 {
 
-		if err := sock.DetachedServerCommunicator_Test(address, email, cluster_id); err != nil {
-			fmt.Println(err.Error())
-			return
+		if MODE_DEBUG == 1 {
+
+			if err := sock.DetachedServerCommunicator_Test_Debug(address, email, cluster_id); err != nil {
+				fmt.Println(err.Error())
+				return
+			}
+
+		} else {
+
+			if err := sock.DetachedServerCommunicator_Test(address, email, cluster_id); err != nil {
+				fmt.Println(err.Error())
+				return
+			}
+
 		}
 
 	} else if MODE_UPDATE == 1 {

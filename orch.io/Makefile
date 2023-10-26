@@ -7,6 +7,11 @@ build:
 
 run: 
 
+	sudo docker-compose up --build
+
+
+run-newkey: 
+
 	go run ./_okeygen/keygen.go
 
 	cp okey osock/okey

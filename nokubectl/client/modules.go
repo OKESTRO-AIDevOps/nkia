@@ -217,9 +217,7 @@ func RequestHandler_LinearInstruction_Persist_PrintOnly(c *websocket.Conn, targe
 
 }
 
-func RequestHandler_APIX_Once_PrintOnly(c *websocket.Conn, req_orchstrator ctrl.OrchestratorRequest) {
-
-	var req_orchestrator ctrl.OrchestratorRequest
+func RequestHandler_APIX_Once_PrintOnly(c *websocket.Conn, req_orchestrator ctrl.OrchestratorRequest) {
 
 	recv := make(chan ctrl.OrchestratorResponse)
 
