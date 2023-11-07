@@ -19,7 +19,7 @@ func InitCtl() error {
 
 	var file_b []byte
 
-	cmd := exec.Command("mkdir", "-p", "srv")
+	cmd := exec.Command("mkdir", "-p", ".npia")
 
 	err := cmd.Run()
 
@@ -38,7 +38,7 @@ func InitCtl() error {
 		return fmt.Errorf("failed to init: %s", err.Error())
 	}
 
-	err = os.WriteFile("srv/.priv", file_b, 0644)
+	err = os.WriteFile(".npia/.priv", file_b, 0644)
 
 	if err != nil {
 		return fmt.Errorf("failed to init: %s", err.Error())

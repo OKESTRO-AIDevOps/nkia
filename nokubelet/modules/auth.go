@@ -34,7 +34,7 @@ func AccessAuth(c *gin.Context) (string, error) {
 		session_id = v.(string)
 	}
 
-	file_byte, err := os.ReadFile("srv/key.json")
+	file_byte, err := os.ReadFile(".npia/key.json")
 
 	if err != nil {
 		return "", fmt.Errorf("access auth failed: %s", err.Error())
@@ -64,7 +64,7 @@ func AccessAuth_Detached(key_id string) (string, error) {
 
 	var key_records KeyRecord
 
-	file_byte, err := os.ReadFile("srv/key.json")
+	file_byte, err := os.ReadFile(".npia/key.json")
 
 	if err != nil {
 		return "", fmt.Errorf("access auth failed: %s", err.Error())
@@ -195,7 +195,7 @@ func GenerateChallenge(client_ca_pub_key ChallengRecord) (ChallengRecord, error)
 		}
 	}
 
-	file_byte, err := os.ReadFile("srv/challenge.json")
+	file_byte, err := os.ReadFile(".npia/challenge.json")
 
 	if err != nil {
 		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
@@ -251,7 +251,7 @@ func GenerateChallenge(client_ca_pub_key ChallengRecord) (ChallengRecord, error)
 		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
 	}
 
-	err = os.WriteFile("srv/challenge.json", challenge_records_byte, 0644)
+	err = os.WriteFile(".npia/challenge.json", challenge_records_byte, 0644)
 
 	return new_challenge_records, nil
 
@@ -271,7 +271,7 @@ func VerifyChallange(answer ChallengRecord) (string, KeyRecord, error) {
 
 	new_key_record := make(KeyRecord)
 
-	challenge_file_byte, err := os.ReadFile("srv/challenge.json")
+	challenge_file_byte, err := os.ReadFile(".npia/challenge.json")
 
 	if err != nil {
 		return "", new_key_record, fmt.Errorf("failed to verify challenge: %s", err.Error())
@@ -283,7 +283,7 @@ func VerifyChallange(answer ChallengRecord) (string, KeyRecord, error) {
 		return "", new_key_record, fmt.Errorf("failed to verify challenge: %s", err.Error())
 	}
 
-	key_file_byte, err := os.ReadFile("srv/key.json")
+	key_file_byte, err := os.ReadFile(".npia/key.json")
 
 	if err != nil {
 		return "", new_key_record, fmt.Errorf("failed to verify challenge: %s", err.Error())
@@ -369,7 +369,7 @@ func VerifyChallange(answer ChallengRecord) (string, KeyRecord, error) {
 		return "", new_key_record, fmt.Errorf("failed to verify challenge: %s", "key write failed")
 	}
 
-	err = os.WriteFile("srv/key.json", key_records_byte, 0644)
+	err = os.WriteFile(".npia/key.json", key_records_byte, 0644)
 
 	if err != nil {
 		return "", new_key_record, fmt.Errorf("failed to verify challenge: %s", "key write failed")
@@ -492,7 +492,7 @@ func GenerateChallenge_Detached(config_b []byte, client_ca_pub_key ChallengRecor
 		return challenge_records, fmt.Errorf("failed to generate challenge: %s", "invalid pub key")
 	}
 
-	file_byte, err := os.ReadFile("srv/challenge.json")
+	file_byte, err := os.ReadFile(".npia/challenge.json")
 
 	if err != nil {
 		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
@@ -542,7 +542,7 @@ func GenerateChallenge_Detached(config_b []byte, client_ca_pub_key ChallengRecor
 		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
 	}
 
-	err = os.WriteFile("srv/challenge.json", challenge_records_byte, 0644)
+	err = os.WriteFile(".npia/challenge.json", challenge_records_byte, 0644)
 
 	return new_challenge_records, nil
 }
@@ -563,7 +563,7 @@ func GenerateChallenge_Key(email string, pub_str string) (ChallengRecord, error)
 		return challenge_records, fmt.Errorf("failed to generate challenge: invf 04: %s", err.Error())
 	}
 
-	file_byte, err := os.ReadFile("srv/challenge.json")
+	file_byte, err := os.ReadFile(".npia/challenge.json")
 
 	if err != nil {
 		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
@@ -601,7 +601,7 @@ func GenerateChallenge_Key(email string, pub_str string) (ChallengRecord, error)
 		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
 	}
 
-	err = os.WriteFile("srv/challenge.json", challenge_records_byte, 0644)
+	err = os.WriteFile(".npia/challenge.json", challenge_records_byte, 0644)
 
 	return new_challenge_records, nil
 }
@@ -620,7 +620,7 @@ func VerifyChallange_Detached(config_b []byte, answer ChallengRecord) (string, K
 
 	new_key_record := make(KeyRecord)
 
-	challenge_file_byte, err := os.ReadFile("srv/challenge.json")
+	challenge_file_byte, err := os.ReadFile(".npia/challenge.json")
 
 	if err != nil {
 		return "", new_key_record, fmt.Errorf("failed to verify challenge: %s", err.Error())
@@ -632,7 +632,7 @@ func VerifyChallange_Detached(config_b []byte, answer ChallengRecord) (string, K
 		return "", new_key_record, fmt.Errorf("failed to verify challenge: %s", err.Error())
 	}
 
-	key_file_byte, err := os.ReadFile("srv/key.json")
+	key_file_byte, err := os.ReadFile(".npia/key.json")
 
 	if err != nil {
 		return "", new_key_record, fmt.Errorf("failed to verify challenge: %s", err.Error())
@@ -714,7 +714,7 @@ func VerifyChallange_Detached(config_b []byte, answer ChallengRecord) (string, K
 		return "", new_key_record, fmt.Errorf("failed to verify challenge: %s", "key write failed")
 	}
 
-	err = os.WriteFile("srv/key.json", key_records_byte, 0644)
+	err = os.WriteFile(".npia/key.json", key_records_byte, 0644)
 
 	if err != nil {
 		return "", new_key_record, fmt.Errorf("failed to verify challenge: %s", "key write failed")
@@ -756,7 +756,7 @@ func VerifyChallange_Key(answer ChallengRecord) (string, error) {
 
 	challenge_records := make(ChallengRecord)
 
-	challenge_file_byte, err := os.ReadFile("srv/challenge.json")
+	challenge_file_byte, err := os.ReadFile(".npia/challenge.json")
 
 	if err != nil {
 		return email, fmt.Errorf("failed to verify challenge: %s", err.Error())

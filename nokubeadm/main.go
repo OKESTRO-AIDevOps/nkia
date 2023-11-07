@@ -16,7 +16,7 @@ import (
 
 func InitAdm() error {
 
-	cmd := exec.Command("mkdir", "-p", "srv")
+	cmd := exec.Command("mkdir", "-p", ".npia")
 
 	err := cmd.Run()
 
@@ -31,7 +31,7 @@ func InitAdm() error {
 
 	get_kubeconfig_path_command_b := []byte(get_kubeconfig_path_command_string)
 
-	err = os.WriteFile("srv/get_kubeconfig_path", get_kubeconfig_path_command_b, 0755)
+	err = os.WriteFile(".npia/get_kubeconfig_path", get_kubeconfig_path_command_b, 0755)
 
 	if err != nil {
 

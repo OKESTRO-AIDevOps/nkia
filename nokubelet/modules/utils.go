@@ -53,7 +53,7 @@ func GetKubeConfigPath() (string, error) {
 
 	var kube_config_path string
 
-	cmd := exec.Command("srv/get_kubeconfig_path")
+	cmd := exec.Command(".npia/get_kubeconfig_path")
 
 	out, err := cmd.Output()
 

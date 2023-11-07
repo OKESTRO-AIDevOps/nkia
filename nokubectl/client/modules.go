@@ -284,7 +284,7 @@ func LoadKeyAuthCredential() (*rsa.PrivateKey, error) {
 
 	var ret_key *rsa.PrivateKey
 
-	key_b, err := os.ReadFile("srv/.priv")
+	key_b, err := os.ReadFile(".npia/.priv")
 
 	if err != nil {
 		return ret_key, fmt.Errorf("failed to load cred: %s", err.Error())

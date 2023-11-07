@@ -38,7 +38,7 @@ type KeyRecord map[string]string
 
 func GetKubeConfigPathSimple() {
 
-	cmd := exec.Command("../srv/get_kubeconfig_path")
+	cmd := exec.Command("../.npia/get_kubeconfig_path")
 
 	out, err := cmd.Output()
 
@@ -63,7 +63,7 @@ func GetKubeConfigPath() (string, error) {
 
 	var kube_config_path string
 
-	cmd := exec.Command("../srv/get_kubeconfig_path")
+	cmd := exec.Command("../.npia/get_kubeconfig_path")
 
 	out, err := cmd.Output()
 
@@ -94,7 +94,7 @@ func LoadTest() (ChallengRecord, error) {
 
 	context_challenges := make(map[string]string)
 
-	file_byte, err := os.ReadFile("../srv/challenge.json")
+	file_byte, err := os.ReadFile("../.npia/challenge.json")
 
 	if err != nil {
 		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
@@ -152,7 +152,7 @@ func LoadTest() (ChallengRecord, error) {
 		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
 	}
 
-	err = os.WriteFile("../srv/challenge.json", challenge_records_byte, 0644)
+	err = os.WriteFile("../.npia/challenge.json", challenge_records_byte, 0644)
 
 	if err != nil {
 		return challenge_records, fmt.Errorf("failed to generate challenge: %s", err.Error())
@@ -788,7 +788,7 @@ func save_test() {
 
 	get_kubeconfig_path_command_b := []byte(get_kubeconfig_path_command_string)
 
-	err := os.WriteFile("srv/get_kubeconfig_path", get_kubeconfig_path_command_b, 0755)
+	err := os.WriteFile(".npia/get_kubeconfig_path", get_kubeconfig_path_command_b, 0755)
 
 	if err != nil {
 
@@ -796,7 +796,7 @@ func save_test() {
 		return
 	}
 
-	cmd := exec.Command("srv/get_kubeconfig_path")
+	cmd := exec.Command(".npia/get_kubeconfig_path")
 
 	t, err := cmd.Output()
 
