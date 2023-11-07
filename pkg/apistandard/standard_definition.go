@@ -16,17 +16,24 @@ type API_STD map[string][]string
 
 var API_DEFINITION string = "" +
 	//            id          :       keys
-	"ADMIN-INSTENV            :id, localip                                                                                " + "\n" +
+	// "ADMIN-INSTENV            :id, localip                                                                                " + "\n" +
+	// "ADMIN-INSTENVRES         :id, localip                                                                                " + "\n" +
 	"ADMIN-INSTCTRL           :id, localip, osnm, cv                                                                      " + "\n" +
-	"ADMIN-INSTANCTRLOL       :id, targetip, targetid, targetpw                                                           " + "\n" +
-	"ADMIN-INSTANCTRLOR       :id, targetip, targetid, targetpw, localip, osnm, cv, token, nrole, nid                     " + "\n" +
-	"ADMIN-INSTWK             :id, targetip, targetid, targetpw, localip, osnm, cv, token, nrole, nid                     " + "\n" +
-	"ADMIN-INSTVOLOR          :id, targetip, targetid, targetpw, localip                                                  " + "\n" +
+	// "ADMIN-INSTANCTRLCRT      :id, targetip, targetid, targetpw                                                           " + "\n" +
+	// "ADMIN-INSTANCTRLOL       :id, localip, osnm, cv, token, nrole, nid                                                   " + "\n" +
+	// "ADMIN-INSTANCTRLOR       :id, targetip, targetid, targetpw, localip, osnm, cv, token, nrole, nid                     " + "\n" +
+	"ADMIN-INSTWKOL           :id, localip, osnm, cv, token, nrole, nid                                                   " + "\n" +
+	"ADMIN-INSTWKOR           :id, targetip, targetid, targetpw, localip, osnm, cv, token, nrole, nid                     " + "\n" +
 	"ADMIN-INSTVOLOL          :id, targetip                                                                               " + "\n" +
-	"ADMIN-INSTTK             :id                                                                                         " + "\n" +
-	"ADMIN-INSTLOG            :id, islocal, targetip, targetid, targetpw                                                  " + "\n" +
-	"ADMIN-INSTLOCKGET        :id, islocal, targetip, targetid, targetpw                                                  " + "\n" +
-	"ADMIN-INSTLOCKSET        :id, islocal, targetip, targetid, targetpw                                                  " + "\n" +
+	"ADMIN-INSTVOLOR          :id, targetip, targetid, targetpw, localip                                                  " + "\n" +
+	"ADMIN-INSTTKOL           :id                                                                                         " + "\n" +
+	"ADMIN-INSTTKOR           :id, targetip, targetid, targetpw                                                           " + "\n" +
+	"ADMIN-INSTLOGOL          :id, targetip, targetid, targetpw                                                           " + "\n" +
+	"ADMIN-INSTLOGOR          :id, targetip, targetid, targetpw                                                           " + "\n" +
+	"ADMIN-INSTLOCKGETOL      :id, targetip, targetid, targetpw                                                           " + "\n" +
+	"ADMIN-INSTLOCKGETOR      :id, targetip, targetid, targetpw                                                           " + "\n" +
+	"ADMIN-INSTLOCKSETOL      :id, targetip, targetid, targetpw                                                           " + "\n" +
+	"ADMIN-INSTLOCKSETOR      :id, targetip, targetid, targetpw                                                           " + "\n" +
 	//	"DELND                    :id                                                                                       " + "\n" +
 	"ADMIN-INIT               :id                                                                                         " + "\n" +
 	"ADMIN-INITLOG            :id                                                                                         " + "\n" +
@@ -34,7 +41,7 @@ var API_DEFINITION string = "" +
 	"SETTING-SETREPO          :id, ns, repoaddr, repoid, repopw                                                           " + "\n" +
 	"SETTING-SETREG           :id, ns, regaddr, regid, regpw                                                              " + "\n" +
 	// "SETTING-CRTNSVOL          :id, ns, volserver                                                                        " + "\n" +
-	// "SETTING-CRTVOL            :id, ns, volserver                                                                        " + "\n" +
+	"SETTING-CRTVOL           :id, ns, targetip                                                                           " + "\n" +
 	"SETTING-CRTMON           :id                                                                                         " + "\n" +
 	//  "SETTING-DELNS            :id, ns                                                                                   " + "\n" +
 	//  "TOOLKIT-SUBMIT           :id                                                                                       " + "\n" +

@@ -2,9 +2,7 @@ package kubebase
 
 func InstallEnvironment(localip string) ([]byte, error) {
 	var ret_byte []byte
-
 	return ret_byte, nil
-
 }
 
 func InstallControlPlane(localip string, osnm string, cversion string) ([]byte, error) {

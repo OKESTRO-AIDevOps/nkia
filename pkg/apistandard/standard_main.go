@@ -21,25 +21,39 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 	cmd_id := std_cmd["id"]
 
 	switch cmd_id {
-	//	case "ADMIN-ADMRMTCHK":
-	//	case "ADMIN-ADMRMTLDHA":
-	//	case "ADMIN-ADMRMTLDMV":
-	//	case "ADMIN-ADMRMTMSR":
-	//	case "ADMIN-ADMRMTLDWRK":
-	//	case "ADMIN-ADMRMTWRK":
-	//	case "ADMIN-ADMRMTSTR":
-	//	case "ADMIN-ADMRMTLOG":
-	//	case "ADMIN-ADMRMTSTATUS":
-	//	case "ADMIN-LEAD":
-	//	case "ADMIN-MSR":
-	//	case "ADMIN-LDVOL":
-	//	case "ADMIN-WRK":
-	//	case "ADMIN-STR":
-	//	case "ADMIN-LOG":
-	//	case "ADMIN-STATUS":
-	//	case "ADMIN-UP":
-	//	case "ADMIN-DOWN":
-	//	case "DELND":
+
+	// case "ADMIN-INSTENV":
+
+	case "ADMIN-INSTCTRL":
+
+	//	case "ADMIN-INSTANCTRLOL":
+
+	//	case "ADMIN-INSTANCTRLOR":
+
+	case "ADMIN-INSTWKOL":
+
+	case "ADMIN-INSTWKOR":
+
+	case "ADMIN-INSTVOLOL":
+
+	case "ADMIN-INSTVOLOR":
+
+	case "ADMIN-INSTTKOL":
+
+	case "ADMIN-INSTTKOR":
+
+	case "ADMIN-INSTLOGOL":
+
+	case "ADMIN-INSTLOGOR":
+
+	case "ADMIN-INSTLOCKGETOL":
+
+	case "ADMIN-INSTLOCKGETOR":
+
+	case "ADMIN-INSTLOCKSETOL":
+
+	case "ADMIN-INSTLOCKSETOR":
+
 	case "ADMIN-INIT":
 
 		go kubebase.AdminInitNPIA()
@@ -99,7 +113,8 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 
 		ret_api_out.BODY = string(b_out)
 		//	case "SETTING-CRTNSVOL":
-		//	case "SETTING-CRTVOL":
+	case "SETTING-CRTVOL":
+
 	case "SETTING-CRTMON":
 
 		b_out, cmd_err := kubebase.SettingCreateMonitoring()
