@@ -21,4 +21,4 @@ sudo helm repo add prometheus-community https://prometheus-community.github.io/h
 
 sudo helm repo update  
 
-sudo helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack --version 42.2.0
+sudo helm install -f ./default-kubeprom-custom-value.yaml kube-prometheus-stack prometheus-community/kube-prometheus-stack --version 42.2.0
