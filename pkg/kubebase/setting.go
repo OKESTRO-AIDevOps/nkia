@@ -6,6 +6,7 @@ import (
 
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/libinterface"
 	runfs "github.com/OKESTRO-AIDevOps/nkia/pkg/runtimefs"
+	"github.com/OKESTRO-AIDevOps/nkia/pkg/utils"
 )
 
 func SettingCreateNamespace(main_ns string, repoaddr string, regaddr string) ([]byte, error) {
@@ -106,7 +107,15 @@ func SettingCreateMonitoring() ([]byte, error) {
 
 	}
 
-	LIBIF_SCRIPTS_PROM_CREATE, err := libif.GetLibComponentAddress("scripts", "prom_create")
+	os_release := utils.MakeOSReleaseLinux()
+
+	lib_base_name, err := ConstructBaseName("SETTING-CRTMON", os_release["ID"])
+
+	if err != nil {
+		return ret_byte, fmt.Errorf(": %s", err.Error())
+	}
+
+	LIBIF_SCRIPTS_PROM_CREATE, err := libif.GetLibComponentAddress("base", lib_base_name)
 
 	if err != nil {
 

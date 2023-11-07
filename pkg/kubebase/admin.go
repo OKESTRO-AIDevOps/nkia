@@ -128,7 +128,7 @@ func AdminInitNPIA() {
 		return
 	}
 
-	LIBIF_SCRIPTS_ADMIN_INIT_DEPENDENCY, err := libif.GetLibComponentAddress("scripts", "admin_init_dependency")
+	LIBIF_SCRIPTS_ADMIN_INIT_DEPENDENCY, err := libif.GetLibComponentAddress("base", "admin_init_dependency")
 
 	if err != nil {
 		AdminBlindResetNPIA()
