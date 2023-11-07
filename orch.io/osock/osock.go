@@ -48,7 +48,7 @@ func O_Init() error {
 
 	key_records["_INIT"] = "_INIT"
 
-	cmd := exec.Command("mkdir", "-p", "srv")
+	cmd := exec.Command("mkdir", "-p", ".npia")
 
 	err := cmd.Run()
 
@@ -80,14 +80,14 @@ func O_Init() error {
 		return fmt.Errorf("failed init npia orchestrator: %s", err.Error())
 	}
 
-	err = os.WriteFile("srv/challenge.json", challenge_records_b, 0644)
+	err = os.WriteFile(".npia/challenge.json", challenge_records_b, 0644)
 
 	if err != nil {
 
 		return fmt.Errorf("failed init npia orchestrator: %s", err.Error())
 	}
 
-	err = os.WriteFile("srv/key.json", key_records_b, 0644)
+	err = os.WriteFile(".npia/key.json", key_records_b, 0644)
 
 	if err != nil {
 

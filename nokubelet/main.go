@@ -36,7 +36,7 @@ func InitNpiaServer() error {
 
 	key_records["_INIT"] = "_INIT"
 
-	cmd := exec.Command("mkdir", "-p", "srv")
+	cmd := exec.Command("mkdir", "-p", ".npia")
 
 	err := cmd.Run()
 
@@ -59,14 +59,14 @@ func InitNpiaServer() error {
 		return fmt.Errorf("failed init npia server: %s", err.Error())
 	}
 
-	err = os.WriteFile("srv/challenge.json", challenge_records_b, 0644)
+	err = os.WriteFile(".npia/challenge.json", challenge_records_b, 0644)
 
 	if err != nil {
 
 		return fmt.Errorf("failed init npia server: %s", err.Error())
 	}
 
-	err = os.WriteFile("srv/key.json", key_records_b, 0644)
+	err = os.WriteFile(".npia/key.json", key_records_b, 0644)
 
 	if err != nil {
 
@@ -79,7 +79,7 @@ func InitNpiaServer() error {
 
 	get_kubeconfig_path_command_b := []byte(get_kubeconfig_path_command_string)
 
-	err = os.WriteFile("srv/get_kubeconfig_path", get_kubeconfig_path_command_b, 0755)
+	err = os.WriteFile(".npia/get_kubeconfig_path", get_kubeconfig_path_command_b, 0755)
 
 	if err != nil {
 

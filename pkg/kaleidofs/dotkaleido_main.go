@@ -55,7 +55,7 @@ func InitKaleidoRoot() error {
 
 	mode := CheckMode()
 
-	if mode == "srv" {
+	if mode == ".npia" {
 
 		kube_config_path, err = GetKubeConfigPath()
 
@@ -162,7 +162,7 @@ func SaveAndSwitch(switch_to string) error {
 
 	mode := CheckMode()
 
-	if mode == "srv" {
+	if mode == ".npia" {
 
 		kube_config_path, err = GetKubeConfigPath()
 
