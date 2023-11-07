@@ -14,11 +14,11 @@ apt-get install -y nfs-common
 
 apt-get install -y jq
 
-mkdir -p /kw_data
+mkdir -p /npia-data
 
-chown -R root:root /kw_data
+chown -R root:root /npia-data
 
-chmod -R 777 /kw_data
+chmod -R 777 /npia-data
 
 
 
@@ -26,7 +26,7 @@ IP=$local_ip
 
 cat << EOF > /etc/exports
 
-/kw_data $IP/24(rw,sync,no_subtree_check,no_root_squash) 10.10.0.0/16(rw,sync,no_subtree_check,no_root_squash)
+/npia-data $IP/24(rw,sync,no_subtree_check,no_root_squash) 10.10.0.0/16(rw,sync,no_subtree_check,no_root_squash)
 
 EOF
 

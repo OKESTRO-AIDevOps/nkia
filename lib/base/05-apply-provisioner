@@ -4,7 +4,6 @@ server_ip=$1
 
 storage_class_path=$2
 
-mkdir -p /npia-data
 
 sudo helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
 
