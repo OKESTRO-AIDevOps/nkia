@@ -13,18 +13,17 @@ func OpenFilePointerForUsrBuildLog() (*os.File, error) {
 	var outfile *os.File
 	var err error
 
-	if _, err := os.Stat(".usr/build_log"); err == nil {
+	build_log_path, err := BuildOpenForward()
+
+	if err != nil {
+		return outfile, fmt.Errorf("failed to get file pointer: %s", err.Error())
+	}
+
+	if _, err := os.Stat(build_log_path); err == nil {
 		return outfile, fmt.Errorf("failed to get file pointer: %s", "another build in process")
 	}
 
-	if _, err := os.Stat(".usr/build_done"); err == nil {
-		e := os.Remove(".usr/build_done")
-		if e != nil {
-			return outfile, fmt.Errorf("failed to get file pointer: %s", err.Error())
-		}
-	}
-
-	outfile, err = os.Create(".usr/build_log")
+	outfile, err = os.Create(build_log_path)
 
 	if err != nil {
 		return outfile, fmt.Errorf("failed to get file pointer: %s", err.Error())
@@ -41,22 +40,10 @@ func CloseFilePointerForUsrBuildLogAndMarkDone(fp *os.File) error {
 		return fmt.Errorf("failed to close file pointer: %s", err.Error())
 	}
 
-	file_byte, err := os.ReadFile(".usr/build_log")
+	err = BuildClose()
 
 	if err != nil {
-		return fmt.Errorf("failed to close file pointer: %s", err.Error())
-	}
-
-	err = os.Remove(".usr/build_log")
-
-	if err != nil {
-		return fmt.Errorf("failed to close file pointer: %s", err.Error())
-	}
-
-	err = os.WriteFile(".usr/build_done", file_byte, 0644)
-
-	if err != nil {
-		return fmt.Errorf("failed to close file pointer: %s", err.Error())
+		return fmt.Errorf("failed to close build: %s", err.Error())
 	}
 
 	return nil

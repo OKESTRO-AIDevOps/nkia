@@ -28,12 +28,8 @@ var API_DEFINITION string = "" +
 	"ADMIN-INSTVOLOR          :id, targetip, targetid, targetpw, localip                                                  " + "\n" +
 	"ADMIN-INSTTKOL           :id                                                                                         " + "\n" +
 	"ADMIN-INSTTKOR           :id, targetip, targetid, targetpw                                                           " + "\n" +
-	"ADMIN-INSTLOGOL          :id, targetip, targetid, targetpw                                                           " + "\n" +
+	"ADMIN-INSTLOGOL          :id,                                                                                        " + "\n" +
 	"ADMIN-INSTLOGOR          :id, targetip, targetid, targetpw                                                           " + "\n" +
-	"ADMIN-INSTLOCKGETOL      :id, targetip, targetid, targetpw                                                           " + "\n" +
-	"ADMIN-INSTLOCKGETOR      :id, targetip, targetid, targetpw                                                           " + "\n" +
-	"ADMIN-INSTLOCKSETOL      :id, targetip, targetid, targetpw                                                           " + "\n" +
-	"ADMIN-INSTLOCKSETOR      :id, targetip, targetid, targetpw                                                           " + "\n" +
 	//	"DELND                    :id                                                                                       " + "\n" +
 	"ADMIN-INIT               :id                                                                                         " + "\n" +
 	"ADMIN-INITLOG            :id                                                                                         " + "\n" +
@@ -43,6 +39,7 @@ var API_DEFINITION string = "" +
 	// "SETTING-CRTNSVOL          :id, ns, volserver                                                                        " + "\n" +
 	"SETTING-CRTVOL           :id, ns, targetip                                                                           " + "\n" +
 	"SETTING-CRTMON           :id                                                                                         " + "\n" +
+	"SETTING-CRTMONPERS       :id                                                                                         " + "\n" +
 	//  "SETTING-DELNS            :id, ns                                                                                   " + "\n" +
 	//  "TOOLKIT-SUBMIT           :id                                                                                       " + "\n" +
 	//	"TOOLKIT-CALLME           :id                                                                                       " + "\n" +

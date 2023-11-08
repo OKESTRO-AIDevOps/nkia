@@ -24,7 +24,11 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 
 	// case "ADMIN-INSTENV":
 
+	// case "ADMIN-INSTENVRES":
+
 	case "ADMIN-INSTCTRL":
+
+	//	case "ADMIN-INSTANCTRLCRT":
 
 	//	case "ADMIN-INSTANCTRLOL":
 
@@ -113,11 +117,33 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 
 		ret_api_out.BODY = string(b_out)
 		//	case "SETTING-CRTNSVOL":
+
 	case "SETTING-CRTVOL":
+
+		main_ns := std_cmd["ns"]
+		target_ip := std_cmd["targetip"]
+
+		b_out, cmd_err := kubebase.SettingCreateVolume(main_ns, target_ip)
+
+		if cmd_err != nil {
+			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+		}
+
+		ret_api_out.BODY = string(b_out)
 
 	case "SETTING-CRTMON":
 
 		b_out, cmd_err := kubebase.SettingCreateMonitoring()
+
+		if cmd_err != nil {
+			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+		}
+
+		ret_api_out.BODY = string(b_out)
+
+	case "SETTING-CRTMONPERS":
+
+		b_out, cmd_err := kubebase.SettingCreateMonitoringPersistent()
 
 		if cmd_err != nil {
 			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
@@ -132,7 +158,7 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 		//	case "PIPEHIST":
 		//	case "PIPE":
 		//	case "PIPELOG":
-	case "BUILD":
+	case "TOOLKIT-BUILD":
 
 		ns := std_cmd["ns"]
 		repoaddr := std_cmd["repoaddr"]
@@ -144,7 +170,7 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 
 		ret_api_out.BODY = string(b_out)
 
-	case "BUILDLOG":
+	case "TOOLKIT-BUILDLOG":
 
 		b_out, cmd_err := kubetoolkit.ToolkitBuildImagesGetLog()
 
