@@ -7,6 +7,7 @@ import (
 
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/libinterface"
 	runfs "github.com/OKESTRO-AIDevOps/nkia/pkg/runtimefs"
+	"github.com/OKESTRO-AIDevOps/nkia/pkg/utils"
 )
 
 func AdminInitNPIA() {
@@ -128,7 +129,16 @@ func AdminInitNPIA() {
 		return
 	}
 
-	LIBIF_SCRIPTS_ADMIN_INIT_DEPENDENCY, err := libif.GetLibComponentAddress("base", "admin_init_dependency")
+	os_release := utils.MakeOSReleaseLinux()
+
+	lib_base_name, err := ConstructBaseName("ADMIN-INIT", os_release["ID"])
+
+	if err != nil {
+		outfile.Write([]byte("failed to init: " + err.Error() + "\n"))
+		return
+	}
+
+	LIBIF_SCRIPTS_ADMIN_INIT_DEPENDENCY, err := libif.GetLibComponentAddress("base", lib_base_name)
 
 	if err != nil {
 		AdminBlindResetNPIA()

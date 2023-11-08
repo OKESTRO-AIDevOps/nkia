@@ -95,6 +95,62 @@ func SettingRegInfo(main_ns string, regaddr string, regid string, regpw string) 
 	return ret_byte, nil
 }
 
+func SettingCreateVolume(main_ns string, targetip string) ([]byte, error) {
+
+	var ret_byte []byte
+
+	libif, err := libinterface.ConstructLibIface()
+
+	if err != nil {
+
+		return ret_byte, fmt.Errorf(": %s", err.Error())
+
+	}
+
+	os_release := utils.MakeOSReleaseLinux()
+
+	lib_base_name, err := ConstructBaseName("SETTING-CRTVOL", os_release["ID"])
+
+	if err != nil {
+		return ret_byte, fmt.Errorf(": %s", err.Error())
+	}
+
+	LIBIF_BASE_NFS_PROVISION, err := libif.GetLibComponentAddress("base", lib_base_name)
+
+	if err != nil {
+
+		return ret_byte, fmt.Errorf(": %s", err.Error())
+
+	}
+
+	cmd := exec.Command(LIBIF_BASE_NFS_PROVISION, targetip)
+
+	out, err := cmd.Output()
+
+	if err != nil {
+		return ret_byte, fmt.Errorf(": %s", err.Error())
+	}
+
+	SC_SRC_PATH, err := runfs.CreateDefaultStorageSource()
+
+	if err != nil {
+		return ret_byte, fmt.Errorf(": %s", err.Error())
+	}
+
+	cmd = exec.Command("kubectl", "apply", "-f", SC_SRC_PATH)
+
+	out, err = cmd.Output()
+
+	if err != nil {
+		return ret_byte, fmt.Errorf(": %s", err.Error())
+	}
+
+	ret_byte = out
+
+	return ret_byte, nil
+
+}
+
 func SettingCreateMonitoring() ([]byte, error) {
 
 	var ret_byte []byte
@@ -106,6 +162,18 @@ func SettingCreateMonitoring() ([]byte, error) {
 		return ret_byte, fmt.Errorf(": %s", err.Error())
 
 	}
+
+	cmd := exec.Command("helm", "repo", "add", "prometheus-community", "https://prometheus-community.github.io/helm-charts")
+
+	_ = cmd.Run()
+
+	cmd = exec.Command("helm", "repo", "update")
+
+	_ = cmd.Run()
+
+	cmd = exec.Command("helm", "install", "kube-prometheus-stack", "prometheus-community/kube-prometheus-stack", "--version", "42.2.0")
+
+	_ = cmd.Run()
 
 	os_release := utils.MakeOSReleaseLinux()
 
@@ -123,7 +191,70 @@ func SettingCreateMonitoring() ([]byte, error) {
 
 	}
 
-	cmd := exec.Command(LIBIF_SCRIPTS_PROM_CREATE)
+	cmd = exec.Command(LIBIF_SCRIPTS_PROM_CREATE)
+
+	_ = cmd.Run()
+
+	cmd = exec.Command("kubectl", "get", "deployments")
+
+	out, err := cmd.Output()
+
+	if err != nil {
+		return ret_byte, fmt.Errorf(": %s", err.Error())
+	}
+
+	ret_byte = out
+
+	return ret_byte, nil
+}
+
+func SettingCreateMonitoringPersistent() ([]byte, error) {
+
+	var ret_byte []byte
+
+	libif, err := libinterface.ConstructLibIface()
+
+	if err != nil {
+
+		return ret_byte, fmt.Errorf(": %s", err.Error())
+
+	}
+
+	KPV_SRC_PATH, err := runfs.CreateDefaultHelmValueSource()
+
+	if err != nil {
+		return ret_byte, fmt.Errorf(": %s", err.Error())
+	}
+
+	cmd := exec.Command("helm", "repo", "add", "prometheus-community", "https://prometheus-community.github.io/helm-charts")
+
+	_ = cmd.Run()
+
+	cmd = exec.Command("helm", "repo", "update")
+
+	_ = cmd.Run()
+
+	cmd = exec.Command("helm", "install", "-f", KPV_SRC_PATH, "kube-prometheus-stack", "prometheus-community/kube-prometheus-stack", "--version", "42.2.0")
+
+	_ = cmd.Run()
+
+	os_release := utils.MakeOSReleaseLinux()
+
+	lib_base_name, err := ConstructBaseName("SETTING-CRTMON", os_release["ID"])
+
+	if err != nil {
+		return ret_byte, fmt.Errorf(": %s", err.Error())
+	}
+
+	LIBIF_SCRIPTS_PROM_CREATE, err := libif.GetLibComponentAddress("base", lib_base_name)
+
+	if err != nil {
+
+		return ret_byte, fmt.Errorf(": %s", err.Error())
+
+	}
+
+	cmd = exec.Command(LIBIF_SCRIPTS_PROM_CREATE)
 
 	_ = cmd.Run()
 

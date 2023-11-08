@@ -2,7 +2,6 @@
 
 server_ip=$1
 
-storage_class_path=$2
 
 
 sudo helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
@@ -10,5 +9,3 @@ sudo helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.githu
 
 sudo helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner --set nfs.server=$server_ip --set nfs.path=/npia-data
 
-
-sudo kubectl apply -f "$storage_class_path"
