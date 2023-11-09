@@ -19,15 +19,15 @@ var API_DEFINITION string = "" +
 	// "ADMIN-INSTENV            :id, localip                                                                                " + "\n" +
 	// "ADMIN-INSTENVRES         :id, localip                                                                                " + "\n" +
 	"ADMIN-INSTCTRL           :id, localip, osnm, cv                                                                      " + "\n" +
-	// "ADMIN-INSTANCTRLCRT      :id, targetip, targetid, targetpw                                                           " + "\n" +
-	// "ADMIN-INSTANCTRLOL       :id, localip, osnm, cv, token, nrole, nid                                                   " + "\n" +
-	// "ADMIN-INSTANCTRLOR       :id, targetip, targetid, targetpw, localip, osnm, cv, token, nrole, nid                     " + "\n" +
-	"ADMIN-INSTWKOL           :id, localip, osnm, cv, token, nrole, nid                                                   " + "\n" +
-	"ADMIN-INSTWKOR           :id, targetip, targetid, targetpw, localip, osnm, cv, token, nrole, nid                     " + "\n" +
-	"ADMIN-INSTVOLOL          :id, targetip                                                                               " + "\n" +
-	"ADMIN-INSTVOLOR          :id, targetip, targetid, targetpw, localip                                                  " + "\n" +
+	// "ADMIN-INSTANCTRLCRT      :id, targetip, targetid, targetpw                                                          " + "\n" +
+	// "ADMIN-INSTANCTRLOL       :id, localip, osnm, cv, token                                                              " + "\n" +
+	// "ADMIN-INSTANCTRLOR       :id, targetip, targetid, targetpw, localip, osnm, cv, token                                " + "\n" +
+	"ADMIN-INSTWKOL           :id, localip, osnm, cv, token                                                               " + "\n" +
+	"ADMIN-INSTWKOR           :id, targetip, targetid, targetpw, localip, osnm, cv, token                                 " + "\n" +
+	"ADMIN-INSTVOLOL          :id, localip                                                                               " + "\n" +
+	// "ADMIN-INSTVOLOR          :id, targetip, targetid, targetpw, localip                                                  " + "\n" +
 	"ADMIN-INSTTKOL           :id                                                                                         " + "\n" +
-	"ADMIN-INSTTKOR           :id, targetip, targetid, targetpw                                                           " + "\n" +
+	// "ADMIN-INSTTKOR           :id, targetip, targetid, targetpw                                                           " + "\n" +
 	"ADMIN-INSTLOGOL          :id,                                                                                        " + "\n" +
 	"ADMIN-INSTLOGOR          :id, targetip, targetid, targetpw                                                           " + "\n" +
 	//	"DELND                    :id                                                                                       " + "\n" +
@@ -49,6 +49,8 @@ var API_DEFINITION string = "" +
 	//	"TOOLKIT-PIPELOG          :id                                                                                       " + "\n" +
 	"TOOLKIT-BUILD            :id, ns, repoaddr, regaddr                                                                  " + "\n" +
 	"TOOLKIT-BUILDLOG         :id                                                                                         " + "\n" +
+	// "TOOLKIT-BUILDAGT         :id, ns, repoaddr, regaddr                                                                  " + "\n" +
+	// "TOOLKIT-BUILDLOGAGT      :id                                                                                         " + "\n" +
 	"RESOURCE-NDS             :id, ns                                                                                     " + "\n" +
 	"RESOURCE-PDS             :id, ns                                                                                     " + "\n" +
 	"RESOURCE-PLOG            :id, ns, podnm                                                                              " + "\n" +

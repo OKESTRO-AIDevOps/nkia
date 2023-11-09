@@ -1,0 +1,4 @@
+MODE: test
+BASE_URL: http://localhost:1337
+BASE_URL_SOCK: ws://localhost:7331
+EMAIL: seantywork@gmail.com

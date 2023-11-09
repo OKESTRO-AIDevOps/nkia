@@ -1,6 +1,9 @@
 config.json
 VENV
-_out/nokubectl
+.priv
 orch.io/ofront/ofront
 orch.io/osock/osock
 orch.io/osock/okey
+*.tar
+*.tar.gz
+*.tgz

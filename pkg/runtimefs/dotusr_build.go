@@ -32,7 +32,7 @@ func OpenFilePointerForUsrBuildLog() (*os.File, error) {
 	return outfile, nil
 }
 
-func CloseFilePointerForUsrBuildLogAndMarkDone(fp *os.File) error {
+func CloseFilePointerForUsrBuildLogAndMarkDone(fp *os.File, close_msg string) error {
 
 	err := fp.Close()
 
@@ -40,7 +40,7 @@ func CloseFilePointerForUsrBuildLogAndMarkDone(fp *os.File) error {
 		return fmt.Errorf("failed to close file pointer: %s", err.Error())
 	}
 
-	err = BuildClose()
+	err = BuildClose(close_msg)
 
 	if err != nil {
 		return fmt.Errorf("failed to close build: %s", err.Error())

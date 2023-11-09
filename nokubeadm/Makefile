@@ -1,3 +1,3 @@
 build:
-	/bin/cp -Rf ./.npia ../_out/nokubeadm/
-	go build -o ../_out/nokubeadm .
+	/bin/cp -Rf ./.npia ../bin/nokubeadm/
+	go build -o ../bin/nokubeadm .
