@@ -62,6 +62,42 @@ func (axgi API_X) BuildOrchRequest(apix_id string, apix_options API_X_OPTIONS) (
 	return oreq, nil
 }
 
+func (axgi API_X) BuildAPIInput(apix_id string, apix_options API_X_OPTIONS) (apistd.API_INPUT, error) {
+
+	apistd_in := make(apistd.API_INPUT)
+
+	apistd_id, okay := axgi[apix_id]
+
+	if !okay {
+		return apistd_in, fmt.Errorf("builder: %s", "no matching api std for: "+apix_id)
+	}
+
+	apistd_in_template, okay := apistd.ASgi[apistd_id]
+
+	if !okay {
+		return apistd_in, fmt.Errorf("builder: %s", "no matching api std for: "+apistd_id)
+	}
+
+	for k, v := range apistd_in_template {
+
+		if k == 0 {
+			apistd_in[v] = apistd_id
+			continue
+		}
+
+		input_val, okay := apix_options[v]
+
+		if !okay {
+			return apistd_in, fmt.Errorf("builder: %s", "missing required option: "+"--"+v)
+		}
+
+		apistd_in[v] = input_val
+
+	}
+
+	return apistd_in, nil
+}
+
 func (axgi API_X) BuildOrchRequestFromCommandLine(args []string) (ctrl.OrchestratorRequest, error) {
 
 	oreq := ctrl.OrchestratorRequest{}
@@ -79,6 +115,25 @@ func (axgi API_X) BuildOrchRequestFromCommandLine(args []string) (ctrl.Orchestra
 	}
 
 	return oreq, nil
+}
+
+func (axgi API_X) BuildAPIInputFromCommandLine(args []string) (apistd.API_INPUT, error) {
+
+	var api_input apistd.API_INPUT
+
+	apix_id, apix_options, err := BuildCmdIdAndOptions(args)
+
+	if err != nil {
+		return api_input, fmt.Errorf("error cmd args: %s", err.Error())
+	}
+
+	api_input, err = axgi.BuildAPIInput(apix_id, apix_options)
+
+	if err != nil {
+		return api_input, fmt.Errorf("error cmd args: %s", err.Error())
+	}
+
+	return api_input, nil
 }
 
 func BuildCmdIdAndOptions(args []string) (string, API_X_OPTIONS, error) {

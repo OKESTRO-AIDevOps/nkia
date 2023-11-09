@@ -170,3 +170,65 @@ func CloseFilePointerForInstallLogAndMarkFail(fp *os.File, close_msg string) err
 
 	return nil
 }
+
+func GetOngoingInstallLog() ([]byte, error) {
+
+	var ret_byte []byte
+
+	head_dir := ".npia/install/"
+
+	ERR_MSG := "failed to get ongoing install log: %s"
+
+	if _, err := os.Stat(".npia/install/HEAD"); err != nil {
+
+		return ret_byte, fmt.Errorf(ERR_MSG, err.Error())
+
+	}
+
+	head_value_b, err := os.ReadFile(".npia/install/HEAD")
+
+	if err != nil {
+		return ret_byte, fmt.Errorf(ERR_MSG, err.Error())
+	}
+
+	head_value := string(head_value_b)
+
+	head_dir += head_value
+
+	if _, err := os.Stat(head_dir); err != nil {
+
+		return ret_byte, fmt.Errorf(ERR_MSG, err.Error())
+
+	}
+
+	head_dir += "/"
+
+	head_dir_open := head_dir + "open"
+
+	head_dir_close := head_dir + "close"
+
+	head_dir_log := head_dir + "log"
+
+	if _, err := os.Stat(head_dir_open); err != nil {
+
+		return ret_byte, fmt.Errorf(ERR_MSG, err.Error())
+
+	}
+
+	if _, err := os.Stat(head_dir_close); err == nil {
+
+		return ret_byte, fmt.Errorf(ERR_MSG, "installation already closed")
+
+	}
+
+	file_b, err := os.ReadFile(head_dir_log)
+
+	if err != nil {
+		return ret_byte, fmt.Errorf(ERR_MSG, err.Error())
+	}
+
+	ret_byte = file_b
+
+	return ret_byte, nil
+
+}

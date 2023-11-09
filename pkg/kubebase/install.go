@@ -1,6 +1,7 @@
 package kubebase
 
 import (
+	"fmt"
 	"os/exec"
 	"strings"
 
@@ -429,12 +430,20 @@ func InstallToolKitOnLocal() {
 //}
 
 func InstallLogOnLocal() ([]byte, error) {
+
 	var ret_byte []byte
+
+	ret_byte, err := runfs.GetOngoingInstallLog()
+
+	if err != nil {
+		return ret_byte, fmt.Errorf(": %s", err.Error())
+	}
 
 	return ret_byte, nil
 }
 
 func InstallLogOnRemote(targetip string, targetid string, targetpw string) ([]byte, error) {
+
 	var ret_byte []byte
 
 	return ret_byte, nil

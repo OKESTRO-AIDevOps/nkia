@@ -6,23 +6,27 @@ var APIX_COMMAND = "" +
 	"keygen                                            : generate and receive private key                " + "\n" +
 	"addcluster                                        : generate and receive token for connecting a working cluster            " + "\n" +
 	// query
-	"admin-install-env                                 : set up installation environment         " + "\n" +
-	"admin-install-mainctrl                            : set up main control plane         " + "\n" +
-	"admin-install-subctrl-prep                        : prepare sub control plane    " + "\n" +
-	"admin-install-subctrl-add                         : set up sub sontrol plane    " + "\n" +
-	"admin-install-worker                              : set up worker           " + "\n" +
-	"admin-install-volume-prep                         : prepare volume        " + "\n" +
-	"admin-install-volume-add                          : set up volume       " + "\n" +
-	"admin-install-toolkit                             : set up toolkit          " + "\n" +
-	"admin-install-log                                 : check set up logs        " + "\n" +
-	"admin-install-lock-get                            : get lock info on installation process     " + "\n" +
-	"admin-install-lock-set                            : set lock info on installation process    " + "\n" +
+	//"admin-install-env                                 : set up installation environment         " + "\n" +
+	"install-mainctrl                                  : install control plane using nokubeadm        " + "\n" +
+	"install-subctrl-prep                              : prepare for another control plane installation   " + "\n" +
+	"install-subctrl                                   : install another control plane using nokubeadm   " + "\n" +
+	"admin-install-subctrl                             : remote hook for installing another control plane    " + "\n" +
+	"install-worker                                    : install worker using nokubeadm        " + "\n" +
+	"admin-install-worker                              : remote hook for installing worker        " + "\n" +
+	"install-volume                                    : install volume using nokubeadm       " + "\n" +
+	"admin-install-volume                              : remote hook for installing worker       " + "\n" +
+	"install-toolkit                                   : install build toolkit using nokubeadm        " + "\n" +
+	"admin-install-toolkit                             : remote hook for installing toolkit       " + "\n" +
+	"install-log                                       : get install log using nokubeadm       " + "\n" +
+	"admin-install-log                                 : remote hook for getting log       " + "\n" +
 	"admin-init                                        : initiate admin function            " + "\n" +
 	"admin-init-log                                    : get admin initiation log         " + "\n" +
 	"setting-create-namespace                          : create namespace         " + "\n" +
 	"setting-set-repo                                  : set repository per project       " + "\n" +
 	"setting-set-reg                                   : set registry per project        " + "\n" +
-	"setting-create-monitoring                         : create monitoring        " + "\n" +
+	"setting-create-volume                             : set volume provisioner       " + "\n" +
+	"setting-create-monitoring                         : set monitoring api without persistent data        " + "\n" +
+	"setting-create-monitoring-persist                 : set monitoring api with persistent data    " + "\n" +
 	"toolkit-build                                     : build from docker-compose.yaml         " + "\n" +
 	"toolkit-build-log                                 : get build log      " + "\n" +
 	"resource-nodes                                    : get nodes          " + "\n" +

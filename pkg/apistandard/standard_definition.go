@@ -16,19 +16,19 @@ type API_STD map[string][]string
 
 var API_DEFINITION string = "" +
 	//            id          :       keys
-	// "ADMIN-INSTENV            :id, localip                                                                                " + "\n" +
-	// "ADMIN-INSTENVRES         :id, localip                                                                                " + "\n" +
-	"ADMIN-INSTCTRL           :id, localip, osnm, cv                                                                      " + "\n" +
-	// "ADMIN-INSTANCTRLCRT      :id, targetip, targetid, targetpw                                                          " + "\n" +
-	// "ADMIN-INSTANCTRLOL       :id, localip, osnm, cv, token                                                              " + "\n" +
+	// "NKADM-INSTENV            :id, localip                                                                                " + "\n" +
+	// "NKADM-INSTENVRES         :id, localip                                                                                " + "\n" +
+	"NKADM-INSTCTRL           :id, localip, osnm, cv                                                                      " + "\n" +
+	// "NKADM-INSTANCTRLCRT      :id, targetip, targetid, targetpw                                                          " + "\n" +
+	// "NKADM-INSTANCTRLOL       :id, localip, osnm, cv, token                                                              " + "\n" +
 	// "ADMIN-INSTANCTRLOR       :id, targetip, targetid, targetpw, localip, osnm, cv, token                                " + "\n" +
-	"ADMIN-INSTWKOL           :id, localip, osnm, cv, token                                                               " + "\n" +
+	"NKADM-INSTWKOL           :id, localip, osnm, cv, token                                                               " + "\n" +
 	"ADMIN-INSTWKOR           :id, targetip, targetid, targetpw, localip, osnm, cv, token                                 " + "\n" +
-	"ADMIN-INSTVOLOL          :id, localip                                                                               " + "\n" +
+	"NKADM-INSTVOLOL          :id, localip                                                                                " + "\n" +
 	// "ADMIN-INSTVOLOR          :id, targetip, targetid, targetpw, localip                                                  " + "\n" +
-	"ADMIN-INSTTKOL           :id                                                                                         " + "\n" +
+	"NKADM-INSTTKOL           :id                                                                                         " + "\n" +
 	// "ADMIN-INSTTKOR           :id, targetip, targetid, targetpw                                                           " + "\n" +
-	"ADMIN-INSTLOGOL          :id,                                                                                        " + "\n" +
+	"NKADM-INSTLOGOL          :id                                                                                         " + "\n" +
 	"ADMIN-INSTLOGOR          :id, targetip, targetid, targetpw                                                           " + "\n" +
 	//	"DELND                    :id                                                                                       " + "\n" +
 	"ADMIN-INIT               :id                                                                                         " + "\n" +

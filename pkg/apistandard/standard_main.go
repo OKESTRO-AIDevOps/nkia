@@ -40,23 +40,15 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 
 	case "ADMIN-INSTVOLOL":
 
-	case "ADMIN-INSTVOLOR":
+	// case "ADMIN-INSTVOLOR":
 
 	case "ADMIN-INSTTKOL":
 
-	case "ADMIN-INSTTKOR":
+	// case "ADMIN-INSTTKOR":
 
 	case "ADMIN-INSTLOGOL":
 
 	case "ADMIN-INSTLOGOR":
-
-	case "ADMIN-INSTLOCKGETOL":
-
-	case "ADMIN-INSTLOCKGETOR":
-
-	case "ADMIN-INSTLOCKSETOL":
-
-	case "ADMIN-INSTLOCKSETOR":
 
 	case "ADMIN-INIT":
 
