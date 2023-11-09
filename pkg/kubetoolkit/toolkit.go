@@ -27,8 +27,9 @@ func ToolkitBuildImagesStart(main_ns string, repoaddr string, regaddr string) {
 	ns_found, _, _ := runfs.GetRecordInfo(app_origin.RECORDS, main_ns)
 
 	if !ns_found {
-		fp.Write([]byte("namespace not found in ADMorigin\n"))
-		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp)
+		close_msg := "namespace not found in ADMorigin\n"
+		fp.Write([]byte(close_msg))
+		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, close_msg)
 		return
 	}
 
@@ -36,7 +37,7 @@ func ToolkitBuildImagesStart(main_ns string, repoaddr string, regaddr string) {
 
 	if err != nil {
 		fp.Write([]byte(err.Error()))
-		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp)
+		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, err.Error())
 		return
 	}
 
@@ -44,7 +45,7 @@ func ToolkitBuildImagesStart(main_ns string, repoaddr string, regaddr string) {
 
 	if err != nil {
 		fp.Write([]byte(err.Error()))
-		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp)
+		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, err.Error())
 		return
 	}
 
@@ -58,7 +59,7 @@ func ToolkitBuildImagesStart(main_ns string, repoaddr string, regaddr string) {
 
 	if err != nil {
 		fp.Write([]byte(err.Error()))
-		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp)
+		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, err.Error())
 		return
 	}
 
@@ -68,15 +69,16 @@ func ToolkitBuildImagesStart(main_ns string, repoaddr string, regaddr string) {
 
 	if err != nil {
 		fp.Write([]byte(err.Error()))
-		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp)
+		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, err.Error())
 		return
 	}
 
 	addr_found, regid, regpw := runfs.GetRegInfo(app_origin.REGS, regaddr)
 
 	if !addr_found {
-		fp.Write([]byte("reg addr not found in ADMorigin\n"))
-		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp)
+		close_msg := "reg addr not found in ADMorigin\n"
+		fp.Write([]byte(close_msg))
+		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, close_msg)
 		return
 	}
 
@@ -84,7 +86,7 @@ func ToolkitBuildImagesStart(main_ns string, repoaddr string, regaddr string) {
 
 	if err != nil {
 		fp.Write([]byte(err.Error()))
-		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp)
+		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, err.Error())
 		return
 	}
 
@@ -92,11 +94,11 @@ func ToolkitBuildImagesStart(main_ns string, repoaddr string, regaddr string) {
 
 	if err != nil {
 		fp.Write([]byte(err.Error()))
-		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp)
+		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, err.Error())
 		return
 	}
 
-	err = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp)
+	err = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, "SUCCESS")
 
 	if err != nil {
 		return

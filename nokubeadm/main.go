@@ -6,11 +6,13 @@ import (
 	"net/http/cookiejar"
 	"os"
 	"os/exec"
+	"time"
 
 	_ "github.com/OKESTRO-AIDevOps/nkia/nokubeadm/admin"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubeadm/config"
 	_ "github.com/OKESTRO-AIDevOps/nkia/nokubeadm/debug"
 	nkadmdebug "github.com/OKESTRO-AIDevOps/nkia/nokubeadm/debug"
+	"github.com/OKESTRO-AIDevOps/nkia/pkg/kubebase"
 	goya "github.com/goccy/go-yaml"
 )
 
@@ -187,6 +189,8 @@ func main() {
 
 	INIT := 0
 
+	INIT_NPIA := 0
+
 	MODE_TEST := 0
 
 	MODE_DEBUG := 0
@@ -204,6 +208,14 @@ func main() {
 			INIT = 1
 
 			break
+		}
+
+		if flag == "init-npia" {
+
+			INIT_NPIA = 1
+
+			break
+
 		}
 
 		if flag == "-t" || flag == "--test" {
@@ -232,6 +244,56 @@ func main() {
 		}
 		fmt.Println("successfully initiated")
 		return
+	}
+
+	if INIT_NPIA == 1 {
+		err_init := InitAdm()
+
+		if err_init != nil {
+			fmt.Println(err_init.Error())
+		}
+
+		go kubebase.AdminInitNPIA()
+
+		t_start := time.Now()
+
+		done := 0
+
+		for time.Now().Sub(t_start).Seconds() < 30 {
+
+			if _, err := os.Stat("npia_init_done"); err == nil {
+
+				done = 1
+				break
+
+			}
+
+		}
+
+		if done == 1 {
+			b, _ := kubebase.AdminGetInitLog()
+
+			fmt.Println("-----INITLOG-----")
+
+			fmt.Println(string(b))
+
+			fmt.Println("-----------------")
+
+			fmt.Println("successfully initiated")
+		} else {
+
+			b, _ := kubebase.AdminGetInitLog()
+
+			fmt.Println("-----FAILLOG-----")
+
+			fmt.Println(string(b))
+
+			fmt.Println("-----------------")
+
+			fmt.Println("initiation timeout")
+		}
+		return
+
 	}
 
 	if (MODE_TEST + MODE_DEBUG + MODE_INTERACTIVE) > 1 {

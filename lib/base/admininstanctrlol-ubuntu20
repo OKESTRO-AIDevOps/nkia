@@ -15,7 +15,10 @@ sudo apt-get update -y
 
 
 
-OS="$2"
+OS="xUbuntu_20.04"
+
+OSNM="$2"
+
 
 VERSION="$3"
 

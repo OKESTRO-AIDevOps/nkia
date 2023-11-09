@@ -122,7 +122,7 @@ func BuildOpenForward() (string, error) {
 	return build_dir, nil
 }
 
-func BuildClose() error {
+func BuildClose(close_msg string) error {
 
 	ERR_MSG := "failed build close: %s"
 
@@ -156,6 +156,8 @@ func BuildClose() error {
 
 	head_dir_close := head_dir + "close"
 
+	head_dir_result := head_dir + "result"
+
 	if _, err := os.Stat(head_dir_open); err != nil {
 
 		head_dir_ignore := head_dir + "ignore"
@@ -185,6 +187,8 @@ func BuildClose() error {
 	t_str := t_now.Format("2006-01-02-15-04-05")
 
 	_ = os.WriteFile(head_dir_close, []byte(t_str), 0644)
+
+	_ = os.WriteFile(head_dir_result, []byte(close_msg), 0644)
 
 	return nil
 }

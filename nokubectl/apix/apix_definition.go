@@ -14,23 +14,28 @@ var APIX_QUERY_MAP = "" +
 	"keygen                                            : KEYGEN                " + "\n" +
 	"addcluster                                        : ADDCLUSTER            " + "\n" +
 	// query
-	"admin-install-env                                 : ADMIN-INSTENV         " + "\n" +
-	"admin-install-mainctrl                            : ADMIN-INSTCTRL        " + "\n" +
-	"admin-install-subctrl-prep                        : ADMIN-INSTANCTRLOL    " + "\n" +
-	"admin-install-subctrl-add                         : ADMIN-INSTANCTRLOR    " + "\n" +
-	"admin-install-worker                              : ADMIN-INSTWK          " + "\n" +
-	"admin-install-volume-prep                         : ADMIN-INSTVOLOR       " + "\n" +
-	"admin-install-volume-add                          : ADMIN-INSTVOLOL       " + "\n" +
-	"admin-install-toolkit                             : ADMIN-INSTTK          " + "\n" +
-	"admin-install-log                                 : ADMIN-INSTLOG         " + "\n" +
-	"admin-install-lock-get                            : ADMIN-INSTLOCKGET     " + "\n" +
-	"admin-install-lock-set                            : ADMIN-INSTLOCKSET     " + "\n" +
+	// "install-env                                      : NKADM-INSTENV         " + "\n" +
+	// "install-env-restart                              : NKADM-INSTENVRES      " + "\n" +
+	"install-mainctrl                                  : NKADM-INSTCTRL        " + "\n" +
+	"install-subctrl-prep                              : NKADM-INSTANCTRLCRT   " + "\n" +
+	"install-subctrl                                   : NKADM-INSTANCTRLOL    " + "\n" +
+	"admin-install-subctrl                             : ADMIN-INSTANCTRLOR    " + "\n" +
+	"install-worker                                    : NKADM-INSTWKOL        " + "\n" +
+	"admin-install-worker                              : ADMIN-INSTWKOR        " + "\n" +
+	"install-volume                                    : NKADM-INSTVOLOL       " + "\n" +
+	"admin-install-volume                              : ADMIN-INSTVOLOR       " + "\n" +
+	"install-toolkit                                   : NKADM-INSTTKOL        " + "\n" +
+	"admin-install-toolkit                             : ADMIN-INSTTKOR        " + "\n" +
+	"install-log                                       : NKADM-INSTLOGOL       " + "\n" +
+	"admin-install-log                                 : ADMIN-INSTLOGOR       " + "\n" +
 	"admin-init                                        : ADMIN-INIT            " + "\n" +
 	"admin-init-log                                    : ADMIN-INITLOG         " + "\n" +
 	"setting-create-namespace                          : SETTING-CRTNS         " + "\n" +
 	"setting-set-repo                                  : SETTING-SETREPO       " + "\n" +
 	"setting-set-reg                                   : SETTING-SETREG        " + "\n" +
+	"setting-create-volume                             : SETTING-CRTVOL        " + "\n" +
 	"setting-create-monitoring                         : SETTING-CRTMON        " + "\n" +
+	"setting-create-monitoring-persist                 : SETTING-CRTMONPERS    " + "\n" +
 	"toolkit-build                                     : TOOLKIT-BUILD         " + "\n" +
 	"toolkit-build-log                                 : TOOLKIT-BUILDLOG      " + "\n" +
 	"resource-nodes                                    : RESOURCE-NDS          " + "\n" +
@@ -195,6 +200,33 @@ func _CONSTRUCT_NKCTL_FLAG() API_X {
 	return api_x
 }
 
+func _CONSTRUCT_NKADM_FLAG() API_X {
+
+	api_x := make(API_X)
+
+	def_list := strings.Split(NKADM_FLAGS, "\n")
+
+	for i := 0; i < len(def_list); i++ {
+
+		if def_list[i] == "" || def_list[i] == " " || def_list[i] == "\n" {
+			continue
+		}
+
+		raw_record := def_list[i]
+
+		record_list := strings.SplitN(raw_record, ":", 2)
+
+		key := record_list[0]
+
+		key = strings.ReplaceAll(key, " ", "")
+
+		api_x[key] = record_list[1]
+
+	}
+
+	return api_x
+}
+
 var AXgi, AXid = _CONSTRUCT_API_X()
 
 var AXcmd = _CONSTRUCT_API_X_COMMAND()
@@ -202,3 +234,5 @@ var AXcmd = _CONSTRUCT_API_X_COMMAND()
 var AXflag = _CONSTRUCT_API_X_FLAG()
 
 var NKCTLflag = _CONSTRUCT_NKCTL_FLAG()
+
+var NKADMflag = _CONSTRUCT_NKADM_FLAG()

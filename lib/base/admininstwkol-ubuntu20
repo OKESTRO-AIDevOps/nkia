@@ -14,8 +14,10 @@ sudo swapoff -a
 sudo apt-get update -y
 
 
+OS="xUbuntu_20.04"
 
-OS="$2"
+OSNM="$2"
+
 
 VERSION="$3"
 

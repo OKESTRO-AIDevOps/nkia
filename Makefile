@@ -6,11 +6,11 @@ all:
 
 build:
 
-	mkdir -p _out/nokubeadm
+	mkdir -p bin/nokubeadm
 
-	mkdir -p _out/nokubectl
+	mkdir -p bin/nokubectl
 
-	mkdir -p _out/nokubelet
+	mkdir -p bin/nokubelet
 
 	cd ./nokubeadm && make build
 
@@ -22,11 +22,11 @@ build:
 
 build-commit:
 
-	mkdir -p _out/nokubeadm
+	mkdir -p bin/nokubeadm
 
-	mkdir -p _out/nokubectl
+	mkdir -p bin/nokubectl
 
-	mkdir -p _out/nokubelet
+	mkdir -p bin/nokubelet
 
 	cd ./nokubeadm && make build
 
@@ -35,6 +35,10 @@ build-commit:
 	cd ./nokubelet && make build
 
 	cd ./orch.io && make build
+
+	tar -czvf lib.tgz lib
+
+	tar -czvf bin.tgz bin
 
 	git pull
 
