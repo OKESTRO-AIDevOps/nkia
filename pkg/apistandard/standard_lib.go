@@ -19,7 +19,7 @@ func (asgi API_STD) Verify(verifiable API_INPUT) error {
 		return fmt.Errorf("verification failed: %s", "missing command id")
 	}
 
-	v_list, okay := asgi[cmd_id]
+	v_list, okay := ASgi[cmd_id]
 
 	if !okay {
 
@@ -59,7 +59,7 @@ func (asgi API_STD) StdCmdInputBuildFromLinearInstruction(linear_string string) 
 
 	linear_key := linear_split[0]
 
-	std_keys, okay := asgi[linear_key]
+	std_keys, okay := ASgi[linear_key]
 
 	if !okay {
 		return ret_api_std, fmt.Errorf("failed to interpret linear instruction: %s", "matching key not found")
@@ -98,6 +98,6 @@ func (asgi API_STD) PrintPrettyDefinition() {
 
 func (asgi API_STD) PrintRawDefinition() {
 
-	fmt.Println(asgi)
+	fmt.Println(ASgi)
 
 }
