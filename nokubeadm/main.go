@@ -6,6 +6,7 @@ import (
 	"net/http/cookiejar"
 	"os"
 	"os/exec"
+	"os/user"
 	"time"
 
 	"github.com/OKESTRO-AIDevOps/nkia/nokubectl/apix"
@@ -204,6 +205,22 @@ func RunAdminCmd(args []string) {
 }
 
 func main() {
+
+	current_user, err := user.Current()
+
+	if err != nil {
+		fmt.Println(err.Error())
+
+		return
+
+	}
+
+	if current_user.Username != "root" {
+
+		fmt.Println("Error: not running as root")
+		return
+
+	}
 
 	flag, args, err := apix.GetNKADMFlagAndReduceArgs()
 
