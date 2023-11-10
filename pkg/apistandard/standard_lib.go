@@ -9,6 +9,8 @@ import (
 
 func (asgi API_STD) Verify(verifiable API_INPUT) error {
 
+	fmt.Println(asgi)
+
 	cmd_id, okay := verifiable["id"]
 
 	var duplicate_check []string
