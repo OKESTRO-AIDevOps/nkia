@@ -24,7 +24,9 @@ import (
 //	return ret_byte, nil
 //}
 
-func InstallControlPlane(localip string, osnm string, cv string) {
+func InstallControlPlane(localip string, osnm string, cv string) error {
+
+	ERR_MSG := "failed installing control plane: %s\n"
 
 	fp, err := runfs.OpenFilePointerForNpiaInstallCtrlLog()
 
@@ -34,7 +36,7 @@ func InstallControlPlane(localip string, osnm string, cv string) {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	libif, err := libinterface.ConstructLibIface()
@@ -45,7 +47,7 @@ func InstallControlPlane(localip string, osnm string, cv string) {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	os_release := utils.MakeOSReleaseLinux()
@@ -57,7 +59,7 @@ func InstallControlPlane(localip string, osnm string, cv string) {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	LIB_BASE_INSTALL_CTRL, err := libif.GetLibComponentAddress("base", lib_base_name)
@@ -67,7 +69,7 @@ func InstallControlPlane(localip string, osnm string, cv string) {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	cmd := exec.Command(LIB_BASE_INSTALL_CTRL, localip, osnm, cv)
@@ -84,7 +86,7 @@ func InstallControlPlane(localip string, osnm string, cv string) {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	cmd = exec.Command("kubectl", "get", "nodes")
@@ -97,15 +99,16 @@ func InstallControlPlane(localip string, osnm string, cv string) {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	err = runfs.CloseFilePointerForInstallLogAndMarkDone(fp)
 
 	if err != nil {
-		return
+		return fmt.Errorf(ERR_MSG, err.Error())
 	}
 
-	return
+	return nil
 }
 
 //func InstallAnotherControlPlaneCertificate(targetip string, targetid string, targetpw string) ([]byte, error) {
@@ -126,7 +129,9 @@ func InstallControlPlane(localip string, osnm string, cv string) {
 //	return ret_byte, nil
 //}
 
-func InstallWorkerOnLocal(localip string, osnm string, cv string, token string) {
+func InstallWorkerOnLocal(localip string, osnm string, cv string, token string) error {
+
+	ERR_MSG := "failed installing worker: %s\n"
 
 	ip_no_dot := strings.ReplaceAll(localip, ".", "-")
 
@@ -142,7 +147,7 @@ func InstallWorkerOnLocal(localip string, osnm string, cv string, token string) 
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	libif, err := libinterface.ConstructLibIface()
@@ -153,7 +158,7 @@ func InstallWorkerOnLocal(localip string, osnm string, cv string, token string) 
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	os_release := utils.MakeOSReleaseLinux()
@@ -165,7 +170,7 @@ func InstallWorkerOnLocal(localip string, osnm string, cv string, token string) 
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	LIB_BASE_INSTALL_WK_OL, err := libif.GetLibComponentAddress("base", lib_base_name)
@@ -175,7 +180,7 @@ func InstallWorkerOnLocal(localip string, osnm string, cv string, token string) 
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	cmd := exec.Command(LIB_BASE_INSTALL_WK_OL, localip, osnm, cv)
@@ -192,7 +197,7 @@ func InstallWorkerOnLocal(localip string, osnm string, cv string, token string) 
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 
 	}
 
@@ -214,7 +219,7 @@ func InstallWorkerOnLocal(localip string, osnm string, cv string, token string) 
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 
 	}
 
@@ -229,25 +234,26 @@ func InstallWorkerOnLocal(localip string, osnm string, cv string, token string) 
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	err = runfs.CloseFilePointerForInstallLogAndMarkDone(fp)
 
 	if err != nil {
-		return
+		return fmt.Errorf(ERR_MSG, err.Error())
 	}
+
+	return nil
+}
+
+func InstallWorkerOnRemote(targetip string, targetid string, targetpw string, localip string, osnm string, cv string, token string) {
 
 	return
 }
 
-func InstallWorkerOnRemote(targetip string, targetid string, targetpw string, localip string, osnm string, cv string, token string) ([]byte, error) {
-	var ret_byte []byte
+func InstallVolumeOnLocal(localip string) error {
 
-	return ret_byte, nil
-}
-
-func InstallVolumeOnLocal(localip string) {
+	ERR_MSG := "failed volume: %s\n"
 
 	fp, err := runfs.OpenFilePointerForNpiaInstallVolumeLog()
 
@@ -257,7 +263,7 @@ func InstallVolumeOnLocal(localip string) {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	libif, err := libinterface.ConstructLibIface()
@@ -268,7 +274,7 @@ func InstallVolumeOnLocal(localip string) {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	os_release := utils.MakeOSReleaseLinux()
@@ -280,7 +286,7 @@ func InstallVolumeOnLocal(localip string) {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	LIB_BASE_INSTALL_VOL_OL, err := libif.GetLibComponentAddress("base", lib_base_name)
@@ -290,7 +296,7 @@ func InstallVolumeOnLocal(localip string) {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	cmd := exec.Command(LIB_BASE_INSTALL_VOL_OL, localip)
@@ -307,7 +313,7 @@ func InstallVolumeOnLocal(localip string) {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 
 	}
 
@@ -322,7 +328,7 @@ func InstallVolumeOnLocal(localip string) {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 
 	}
 
@@ -331,17 +337,17 @@ func InstallVolumeOnLocal(localip string) {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 
 	}
 
 	err = runfs.CloseFilePointerForInstallLogAndMarkDone(fp)
 
 	if err != nil {
-		return
+		return fmt.Errorf(ERR_MSG, err.Error())
 	}
 
-	return
+	return nil
 }
 
 //func InstallVolumeOnRemote(targetip string, targetid string, targetpw string) ([]byte, error) {
@@ -350,7 +356,9 @@ func InstallVolumeOnLocal(localip string) {
 //	return ret_byte, nil
 //}
 
-func InstallToolKitOnLocal() {
+func InstallToolKitOnLocal() error {
+
+	ERR_MSG := "failed toolkit: %s\n"
 
 	fp, err := runfs.OpenFilePointerForNpiaInstallToolkitLog()
 
@@ -360,7 +368,7 @@ func InstallToolKitOnLocal() {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	libif, err := libinterface.ConstructLibIface()
@@ -371,7 +379,7 @@ func InstallToolKitOnLocal() {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	os_release := utils.MakeOSReleaseLinux()
@@ -383,7 +391,7 @@ func InstallToolKitOnLocal() {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	LIB_BASE_INSTALL_TK_OL, err := libif.GetLibComponentAddress("base", lib_base_name)
@@ -393,7 +401,7 @@ func InstallToolKitOnLocal() {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 	}
 
 	cmd := exec.Command(LIB_BASE_INSTALL_TK_OL)
@@ -410,17 +418,17 @@ func InstallToolKitOnLocal() {
 
 		fp.Write([]byte(close_msg))
 		runfs.CloseFilePointerForInstallLogAndMarkFail(fp, close_msg)
-		return
+		return fmt.Errorf(ERR_MSG, close_msg)
 
 	}
 
 	err = runfs.CloseFilePointerForInstallLogAndMarkDone(fp)
 
 	if err != nil {
-		return
+		return fmt.Errorf(ERR_MSG, err.Error())
 	}
 
-	return
+	return nil
 }
 
 //func InstallToolKitOnRemote(targetip string, targetid string, targetpw string) ([]byte, error) {

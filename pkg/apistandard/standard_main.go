@@ -22,31 +22,100 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 
 	switch cmd_id {
 
-	// case "ADMIN-INSTENV":
+	// case "NKADM-INSTENV":
 
-	// case "ADMIN-INSTENVRES":
+	// case "NKADM-INSTENVRES":
 
-	case "ADMIN-INSTCTRL":
+	case "NKADM-INSTCTRL":
 
-	//	case "ADMIN-INSTANCTRLCRT":
+		localip := std_cmd["localip"]
+		osnm := std_cmd["osnm"]
+		cv := std_cmd["cv"]
 
-	//	case "ADMIN-INSTANCTRLOL":
+		cmd_err := kubebase.InstallControlPlane(localip, osnm, cv)
 
-	//	case "ADMIN-INSTANCTRLOR":
+		b_out := []byte("npia install control plane success\n")
 
-	case "ADMIN-INSTWKOL":
+		if cmd_err != nil {
+
+			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+
+		}
+
+		ret_api_out.BODY = string(b_out)
+
+	//	case "NKADM-INSTANCTRLCRT":
+
+	//	case "NKADM-INSTANCTRLOL":
+
+	//	case "NKADM-INSTANCTRLOR":
+
+	case "NKADM-INSTWKOL":
+
+		localip := std_cmd["localip"]
+		osnm := std_cmd["osnm"]
+		cv := std_cmd["cv"]
+		token := std_cmd["token"]
+
+		cmd_err := kubebase.InstallWorkerOnLocal(localip, osnm, cv, token)
+
+		b_out := []byte("npia install worker successful\n")
+
+		if cmd_err != nil {
+
+			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+
+		}
+
+		ret_api_out.BODY = string(b_out)
 
 	case "ADMIN-INSTWKOR":
 
-	case "ADMIN-INSTVOLOL":
+	case "NKADM-INSTVOLOL":
+
+		localip := std_cmd["localip"]
+
+		cmd_err := kubebase.InstallVolumeOnLocal(localip)
+
+		b_out := []byte("npia install volume successful\n")
+
+		if cmd_err != nil {
+
+			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+
+		}
+
+		ret_api_out.BODY = string(b_out)
 
 	// case "ADMIN-INSTVOLOR":
 
-	case "ADMIN-INSTTKOL":
+	case "NKADM-INSTTKOL":
+
+		cmd_err := kubebase.InstallToolKitOnLocal()
+
+		b_out := []byte("npia install toolkit successful\n")
+
+		if cmd_err != nil {
+
+			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+
+		}
+
+		ret_api_out.BODY = string(b_out)
 
 	// case "ADMIN-INSTTKOR":
 
-	case "ADMIN-INSTLOGOL":
+	case "NKADM-INSTLOGOL":
+
+		b_out, cmd_err := kubebase.InstallLogOnLocal()
+
+		if cmd_err != nil {
+
+			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+
+		}
+
+		ret_api_out.BODY = string(b_out)
 
 	case "ADMIN-INSTLOGOR":
 

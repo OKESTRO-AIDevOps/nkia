@@ -39,7 +39,7 @@ func InstallOpenForward(head_value string) (string, error) {
 		return install_path, fmt.Errorf(ERR_MSG, err.Error())
 	}
 
-	if _, err := os.Stat(".npia/install/HEAD"); err == nil {
+	if _, err := os.Stat(".npia/install/HEAD"); err == nil && head_value != "volume" && head_value != "toolkit" {
 
 		head_file_b, err := os.ReadFile(".npia/install/HEAD")
 
@@ -69,7 +69,7 @@ func InstallOpenForward(head_value string) (string, error) {
 				equal_heads = 1
 			}
 
-		} else if head_value == "worker" {
+		} else if head_file_value == "worker" {
 
 			if head_value != head_file_value {
 
@@ -216,6 +216,12 @@ func InstallClose() error {
 	_ = os.WriteFile(head_dir_close, []byte(t_str), 0644)
 
 	_ = os.WriteFile(head_dir_result, []byte("SUCCESS"), 0644)
+
+	if head_value == "control-plane" || head_value == "another-control-plane" || head_value == "worker" {
+
+		_ = os.WriteFile(".npia/install/BODY", []byte(head_value), 0644)
+
+	}
 
 	return nil
 }
