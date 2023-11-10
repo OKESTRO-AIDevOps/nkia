@@ -8,7 +8,7 @@ import (
 
 func RequestHandler(api_input apistandard.API_INPUT) error {
 
-	var ASgi apistandard.API_STD
+	ASgi := apistandard.ASgi
 
 	api_out, err := ASgi.Run(api_input)
 
