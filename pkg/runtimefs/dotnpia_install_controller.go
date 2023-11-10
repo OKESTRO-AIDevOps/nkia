@@ -39,7 +39,7 @@ func InstallOpenForward(head_value string) (string, error) {
 		return install_path, fmt.Errorf(ERR_MSG, err.Error())
 	}
 
-	if _, err := os.Stat(".npia/install/HEAD"); err == nil {
+	if _, err := os.Stat(".npia/install/HEAD"); err == nil && head_value != "volume" && head_value != "toolkit" {
 
 		head_file_b, err := os.ReadFile(".npia/install/HEAD")
 
