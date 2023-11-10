@@ -217,6 +217,12 @@ func InstallClose() error {
 
 	_ = os.WriteFile(head_dir_result, []byte("SUCCESS"), 0644)
 
+	if head_value == "control-plane" || head_value == "another-control-plane" || head_value == "worker" {
+
+		_ = os.WriteFile(".npia/install/BODY", []byte(head_value), 0644)
+
+	}
+
 	return nil
 }
 
