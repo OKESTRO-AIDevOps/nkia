@@ -60,7 +60,7 @@ func InitAdm() error {
 
 		if err == nil {
 
-			err = goya.Unmarshal(file_b, CONFIG_YAML)
+			err = goya.Unmarshal(file_b, &CONFIG_YAML)
 
 			if err == nil {
 
