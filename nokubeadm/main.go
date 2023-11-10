@@ -8,7 +8,9 @@ import (
 	"os/exec"
 	"time"
 
-	_ "github.com/OKESTRO-AIDevOps/nkia/nokubeadm/admin"
+	"github.com/OKESTRO-AIDevOps/nkia/nokubectl/apix"
+
+	nkadmcmd "github.com/OKESTRO-AIDevOps/nkia/nokubeadm/cmd"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubeadm/config"
 	_ "github.com/OKESTRO-AIDevOps/nkia/nokubeadm/debug"
 	nkadmdebug "github.com/OKESTRO-AIDevOps/nkia/nokubeadm/debug"
@@ -181,59 +183,38 @@ func RunAdminInteractive() {
 
 }
 
-func RunAdmin() {
+func RunAdminCmd(args []string) {
+
+	apistd_in, err := apix.AXgi.BuildAPIInputFromCommandLine(args)
+
+	if err != nil {
+		fmt.Printf("failed: %s\n", err.Error())
+
+		return
+	}
+
+	err = nkadmcmd.RequestHandler(apistd_in)
+
+	if err != nil {
+		fmt.Printf("failed: %s\n", err.Error())
+
+		return
+	}
 
 }
 
 func main() {
 
-	INIT := 0
+	flag, args, err := apix.GetNKADMFlagAndReduceArgs()
 
-	INIT_NPIA := 0
-
-	MODE_TEST := 0
-
-	MODE_DEBUG := 0
-
-	MODE_INTERACTIVE := 0
-
-	// MODE_ADMIN := 0
-
-	for i := 0; i < len(os.Args); i++ {
-
-		flag := os.Args[i]
-
-		if flag == "init" {
-
-			INIT = 1
-
-			break
-		}
-
-		if flag == "init-npia" {
-
-			INIT_NPIA = 1
-
-			break
-
-		}
-
-		if flag == "-t" || flag == "--test" {
-
-			MODE_TEST = 1
-
-		} else if flag == "-d" || flag == "--debug" {
-
-			MODE_DEBUG = 1
-
-		} else if flag == "-i" || flag == "--interactive" {
-
-			MODE_INTERACTIVE = 1
-		}
-
+	if err != nil {
+		fmt.Println(err.Error())
+		return
 	}
 
-	if INIT == 1 {
+	if flag == "help" {
+
+	} else if flag == "init" {
 
 		err := InitAdm()
 
@@ -244,9 +225,9 @@ func main() {
 		}
 		fmt.Println("successfully initiated")
 		return
-	}
 
-	if INIT_NPIA == 1 {
+	} else if flag == "init-npia" {
+
 		err_init := InitAdm()
 
 		if err_init != nil {
@@ -294,28 +275,18 @@ func main() {
 		}
 		return
 
-	}
-
-	if (MODE_TEST + MODE_DEBUG + MODE_INTERACTIVE) > 1 {
-		fmt.Println("error: more than one option used together")
-		return
-	}
-
-	if MODE_TEST == 1 {
-
-		nkadmdebug.BaseFlow_APIThenMultiMode_Test()
-
-	} else if MODE_DEBUG == 1 {
-
-		RunDebugInteractive()
-
-	} else if MODE_INTERACTIVE == 1 {
+	} else if flag == "interactive" {
 
 		RunAdminInteractive()
 
+	} else if flag == "debug" {
+
+		RunDebugInteractive()
+
 	} else {
-
-		RunAdmin()
-
+		RunAdminCmd(args)
 	}
+
+	// nkadmdebug.BaseFlow_APIThenMultiMode_Test()
+
 }
