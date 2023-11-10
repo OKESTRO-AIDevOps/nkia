@@ -69,7 +69,7 @@ func InstallOpenForward(head_value string) (string, error) {
 				equal_heads = 1
 			}
 
-		} else if head_value == "worker" {
+		} else if head_file_value == "worker" {
 
 			if head_value != head_file_value {
 
