@@ -4,6 +4,7 @@ import (
 	"crypto/x509"
 	b64 "encoding/base64"
 	"encoding/hex"
+	"encoding/json"
 	"encoding/pem"
 	"fmt"
 	"net/http"
@@ -13,6 +14,7 @@ import (
 
 	ctrl "github.com/OKESTRO-AIDevOps/nkia/nokubelet/controller"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
+	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
 
 	"github.com/gorilla/websocket"
 	_ "github.com/gorilla/websocket"
@@ -177,6 +179,8 @@ func AdminRequest(c *websocket.Conn, email string, query string) ([]byte, error)
 
 	var ret []byte
 
+	var ret_apiout apistandard.API_OUTPUT
+
 	OP, args, err := AdminRequestParser_Linear(query)
 
 	if err != nil {
@@ -199,7 +203,13 @@ func AdminRequest(c *websocket.Conn, email string, query string) ([]byte, error)
 
 		talkback += "\n"
 
-		ret = []byte(talkback)
+		ret_apiout.BODY = talkback
+
+		ret, err = json.Marshal(ret_apiout)
+
+		if err != nil {
+			return ret, fmt.Errorf("admin req: %s", err.Error())
+		}
 
 	case "ORCH-KEYGEN":
 
@@ -237,7 +247,13 @@ func AdminRequest(c *websocket.Conn, email string, query string) ([]byte, error)
 			return ret, fmt.Errorf("admin req: %s", err.Error())
 		}
 
-		ret = priv_pem
+		ret_apiout.BODY = string(priv_pem)
+
+		ret, err = json.Marshal(ret_apiout)
+
+		if err != nil {
+			return ret, fmt.Errorf("admin req: %s", err.Error())
+		}
 
 	case "ORCH-ADDCL":
 
@@ -249,7 +265,13 @@ func AdminRequest(c *websocket.Conn, email string, query string) ([]byte, error)
 			return ret, fmt.Errorf("admin req: %s", err.Error())
 		}
 
-		ret = []byte(token)
+		ret_apiout.BODY = token
+
+		ret, err = json.Marshal(ret_apiout)
+
+		if err != nil {
+			return ret, fmt.Errorf("admin req: %s", err.Error())
+		}
 
 	case "ORCH-INSTCL":
 
@@ -278,7 +300,13 @@ func AdminRequest(c *websocket.Conn, email string, query string) ([]byte, error)
 
 		go InstallCluster(c, cluster_id, targetip, targetid, targetpw, localip, osnm, cv, update_token)
 
-		ret = []byte("remote cluster installation started\n")
+		ret_apiout.BODY = "remote cluster installation started\n"
+
+		ret, err = json.Marshal(ret_apiout)
+
+		if err != nil {
+			return ret, fmt.Errorf("admin req: %s", err.Error())
+		}
 
 	case "ORCH-INSTCLLOG":
 
@@ -287,7 +315,15 @@ func AdminRequest(c *websocket.Conn, email string, query string) ([]byte, error)
 		targetid := args[2]
 		targetpw := args[3]
 
-		ret, err = InstallClusterLog(c, cluster_id, targetip, targetid, targetpw)
+		log_b, err := InstallClusterLog(c, cluster_id, targetip, targetid, targetpw)
+
+		if err != nil {
+			return ret, fmt.Errorf("admin req: %s", err.Error())
+		}
+
+		ret_apiout.BODY = string(log_b)
+
+		ret, err = json.Marshal(ret_apiout)
 
 		if err != nil {
 			return ret, fmt.Errorf("admin req: %s", err.Error())
