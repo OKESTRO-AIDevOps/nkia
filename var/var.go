@@ -1133,9 +1133,9 @@ func (conn *Connection) SendCommands(cmds string) ([]byte, error) {
 	return stdoutB.Bytes(), nil
 }
 
-func remote_shell_command() {
+func remote_shell_command_install_worker() {
 
-	conn, err := Connect("192.168.50.94:22", "ubuntu", "ubuntu")
+	conn, err := Connect("192.168.50.95:22", "ubuntu", "ubuntu")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -1164,11 +1164,60 @@ func remote_shell_command() {
 	}
 	fmt.Print(string(output))
 
-	output, err = conn.SendCommands("sudo /npia/bin/nokubeadm/nokubeadm init-npia-default")
+	output, err = conn.SendCommands("cd /npia/bin/nokubeadm && sudo ./nokubeadm init-npia-default")
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Print(string(output))
+
+	token := "'kubeadm join 192.168.50.94:6443 --token ibz4if.m9f5ga584jeiniud --discovery-token-ca-cert-hash sha256:4b5d5d7818450b99924b1c4124e214498fd5f5f778b648520396e77c1c2bafaa'"
+
+	output, err = conn.SendCommands("cd /npia/bin/nokubeadm && sudo ./nokubeadm install worker --localip 192.168.50.95 --osnm ubuntu --cv 1.27 --token " + token)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Print(string(output))
+
+}
+
+func remote_shell_command_install() {
+
+	conn, err := Connect("192.168.50.94:22", "ubuntu", "ubuntu")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	go func() {
+
+		goutput, err := conn.SendCommands("cd /npia/bin/nokubeadm && sudo ./nokubeadm install mainctrl --localip 192.168.50.94 --osnm ubuntu --cv 1.27")
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Print(string(goutput))
+
+	}()
+
+	exit := 0
+
+	for exit == 0 {
+
+		sign := ""
+
+		fmt.Print("log?: ")
+
+		fmt.Scanln(&sign)
+
+		if sign == "exit" {
+			exit = 1
+		} else {
+			output, err := conn.SendCommands("cd /npia/bin/nokubeadm && sudo ./nokubeadm install log")
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Print(string(output))
+		}
+
+	}
 
 }
 
@@ -1216,5 +1265,7 @@ func main() {
 
 	// getPasswd()
 
-	remote_shell_command()
+	// remote_shell_command()
+
+	remote_shell_command_install_worker()
 }

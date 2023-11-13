@@ -53,6 +53,15 @@ func InitCtl() error {
 		return fmt.Errorf("failed to init: %s", err.Error())
 	}
 
+	cmd = exec.Command("mkdir", "-p", ".npia/_apix_o")
+
+	err = cmd.Run()
+
+	if err != nil {
+
+		return fmt.Errorf("failed to init: %s", err.Error())
+	}
+
 	CONFIG_YAML := make(map[string]string)
 
 	if _, err := os.Stat("./.npia/config.yaml"); err == nil {
@@ -248,7 +257,16 @@ func RunClientCmd(args []string) {
 		return
 	}
 
-	nkctlclient.RequestHandler_APIX_Once_PrintOnly(c, oreq)
+	// nkctlclient.RequestHandler_APIX_Once_PrintOnly(c, oreq)
+
+	nkctlclient.RequestHandler_APIX_Store_Override(c, oreq)
+
+}
+
+func ReadClientCmdResult() {
+
+	nkctlclient.Read_APIX_Store_Override()
+	return
 
 }
 
@@ -287,6 +305,11 @@ func main() {
 	} else if flag == "interactive" {
 
 		RunClientInteractive()
+		return
+
+	} else if flag == "read" {
+
+		ReadClientCmdResult()
 		return
 
 	} else {

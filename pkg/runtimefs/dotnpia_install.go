@@ -232,3 +232,44 @@ func GetOngoingInstallLog() ([]byte, error) {
 	return ret_byte, nil
 
 }
+
+func OpenFilePointerForNpiaInstallRemoteLog() (*os.File, error) {
+
+	var outfile *os.File
+	var err error
+
+	install_remote_log_path, err := InstallOpenForwardRemote()
+
+	if err != nil {
+		return outfile, fmt.Errorf("failed to get file pointer: %s", err.Error())
+	}
+
+	if _, err := os.Stat(install_remote_log_path); err == nil {
+		return outfile, fmt.Errorf("failed to get file pointer: %s", "another build in process")
+	}
+
+	outfile, err = os.Create(install_remote_log_path)
+
+	if err != nil {
+		return outfile, fmt.Errorf("failed to get file pointer: %s", err.Error())
+	}
+
+	return outfile, nil
+}
+
+func CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp *os.File, close_msg string) error {
+
+	err := fp.Close()
+
+	if err != nil {
+		return fmt.Errorf("failed to close file pointer: %s", err.Error())
+	}
+
+	err = InstallCloseRemote(close_msg)
+
+	if err != nil {
+		return fmt.Errorf("failed to close install remote: %s", err.Error())
+	}
+
+	return nil
+}

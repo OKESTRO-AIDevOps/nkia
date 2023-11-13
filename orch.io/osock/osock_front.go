@@ -14,6 +14,7 @@ import (
 	ctrl "github.com/OKESTRO-AIDevOps/nkia/nokubelet/controller"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 
+	"github.com/gorilla/websocket"
 	_ "github.com/gorilla/websocket"
 )
 
@@ -107,7 +108,7 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 
 		if req_option == "admin" {
 
-			ret, err := AdminRequest(email, query_str)
+			ret, err := AdminRequest(c, email, query_str)
 
 			if err != nil {
 				res_orchestrator.ServerMessage = err.Error()
@@ -172,7 +173,7 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func AdminRequest(email string, query string) ([]byte, error) {
+func AdminRequest(c *websocket.Conn, email string, query string) ([]byte, error) {
 
 	var ret []byte
 
@@ -249,6 +250,48 @@ func AdminRequest(email string, query string) ([]byte, error) {
 		}
 
 		ret = []byte(token)
+
+	case "INSTALLCLUSTER":
+
+		if len(FI_SESSIONS.INST_SESSION) > 100 {
+			return ret, fmt.Errorf("admin req: too many remote install sessions")
+		}
+
+		_, okay := FI_SESSIONS.INST_SESSION[c]
+
+		if okay {
+			return ret, fmt.Errorf("admin req: already an ongoing installation")
+		}
+
+		cluster_id := args[0]
+		targetip := args[1]
+		targetid := args[2]
+		targetpw := args[3]
+		localip := args[4]
+		osnm := args[5]
+		cv := args[6]
+		update_token := args[7]
+
+		FI_SESSIONS.INST_SESSION[c] = &[]byte{}
+
+		FI_SESSIONS.INST_RESULT[c] = "-"
+
+		go InstallCluster(c, cluster_id, targetip, targetid, targetpw, localip, osnm, cv, update_token)
+
+		ret = []byte("remote cluster installation started\n")
+
+	case "INSTALLCLUSTERLOG":
+
+		cluster_id := args[0]
+		targetip := args[1]
+		targetid := args[2]
+		targetpw := args[3]
+
+		ret, err = InstallClusterLog(c, cluster_id, targetip, targetid, targetpw)
+
+		if err != nil {
+			return ret, fmt.Errorf("admin req: %s", err.Error())
+		}
 
 	// case "SIGNOUT" :
 

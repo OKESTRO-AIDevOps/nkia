@@ -12,10 +12,13 @@ var APIX_QUERY_MAP = "" +
 	// front admin option
 	"conncheck                                         : CONNCHK               " + "\n" +
 	"keygen                                            : KEYGEN                " + "\n" +
-	"addcluster                                        : ADDCLUSTER            " + "\n" +
+	"addcl                                             : ADDCLUSTER            " + "\n" +
+	"instcl                                            : INSTALLCLUSTER        " + "\n" +
+	"instcllog                                         : INSTALLCLUSTERLOG     " + "\n" +
 	// query
 	// "install-env                                      : NKADM-INSTENV         " + "\n" +
 	// "install-env-restart                              : NKADM-INSTENVRES      " + "\n" +
+	"io-connect-update                                 : NKLET-CONNUP          " + "\n" +
 	"install-mainctrl                                  : NKADM-INSTCTRL        " + "\n" +
 	"install-subctrl-prep                              : NKADM-INSTANCTRLCRT   " + "\n" +
 	"install-subctrl                                   : NKADM-INSTANCTRLOL    " + "\n" +
@@ -227,6 +230,33 @@ func _CONSTRUCT_NKADM_FLAG() API_X {
 	return api_x
 }
 
+func _CONSTRUCT_NKLET_FLAG() API_X {
+
+	api_x := make(API_X)
+
+	def_list := strings.Split(NKLET_FLAGS, "\n")
+
+	for i := 0; i < len(def_list); i++ {
+
+		if def_list[i] == "" || def_list[i] == " " || def_list[i] == "\n" {
+			continue
+		}
+
+		raw_record := def_list[i]
+
+		record_list := strings.SplitN(raw_record, ":", 2)
+
+		key := record_list[0]
+
+		key = strings.ReplaceAll(key, " ", "")
+
+		api_x[key] = record_list[1]
+
+	}
+
+	return api_x
+}
+
 var AXgi, AXid = _CONSTRUCT_API_X()
 
 var AXcmd = _CONSTRUCT_API_X_COMMAND()
@@ -236,3 +266,5 @@ var AXflag = _CONSTRUCT_API_X_FLAG()
 var NKCTLflag = _CONSTRUCT_NKCTL_FLAG()
 
 var NKADMflag = _CONSTRUCT_NKADM_FLAG()
+
+var NKLETflag = _CONSTRUCT_NKLET_FLAG()

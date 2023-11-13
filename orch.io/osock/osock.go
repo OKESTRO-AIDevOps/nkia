@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"sync"
 	"time"
 
 	_ "log"
@@ -23,6 +24,14 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+type InstallSession struct {
+	mu sync.Mutex
+
+	INST_SESSION map[*websocket.Conn]*[]byte
+
+	INST_RESULT map[*websocket.Conn]string
+}
+
 var ADDR = flag.String("addr", "0.0.0.0:7331", "service address")
 
 var UPGRADER = websocket.Upgrader{} // use default options
@@ -36,6 +45,11 @@ var SERVER_CONNECTION = make(map[string]*websocket.Conn)
 var SERVER_CONNECTION_KEY = make(map[*websocket.Conn]string)
 
 var SERVER_CONNECTION_FRONT = make(map[*websocket.Conn]string)
+
+var FI_SESSIONS = InstallSession{
+	INST_SESSION: make(map[*websocket.Conn]*[]byte),
+	INST_RESULT:  make(map[*websocket.Conn]string),
+}
 
 func O_Init() error {
 	challenge_records := make(modules.ChallengRecord)

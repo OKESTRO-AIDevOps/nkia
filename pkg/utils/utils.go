@@ -1,15 +1,19 @@
 package utils
 
 import (
+	"bytes"
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"io"
+	"log"
 	"os"
 	"strconv"
 	"strings"
 
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/promquery"
+	"golang.org/x/crypto/ssh"
 
 	agph "github.com/guptarohit/asciigraph"
 )
@@ -116,4 +120,71 @@ func RandomHex(n int) (string, error) {
 		return "", err
 	}
 	return hex.EncodeToString(bytes), nil
+}
+
+type ShellConnection struct {
+	*ssh.Client
+	password string
+}
+
+func ShellConnect(addr, user, password string) (*ShellConnection, error) {
+
+	var hostkeyCallback = ssh.InsecureIgnoreHostKey()
+
+	sshConfig := &ssh.ClientConfig{
+		User: user,
+		Auth: []ssh.AuthMethod{
+			ssh.Password(password),
+		},
+		HostKeyCallback: hostkeyCallback,
+	}
+
+	conn, err := ssh.Dial("tcp", addr, sshConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ShellConnection{conn, password}, nil
+
+}
+
+func (conn *ShellConnection) SendCommands(cmds string) ([]byte, error) {
+	session, err := conn.NewSession()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer session.Close()
+
+	modes := ssh.TerminalModes{
+		ssh.ECHO:          0,
+		ssh.TTY_OP_ISPEED: 14400,
+		ssh.TTY_OP_OSPEED: 14400,
+	}
+
+	err = session.RequestPty("xterm", 80, 40, modes)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	stdoutB := new(bytes.Buffer)
+	session.Stdout = stdoutB
+	in, _ := session.StdinPipe()
+
+	go func(in io.Writer, output *bytes.Buffer) {
+		for {
+			if strings.Contains(string(output.Bytes()), "[sudo] password for ") {
+				_, err = in.Write([]byte(conn.password + "\n"))
+				if err != nil {
+					break
+				}
+				break
+			}
+		}
+	}(in, stdoutB)
+
+	err = session.Run(cmds)
+	if err != nil {
+		return []byte{}, err
+	}
+	return stdoutB.Bytes(), nil
 }
