@@ -128,6 +128,48 @@ func InitAdm() error {
 
 }
 
+func InitAdmDefault() error {
+
+	if _, err := os.Stat(".npia/config.yaml"); err != nil {
+
+		return fmt.Errorf("no default config yaml exists")
+
+	} else {
+
+		file_b, err := os.ReadFile(".npia/config.yaml")
+
+		CONFIG_YAML := make(map[string]string)
+
+		if err == nil {
+
+			err = goya.Unmarshal(file_b, &CONFIG_YAML)
+
+			if err == nil {
+
+				fmt.Println("existing configuration: ")
+
+				for k, v := range CONFIG_YAML {
+
+					fmt.Printf("%s: %s\n", k, v)
+
+				}
+
+			} else {
+
+				return fmt.Errorf("failed marshalling config yaml: %s", err.Error())
+			}
+
+		} else {
+
+			return fmt.Errorf("failed reading config yaml: %s", err.Error())
+
+		}
+
+	}
+
+	return nil
+}
+
 func RunDebugInteractive() {
 
 	var in_raw_query string
@@ -246,6 +288,55 @@ func main() {
 	} else if flag == "init-npia" {
 
 		err_init := InitAdm()
+
+		if err_init != nil {
+			fmt.Println(err_init.Error())
+		}
+
+		go kubebase.AdminInitNPIA()
+
+		t_start := time.Now()
+
+		done := 0
+
+		for time.Now().Sub(t_start).Seconds() < 30 {
+
+			if _, err := os.Stat("npia_init_done"); err == nil {
+
+				done = 1
+				break
+
+			}
+
+		}
+
+		if done == 1 {
+			b, _ := kubebase.AdminGetInitLog()
+
+			fmt.Println("-----INITLOG-----")
+
+			fmt.Println(string(b))
+
+			fmt.Println("-----------------")
+
+			fmt.Println("successfully initiated")
+		} else {
+
+			b, _ := kubebase.AdminGetInitLog()
+
+			fmt.Println("-----FAILLOG-----")
+
+			fmt.Println(string(b))
+
+			fmt.Println("-----------------")
+
+			fmt.Println("initiation timeout")
+		}
+		return
+
+	} else if flag == "init-npia-default" {
+
+		err_init := InitAdmDefault()
 
 		if err_init != nil {
 			fmt.Println(err_init.Error())

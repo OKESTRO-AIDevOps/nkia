@@ -4,7 +4,10 @@ var APIX_COMMAND = "" +
 	// front admin option
 	"conncheck                                         : checking orch.io connection                " + "\n" +
 	"keygen                                            : generate and receive private key                " + "\n" +
-	"addcluster                                        : generate and receive token for connecting a working cluster            " + "\n" +
+	"addcl                                             : generate and receive token for connecting a working cluster            " + "\n" +
+	"instcl                                            : install main control plane through orch.io       " + "\n" +
+	"instcllog                                         : get installation log for the main control plane through orch.io     " + "\n" +
+	"io-connect-update                                 : start nokubelt with update token         " + "\n" +
 	// query
 	//"admin-install-env                                 : set up installation environment         " + "\n" +
 	"install-mainctrl                                  : install control plane using nokubeadm        " + "\n" +

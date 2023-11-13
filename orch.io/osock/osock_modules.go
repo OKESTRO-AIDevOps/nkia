@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
+	"github.com/OKESTRO-AIDevOps/nkia/pkg/utils"
+	"github.com/gorilla/websocket"
 )
 
 var DB *sql.DB
@@ -433,4 +435,297 @@ func AddClusterByEmailAndClusterID(email string, cluster_id string, config strin
 	res.Close()
 
 	return nil
+}
+
+func InstallCluster(c *websocket.Conn, cluster_id string, targetip string, targetid string, targetpw string, localip string, osnm string, cv string, update_token string) {
+
+	conn, err := utils.ShellConnect(targetip, targetid, targetpw)
+
+	if err != nil {
+
+		WriteToInstallSessionWithLock(c, cluster_id, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+
+		return
+
+	}
+
+	output, err := conn.SendCommands("sudo mkdir -p /npia && ls -la /npia")
+
+	if err != nil {
+		WriteToInstallSessionWithLock(c, cluster_id, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+
+		return
+	}
+
+	output = append(output, []byte("\n----------ROOT NPIA CREATED----------\n")...)
+
+	WriteToInstallSessionWithLock(c, cluster_id, string(output))
+
+	output, err = conn.SendCommands("sudo curl -L https://github.com/OKESTRO-AIDevOps/nkia/releases/download/latest/bin.tgz -o /npia/bin.tgz")
+	if err != nil {
+		WriteToInstallSessionWithLock(c, cluster_id, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		return
+	}
+
+	output = append(output, []byte("\n----------NPIA BIN DOWNLOADED----------\n")...)
+
+	WriteToInstallSessionWithLock(c, cluster_id, string(output))
+
+	output, err = conn.SendCommands("sudo tar -xzf /npia/bin.tgz -C /npia")
+	if err != nil {
+
+		WriteToInstallSessionWithLock(c, cluster_id, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		return
+	}
+
+	output = append(output, []byte("\n----------NPIA BIN INSTALLED----------\n")...)
+
+	WriteToInstallSessionWithLock(c, cluster_id, string(output))
+
+	output, err = conn.SendCommands("cd /npia/bin/nokubeadm && sudo ./nokubeadm init-npia-default")
+	if err != nil {
+
+		WriteToInstallSessionWithLock(c, cluster_id, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		return
+	}
+
+	output = append(output, []byte("\n----------NPIA INITIATED----------\n")...)
+
+	WriteToInstallSessionWithLock(c, cluster_id, string(output))
+
+	options := " " + "--localip " + localip + " " + "--osnm " + osnm + " " + "--cv " + cv
+
+	output, err = conn.SendCommands("cd /npia/bin/nokubeadm && sudo ./nokubeadm install mainctrl" + options)
+	if err != nil {
+
+		WriteToInstallSessionWithLock(c, cluster_id, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		return
+	}
+
+	output = append(output, []byte("\n----------CONTROL PLANE INSTALLED----------\n")...)
+
+	output, err = conn.SendCommands("cd /npia/bin/nokubelet && sudo ./nokubelet init-npia-default" + options)
+	if err != nil {
+
+		WriteToInstallSessionWithLock(c, cluster_id, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		return
+	}
+
+	output = append(output, []byte("\n----------NOKUBELET INITIATED----------\n")...)
+
+	options = " " + "--clusterid " + cluster_id + " " + "--updatetoken " + update_token
+
+	output, err = conn.SendCommands("cd /npia/bin/nokubelet && sudo ./nokubelet io connect update" + options + " " + "&")
+	if err != nil {
+
+		WriteToInstallSessionWithLock(c, cluster_id, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		return
+	}
+
+	output = append(output, []byte("\n----------NOKUBELET CONNECTED----------\n")...)
+
+	return
+}
+
+func InstallClusterLog(c *websocket.Conn, cluster_id string, targetip string, targetid string, targetpw string) ([]byte, error) {
+
+	var ret_byte []byte
+
+	result, err := ReadFromInstallResult(c, cluster_id)
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("install result: %s", err.Error())
+	}
+
+	res_str := string(result)
+
+	if res_str == "SUCCESS" {
+
+		ret_byte = []byte("SUCCESS")
+
+		RemoveFromInstallSessionWithLock(c, cluster_id)
+
+		return ret_byte, nil
+
+	} else if res_str == "-" {
+
+		sess_b, err := ReadFromInstallSession(c, cluster_id)
+
+		if err != nil {
+			return ret_byte, fmt.Errorf("install log: %s", err.Error())
+		}
+
+		log_b, err := FetchInstallClusterLog(c, cluster_id, targetip, targetid, targetpw)
+
+		if err != nil {
+			return ret_byte, fmt.Errorf("install log: %s", err.Error())
+		}
+
+		ret_byte = MergeInstallSessionAndLog(sess_b, log_b)
+
+	} else {
+
+		sess_b, err := ReadFromInstallSession(c, cluster_id)
+
+		if err != nil {
+			return ret_byte, fmt.Errorf("install log: %s", err.Error())
+		}
+
+		ret_byte = append(ret_byte, sess_b...)
+
+		RemoveFromInstallSessionWithLock(c, cluster_id)
+
+		return ret_byte, nil
+
+	}
+
+	return ret_byte, nil
+
+}
+
+func WriteToInstallSessionWithLock(c *websocket.Conn, id string, new_msg string) {
+
+	FI_SESSIONS.mu.Lock()
+
+	defer FI_SESSIONS.mu.Unlock()
+
+	new_bytes := []byte(new_msg)
+
+	ret_byte, okay := FI_SESSIONS.INST_SESSION[c]
+
+	if !okay {
+		EventLogger("in write to install sess could not find session for: " + id)
+		return
+	}
+
+	*ret_byte = append(*ret_byte, new_bytes...)
+
+	return
+}
+
+func WriteToInstallResultWithLock(c *websocket.Conn, id string, result string) {
+
+	FI_SESSIONS.mu.Lock()
+
+	defer FI_SESSIONS.mu.Unlock()
+
+	_, okay := FI_SESSIONS.INST_SESSION[c]
+
+	if !okay {
+		EventLogger("in write to install result could not find session for: " + id)
+		return
+	}
+
+	FI_SESSIONS.INST_RESULT[c] = result
+
+	return
+
+}
+
+func ReadFromInstallSession(c *websocket.Conn, id string) ([]byte, error) {
+
+	var ret_byte []byte
+
+	sess_log, okay := FI_SESSIONS.INST_SESSION[c]
+
+	if !okay {
+		msg := "in remove session could not find session for: " + id
+		EventLogger(msg)
+		return ret_byte, fmt.Errorf(msg)
+	}
+
+	ret_byte = *sess_log
+
+	return ret_byte, nil
+
+}
+
+func ReadFromInstallResult(c *websocket.Conn, id string) ([]byte, error) {
+
+	var ret_byte []byte
+
+	result, okay := FI_SESSIONS.INST_RESULT[c]
+
+	if !okay {
+		msg := "in remove session could not find result for: " + id
+		EventLogger(msg)
+		return ret_byte, fmt.Errorf(msg)
+	}
+
+	ret_byte = []byte(result)
+
+	return ret_byte, nil
+
+}
+
+func RemoveFromInstallSessionWithLock(c *websocket.Conn, id string) {
+
+	FI_SESSIONS.mu.Lock()
+
+	defer FI_SESSIONS.mu.Unlock()
+
+	_, okay := FI_SESSIONS.INST_SESSION[c]
+
+	if !okay {
+		EventLogger("in remove session could not find session for: " + id)
+		return
+	}
+
+	_, okay = FI_SESSIONS.INST_RESULT[c]
+
+	if !okay {
+		EventLogger("in remove session could not find result for: " + id)
+		return
+	}
+
+	delete(FI_SESSIONS.INST_SESSION, c)
+
+	delete(FI_SESSIONS.INST_RESULT, c)
+
+	return
+
+}
+
+func FetchInstallClusterLog(c *websocket.Conn, cluster_id string, targetip string, targetid string, targetpw string) ([]byte, error) {
+
+	var ret_byte []byte
+
+	conn, err := utils.ShellConnect(targetip, targetid, targetpw)
+
+	if err != nil {
+
+		message := fmt.Sprintf("failed to install cluster: %s", err.Error())
+
+		WriteToInstallSessionWithLock(c, cluster_id, message)
+
+		return ret_byte, fmt.Errorf(message)
+
+	}
+
+	output, err := conn.SendCommands("cd /npia/bin/nokubeadm && sudo ./nokubeadm install log")
+
+	if err != nil {
+
+		message := fmt.Sprintf("failed to install cluster: %s", err.Error())
+		WriteToInstallSessionWithLock(c, cluster_id, message)
+
+		return ret_byte, fmt.Errorf(message)
+	}
+
+	ret_byte = output
+
+	return ret_byte, nil
+}
+
+func MergeInstallSessionAndLog(sess_b []byte, log_b []byte) []byte {
+
+	var ret_byte []byte
+
+	ret_byte = append(ret_byte, sess_b...)
+
+	ret_byte = append(ret_byte, []byte("\n\n----------**********----------\n\n---------*   LOG    *---------\n\n----------**********----------\n\n")...)
+
+	ret_byte = append(ret_byte, log_b...)
+
+	return ret_byte
 }

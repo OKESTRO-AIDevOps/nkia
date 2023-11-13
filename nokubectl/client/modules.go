@@ -15,6 +15,7 @@ import (
 	"github.com/OKESTRO-AIDevOps/nkia/nokubectl/config"
 	ctrl "github.com/OKESTRO-AIDevOps/nkia/nokubelet/controller"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
+	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
 	"github.com/gorilla/websocket"
 )
 
@@ -246,6 +247,91 @@ func RequestHandler_APIX_Once_PrintOnly(c *websocket.Conn, req_orchestrator ctrl
 			_ = json.Unmarshal(result.QueryResult, &body_ret)
 
 			fmt.Println(body_ret["BODY"])
+
+			return
+
+		default:
+
+			counter += 1
+
+			if counter > 100 {
+
+				fmt.Println("request timeout")
+
+				return
+			}
+
+			time.Sleep(time.Millisecond * 100)
+
+		}
+	}
+
+}
+
+func RequestHandler_APIX_Store_Override(c *websocket.Conn, req_orchestrator ctrl.OrchestratorRequest) {
+
+	recv := make(chan ctrl.OrchestratorResponse)
+
+	var MSG string
+
+	var OUT apistandard.API_OUTPUT
+
+	var HEAD apistandard.API_METADATA
+
+	var BODY string
+
+	req_b, err := json.Marshal(req_orchestrator)
+
+	if err != nil {
+		panic(err.Error())
+
+	}
+
+	_ = os.WriteFile(".npia/_apix_o/REQ", req_b, 0644)
+
+	go RequestHandler_ReadChannel(c, recv)
+
+	c.WriteJSON(req_orchestrator)
+
+	counter := 0
+
+	for {
+
+		select {
+
+		case result := <-recv:
+
+			OUT = apistandard.API_OUTPUT{}
+
+			MSG = result.ServerMessage
+
+			err := json.Unmarshal(result.QueryResult, &OUT)
+
+			if err != nil {
+				panic(err.Error())
+			}
+
+			if MSG != "SUCCESS" {
+				panic(err.Error())
+			}
+
+			_ = os.WriteFile(".npia/_apix_o/MSG", []byte(MSG), 0644)
+
+			HEAD = OUT.HEAD
+
+			BODY = OUT.BODY
+
+			head_b, err := json.Marshal(HEAD)
+
+			if err != nil {
+				panic(err.Error())
+			}
+
+			_ = os.WriteFile(".npia/_apix_o/HEAD", head_b, 0644)
+
+			_ = os.WriteFile(".npia/_apix_o/BODY", []byte(BODY), 0644)
+
+			fmt.Println("SUCCESS")
 
 			return
 

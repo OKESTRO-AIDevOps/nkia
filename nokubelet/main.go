@@ -5,12 +5,11 @@ import (
 	"os"
 	"os/exec"
 	"os/user"
-	"strings"
-	"syscall"
 	"time"
 
 	"fmt"
 
+	"github.com/OKESTRO-AIDevOps/nkia/nokubectl/apix"
 	_ "github.com/gin-gonic/contrib/sessions"
 	_ "github.com/gin-gonic/gin"
 
@@ -20,9 +19,9 @@ import (
 	_ "github.com/OKESTRO-AIDevOps/nkia/nokubelet/router"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/kubebase"
 	goya "github.com/goccy/go-yaml"
-
-	"golang.org/x/term"
 )
+
+var DEBUG = 0
 
 func InitNpiaServer() error {
 
@@ -170,21 +169,172 @@ func InitNpiaServer() error {
 	return nil
 }
 
+func InitNpiaServerDefault() error {
+
+	challenge_records := make(modules.ChallengRecord)
+
+	key_records := make(modules.KeyRecord)
+
+	challenge_records["_INIT"] = map[string]string{
+		"_INIT": "_INIT",
+	}
+
+	key_records["_INIT"] = "_INIT"
+
+	cmd := exec.Command("mkdir", "-p", ".npia")
+
+	err := cmd.Run()
+
+	if err != nil {
+
+		return fmt.Errorf("failed init npia server: %s", err.Error())
+	}
+
+	challenge_records_b, err := json.Marshal(challenge_records)
+
+	if err != nil {
+
+		return fmt.Errorf("failed init npia server: %s", err.Error())
+	}
+
+	key_records_b, err := json.Marshal(key_records)
+
+	if err != nil {
+
+		return fmt.Errorf("failed init npia server: %s", err.Error())
+	}
+
+	err = os.WriteFile(".npia/challenge.json", challenge_records_b, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed init npia server: %s", err.Error())
+	}
+
+	err = os.WriteFile(".npia/key.json", key_records_b, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed init npia server: %s", err.Error())
+	}
+
+	get_kubeconfig_path_command_string :=
+		`#!/bin/bash
+[[ ! -z "$KUBECONFIG" ]] && echo "$KUBECONFIG" || echo "$HOME/.kube/config"`
+
+	get_kubeconfig_path_command_b := []byte(get_kubeconfig_path_command_string)
+
+	err = os.WriteFile(".npia/get_kubeconfig_path", get_kubeconfig_path_command_b, 0755)
+
+	if err != nil {
+
+		return fmt.Errorf("failed init npia server: %s", err.Error())
+	}
+
+	cmd = exec.Command("mkdir", "-p", ".npia")
+
+	err = cmd.Run()
+
+	if err != nil {
+
+		return fmt.Errorf("failed to init: %s", err.Error())
+	}
+
+	CONFIG_YAML := make(map[string]string)
+
+	if _, err := os.Stat(".npia/config.yaml"); err != nil {
+
+		return fmt.Errorf("no default config yaml exists")
+
+	} else {
+
+		file_b, err := os.ReadFile(".npia/config.yaml")
+
+		if err == nil {
+
+			err = goya.Unmarshal(file_b, &CONFIG_YAML)
+
+			if err == nil {
+
+				fmt.Println("existing configuration: ")
+
+				for k, v := range CONFIG_YAML {
+
+					fmt.Printf("  %s: %s\n", k, v)
+
+				}
+
+			} else {
+
+				return fmt.Errorf("failed marshalling config yaml: %s", err.Error())
+			}
+
+		} else {
+
+			return fmt.Errorf("failed reading config yaml: %s", err.Error())
+
+		}
+
+	}
+
+	return nil
+}
+
+func RunLetCmd(args []string) {
+
+	var address string
+
+	var email string
+
+	address = config.ADDRESS
+
+	email = config.EMAIL
+
+	apistd_in, err := apix.AXgi.BuildAPIInputFromCommandLine(args)
+
+	if err != nil {
+		fmt.Printf("failed: %s\n", err.Error())
+
+		return
+	}
+
+	cluster_id := apistd_in["clusterid"]
+
+	update_token, ut_okay := apistd_in["updatetoken"]
+
+	if config.MODE == "test" && config.DEBUG == "true" && ut_okay {
+
+		if err := sock.DetachedServerCommunicatorWithUpdate_Test_Debug(address, email, cluster_id, update_token); err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+	} else if config.MODE == "test" && config.DEBUG != "true" && ut_okay {
+
+		if err := sock.DetachedServerCommunicatorWithUpdate_Test(address, email, cluster_id, update_token); err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+	} else if config.MODE == "test" && config.DEBUG == "true" && !ut_okay {
+
+		if err := sock.DetachedServerCommunicator_Test_Debug(address, email, cluster_id); err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+	} else if config.MODE == "test" && config.DEBUG != "true" && !ut_okay {
+
+		if err := sock.DetachedServerCommunicator_Test(address, email, cluster_id); err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+	}
+
+}
+
 func main() {
-
-	INIT := 0
-
-	INIT_NPIA := 0
-
-	MODE_DEBUG := 0
-
-	MODE_TEST := 0
-
-	MODE_UPDATE := 0
-
-	_ = MODE_DEBUG
-
-	_ = MODE_TEST
 
 	current_user, err := user.Current()
 
@@ -202,37 +352,14 @@ func main() {
 
 	}
 
-	for i := 1; i < len(os.Args); i++ {
+	flag, args, err := apix.GetNKLETFlagAndReduceArgs()
 
-		flag := os.Args[i]
-
-		if flag == "init" {
-
-			INIT = 1
-
-			break
-		}
-
-		if flag == "init-npia" {
-
-			INIT_NPIA = 1
-
-			break
-		}
-
-		if flag == "-g" || flag == "--debug" {
-
-			MODE_DEBUG = 1
-
-		} else if flag == "-u" || flag == "--update" {
-
-			MODE_UPDATE = 1
-
-		}
-
+	if err != nil {
+		fmt.Println(err.Error())
+		return
 	}
 
-	if INIT == 1 {
+	if flag == "init" {
 		err_init := InitNpiaServer()
 
 		if err_init != nil {
@@ -243,7 +370,7 @@ func main() {
 
 	}
 
-	if INIT_NPIA == 1 {
+	if flag == "init-npia" {
 		err_init := InitNpiaServer()
 
 		if err_init != nil {
@@ -291,10 +418,56 @@ func main() {
 		}
 		return
 
-	}
+	} else if flag == "init-npia-default" {
+		err_init := InitNpiaServerDefault()
 
-	if config.CONFIG_YAML["MODE"] == "test" {
-		MODE_TEST = 1
+		if err_init != nil {
+			fmt.Println(err_init.Error())
+		}
+
+		go kubebase.AdminInitNPIA()
+
+		t_start := time.Now()
+
+		done := 0
+
+		for time.Now().Sub(t_start).Seconds() < 30 {
+
+			if _, err := os.Stat("npia_init_done"); err == nil {
+
+				done = 1
+				break
+
+			}
+
+		}
+
+		if done == 1 {
+			b, _ := kubebase.AdminGetInitLog()
+
+			fmt.Println("-----INITLOG-----")
+
+			fmt.Println(string(b))
+
+			fmt.Println("-----------------")
+
+			fmt.Println("successfully initiated")
+		} else {
+
+			b, _ := kubebase.AdminGetInitLog()
+
+			fmt.Println("-----FAILLOG-----")
+
+			fmt.Println(string(b))
+
+			fmt.Println("-----------------")
+
+			fmt.Println("initiation timeout")
+		}
+		return
+
+	} else {
+		RunLetCmd(args)
 	}
 
 	/* MODE_DEBUG
@@ -316,101 +489,92 @@ func main() {
 
 	*/
 
-	var address string
+	/*
+		fmt.Println("orch.io cluster id: ")
 
-	var email string
+		fmt.Scanln(&cluster_id)
 
-	var cluster_id string
+		if MODE_UPDATE == 1 && MODE_TEST == 1 {
 
-	var update_token string
+			fmt.Println("orch.io update token: ")
 
-	address = config.ADDRESS
+			byte_passwd, err := term.ReadPassword(int(syscall.Stdin))
 
-	email = config.EMAIL
+			if err != nil {
+				fmt.Println(err.Error())
+				return
+			}
 
-	fmt.Println("orch.io cluster id: ")
+			token_str := string(byte_passwd)
 
-	fmt.Scanln(&cluster_id)
+			update_token = strings.TrimSpace(token_str)
 
-	if MODE_UPDATE == 1 && MODE_TEST == 1 {
+			if MODE_DEBUG == 1 {
+				fmt.Println(update_token)
 
-		fmt.Println("orch.io update token: ")
+				if err := sock.DetachedServerCommunicatorWithUpdate_Test_Debug(address, email, cluster_id, update_token); err != nil {
+					fmt.Println(err.Error())
+					return
+				}
 
-		byte_passwd, err := term.ReadPassword(int(syscall.Stdin))
+			} else {
+				if err := sock.DetachedServerCommunicatorWithUpdate_Test(address, email, cluster_id, update_token); err != nil {
+					fmt.Println(err.Error())
+					return
+				}
+			}
 
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
+		} else if MODE_TEST == 1 {
 
-		token_str := string(byte_passwd)
+			if MODE_DEBUG == 1 {
 
-		update_token = strings.TrimSpace(token_str)
+				if err := sock.DetachedServerCommunicator_Test_Debug(address, email, cluster_id); err != nil {
+					fmt.Println(err.Error())
+					return
+				}
 
-		if MODE_DEBUG == 1 {
-			fmt.Println(update_token)
+			} else {
 
-			if err := sock.DetachedServerCommunicatorWithUpdate_Test_Debug(address, email, cluster_id, update_token); err != nil {
+				if err := sock.DetachedServerCommunicator_Test(address, email, cluster_id); err != nil {
+					fmt.Println(err.Error())
+					return
+				}
+
+			}
+
+		} else if MODE_UPDATE == 1 {
+
+			fmt.Println("orch.io update token: ")
+
+			byte_passwd, err := term.ReadPassword(int(syscall.Stdin))
+
+			if err != nil {
+				fmt.Println(err.Error())
+				return
+			}
+
+			token_str := string(byte_passwd)
+
+			update_token = strings.TrimSpace(token_str)
+
+			if MODE_DEBUG == 1 {
+				fmt.Println(update_token)
+			}
+
+			if err := sock.DetachedServerCommunicatorWithUpdate(address, email, cluster_id, update_token); err != nil {
 				fmt.Println(err.Error())
 				return
 			}
 
 		} else {
-			if err := sock.DetachedServerCommunicatorWithUpdate_Test(address, email, cluster_id, update_token); err != nil {
-				fmt.Println(err.Error())
-				return
-			}
-		}
 
-	} else if MODE_TEST == 1 {
-
-		if MODE_DEBUG == 1 {
-
-			if err := sock.DetachedServerCommunicator_Test_Debug(address, email, cluster_id); err != nil {
-				fmt.Println(err.Error())
-				return
-			}
-
-		} else {
-
-			if err := sock.DetachedServerCommunicator_Test(address, email, cluster_id); err != nil {
+			if err := sock.DetachedServerCommunicator(address, email, cluster_id); err != nil {
 				fmt.Println(err.Error())
 				return
 			}
 
 		}
 
-	} else if MODE_UPDATE == 1 {
-
-		fmt.Println("orch.io update token: ")
-
-		byte_passwd, err := term.ReadPassword(int(syscall.Stdin))
-
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
-
-		token_str := string(byte_passwd)
-
-		update_token = strings.TrimSpace(token_str)
-
-		if MODE_DEBUG == 1 {
-			fmt.Println(update_token)
-		}
-
-		if err := sock.DetachedServerCommunicatorWithUpdate(address, email, cluster_id, update_token); err != nil {
-			fmt.Println(err.Error())
-			return
-		}
-
-	} else {
-
-		if err := sock.DetachedServerCommunicator(address, email, cluster_id); err != nil {
-			fmt.Println(err.Error())
-			return
-		}
-
-	}
+	*/
 
 }

@@ -71,6 +71,30 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 
 	case "ADMIN-INSTWKOR":
 
+		targetip := std_cmd["targetip"]
+		targetid := std_cmd["targetid"]
+		targetpw := std_cmd["targetpw"]
+		localip := std_cmd["localip"]
+		osnm := std_cmd["osnm"]
+		cv := std_cmd["cv"]
+		token := std_cmd["token"]
+
+		var cmd_err error
+
+		if token == "-" {
+
+			token, cmd_err = kubebase.GetJoinToken()
+
+			if cmd_err != nil {
+				return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+			}
+
+		}
+
+		go kubebase.InstallWorkerOnRemote(targetip, targetid, targetpw, localip, osnm, cv, token)
+
+		ret_api_out.BODY = string([]byte("remote worker installation started\n"))
+
 	case "NKADM-INSTVOLOL":
 
 		localip := std_cmd["localip"]
@@ -118,6 +142,20 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 		ret_api_out.BODY = string(b_out)
 
 	case "ADMIN-INSTLOGOR":
+
+		targetip := std_cmd["targetip"]
+		targetid := std_cmd["targetid"]
+		targetpw := std_cmd["targetpw"]
+
+		b_out, cmd_err := kubebase.InstallLogOnRemote(targetip, targetid, targetpw)
+
+		if cmd_err != nil {
+
+			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+
+		}
+
+		ret_api_out.BODY = string(b_out)
 
 	case "ADMIN-INIT":
 

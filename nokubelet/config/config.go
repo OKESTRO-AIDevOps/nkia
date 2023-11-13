@@ -69,6 +69,26 @@ func _GetEmail() string {
 
 }
 
+func _GetDebug() string {
+
+	if CFG_EXIST == 1 {
+		return CONFIG_YAML["DEBUG"]
+	} else {
+		return ""
+	}
+
+}
+
+func _GetMode() string {
+
+	if CFG_EXIST == 1 {
+		return CONFIG_YAML["MODE"]
+	} else {
+		return ""
+	}
+
+}
+
 var CFG_EXIST = _CheckCfg()
 
 var CONFIG_YAML = _LoadConfigYaml()
@@ -76,3 +96,7 @@ var CONFIG_YAML = _LoadConfigYaml()
 var ADDRESS = _ConstructURL("/osock/server")
 
 var EMAIL = _GetEmail()
+
+var DEBUG = _GetDebug()
+
+var MODE = _GetMode()

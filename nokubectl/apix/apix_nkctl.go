@@ -7,8 +7,9 @@ import (
 
 var NKCTL_FLAGS = "" +
 	"init              : initiate  (or re-init) a nokubectl config and runtime directory" + "\n" +
-	"help              : given command line argument, prints out relevant information" + "\n" +
-	"interactive       : (recommended) run command in interactive mode" + "\n" +
+	"read              : read out the previous query result if present" + "\n" +
+	//	"help              : given command line argument, prints out relevant information" + "\n" +
+	//	"interactive       : (recommended) run command in interactive mode" + "\n" +
 	"apix-md           : exports all apix information to a markdown file" + "\n" +
 	"apix-js           : exports all apix information to an importable js file" + "\n" +
 	"apix-py           : exports all apix information to an importable py file" + "\n" +
