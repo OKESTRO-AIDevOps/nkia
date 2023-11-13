@@ -1164,7 +1164,7 @@ func remote_shell_command() {
 	}
 	fmt.Print(string(output))
 
-	output, err = conn.SendCommands("sudo /npia/bin/nokubeadm/nokubeadm init-npia-yes")
+	output, err = conn.SendCommands("sudo /npia/bin/nokubeadm/nokubeadm init-npia-default")
 	if err != nil {
 		log.Fatal(err)
 	}

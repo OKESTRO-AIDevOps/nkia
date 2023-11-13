@@ -8,6 +8,7 @@ import (
 var NKADM_FLAGS = "" +
 	"init              : initiate  (or re-init) a nokubeadm config and runtime directory" + "\n" +
 	"init-npia         : fully initiate  (or re-init) a nokubeadm config and runtime directory" + "\n" +
+	"init-npia-default : fully and automatically initiate  (or re-init) a nokubeadm config and runtime directory" + "\n" +
 	"interactive       : enter nokubeadm interactive mode" + "\n" +
 	"debug             : debug whatever" + "\n" +
 	""
