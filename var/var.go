@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"crypto"
 	"crypto/aes"
 	"crypto/cipher"
@@ -16,6 +17,7 @@ import (
 	"encoding/pem"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -1063,6 +1065,113 @@ func getPasswd() {
 
 }
 
+type Connection struct {
+	*ssh.Client
+	password string
+}
+
+func Connect(addr, user, password string) (*Connection, error) {
+
+	var hostkeyCallback = ssh.InsecureIgnoreHostKey()
+
+	sshConfig := &ssh.ClientConfig{
+		User: user,
+		Auth: []ssh.AuthMethod{
+			ssh.Password(password),
+		},
+		HostKeyCallback: hostkeyCallback,
+	}
+
+	conn, err := ssh.Dial("tcp", addr, sshConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Connection{conn, password}, nil
+
+}
+
+func (conn *Connection) SendCommands(cmds string) ([]byte, error) {
+	session, err := conn.NewSession()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer session.Close()
+
+	modes := ssh.TerminalModes{
+		ssh.ECHO:          0,     // disable echoing
+		ssh.TTY_OP_ISPEED: 14400, // input speed = 14.4kbaud
+		ssh.TTY_OP_OSPEED: 14400, // output speed = 14.4kbaud
+	}
+
+	err = session.RequestPty("xterm", 80, 40, modes)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	stdoutB := new(bytes.Buffer)
+	session.Stdout = stdoutB
+	in, _ := session.StdinPipe()
+
+	go func(in io.Writer, output *bytes.Buffer) {
+		for {
+			if strings.Contains(string(output.Bytes()), "[sudo] password for ") {
+				_, err = in.Write([]byte(conn.password + "\n"))
+				if err != nil {
+					break
+				}
+				fmt.Println("put the password ---  end .")
+				break
+			}
+		}
+	}(in, stdoutB)
+
+	err = session.Run(cmds)
+	if err != nil {
+		return []byte{}, err
+	}
+	return stdoutB.Bytes(), nil
+}
+
+func remote_shell_command() {
+
+	conn, err := Connect("192.168.50.94:22", "ubuntu", "ubuntu")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	output, err := conn.SendCommands("sudo whoami")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Print(string(output))
+
+	output, err = conn.SendCommands("sudo mkdir -p /npia && ls -la /npia")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Print(string(output))
+
+	output, err = conn.SendCommands("sudo curl -L https://github.com/OKESTRO-AIDevOps/nkia/releases/download/latest/bin.tgz -o /npia/bin.tgz")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Print(string(output))
+
+	output, err = conn.SendCommands("sudo tar -xzf /npia/bin.tgz -C /npia")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Print(string(output))
+
+	output, err = conn.SendCommands("sudo /npia/bin/nokubeadm/nokubeadm init-npia-yes")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Print(string(output))
+
+}
+
 func main() {
 
 	//	ASgi := apistandard.ASgi
@@ -1105,5 +1214,7 @@ func main() {
 
 	// remote_shell_test()
 
-	getPasswd()
+	// getPasswd()
+
+	remote_shell_command()
 }
