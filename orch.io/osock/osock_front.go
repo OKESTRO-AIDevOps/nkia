@@ -187,7 +187,7 @@ func AdminRequest(c *websocket.Conn, email string, query string) ([]byte, error)
 
 	switch OP {
 
-	case "CONNCHK":
+	case "ORCH-CONNCHK":
 
 		var talkback string = "talking back list: "
 
@@ -201,7 +201,7 @@ func AdminRequest(c *websocket.Conn, email string, query string) ([]byte, error)
 
 		ret = []byte(talkback)
 
-	case "KEYGEN":
+	case "ORCH-KEYGEN":
 
 		privkey, pubkey, err := modules.GenerateKeyPair(4096)
 
@@ -239,7 +239,7 @@ func AdminRequest(c *websocket.Conn, email string, query string) ([]byte, error)
 
 		ret = priv_pem
 
-	case "ADDCLUSTER":
+	case "ORCH-ADDCL":
 
 		cluster_id := args[0]
 
@@ -251,7 +251,7 @@ func AdminRequest(c *websocket.Conn, email string, query string) ([]byte, error)
 
 		ret = []byte(token)
 
-	case "INSTALLCLUSTER":
+	case "ORCH-INSTCL":
 
 		if len(FI_SESSIONS.INST_SESSION) > 100 {
 			return ret, fmt.Errorf("admin req: too many remote install sessions")
@@ -280,7 +280,7 @@ func AdminRequest(c *websocket.Conn, email string, query string) ([]byte, error)
 
 		ret = []byte("remote cluster installation started\n")
 
-	case "INSTALLCLUSTERLOG":
+	case "ORCH-INSTCLLOG":
 
 		cluster_id := args[0]
 		targetip := args[1]
