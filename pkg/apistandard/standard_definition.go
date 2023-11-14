@@ -24,6 +24,7 @@ var API_DEFINITION string = "" +
 	"ORCH-INSTCL              :id, clusterid, targetip, targetid, targetpw, localip, osnm, cv, updatetoken                " + "\n" +
 	"ORCH-INSTCLLOG           :id, clusterid, targetip, targetid, targetpw                                                " + "\n" +
 	"NKLET-CONNUP             :id, clusterid, updatetoken                                                                 " + "\n" +
+	"NKLET-CONN               :id, clusterid                                                                              " + "\n" +
 	// "NKADM-INSTENV            :id, localip                                                                                " + "\n" +
 	// "NKADM-INSTENVRES         :id, localip                                                                                " + "\n" +
 	"NKADM-INSTCTRL           :id, localip, osnm, cv                                                                      " + "\n" +

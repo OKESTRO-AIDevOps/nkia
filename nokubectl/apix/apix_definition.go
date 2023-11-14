@@ -19,6 +19,7 @@ var APIX_QUERY_MAP = "" +
 	// "install-env                                      : NKADM-INSTENV         " + "\n" +
 	// "install-env-restart                              : NKADM-INSTENVRES      " + "\n" +
 	"io-connect-update                                 : NKLET-CONNUP          " + "\n" +
+	"io-connect                                        : NKLET-CONN            " + "\n" +
 	"install-mainctrl                                  : NKADM-INSTCTRL        " + "\n" +
 	"install-subctrl-prep                              : NKADM-INSTANCTRLCRT   " + "\n" +
 	"install-subctrl                                   : NKADM-INSTANCTRLOL    " + "\n" +

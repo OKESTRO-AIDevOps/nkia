@@ -1221,6 +1221,28 @@ func remote_shell_command_install() {
 
 }
 
+func remote_shell_background() {
+
+	conn, err := Connect("192.168.50.94:22", "ubuntu", "ubuntu")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	cluster_id := "test-cs"
+
+	options := " " + "--clusterid " + cluster_id
+
+	output, err := conn.SendCommands("cd /npia/bin/nokubelet && sudo ./nokubelet io connect update" + options + " " + "&")
+	if err != nil {
+
+		fmt.Println(err.Error())
+		return
+	}
+
+	fmt.Println(string(output))
+
+}
+
 func main() {
 
 	//	ASgi := apistandard.ASgi
