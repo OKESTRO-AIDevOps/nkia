@@ -10,15 +10,16 @@ type API_X_OPTIONS map[string]string
 
 var APIX_QUERY_MAP = "" +
 	// front admin option
-	"conncheck                                         : CONNCHK               " + "\n" +
-	"keygen                                            : KEYGEN                " + "\n" +
-	"addcl                                             : ADDCLUSTER            " + "\n" +
-	"instcl                                            : INSTALLCLUSTER        " + "\n" +
-	"instcllog                                         : INSTALLCLUSTERLOG     " + "\n" +
+	"orch-conncheck                                    : ORCH-CONNCHK          " + "\n" +
+	"orch-keygen                                       : ORCH-KEYGEN           " + "\n" +
+	"orch-add-cl                                       : ORCH-ADDCL            " + "\n" +
+	"orch-install-cl                                   : ORCH-INSTCL           " + "\n" +
+	"orch-install-cl-log                               : ORCH-INSTCLLOG        " + "\n" +
 	// query
 	// "install-env                                      : NKADM-INSTENV         " + "\n" +
 	// "install-env-restart                              : NKADM-INSTENVRES      " + "\n" +
 	"io-connect-update                                 : NKLET-CONNUP          " + "\n" +
+	"io-connect                                        : NKLET-CONN            " + "\n" +
 	"install-mainctrl                                  : NKADM-INSTCTRL        " + "\n" +
 	"install-subctrl-prep                              : NKADM-INSTANCTRLCRT   " + "\n" +
 	"install-subctrl                                   : NKADM-INSTANCTRLOL    " + "\n" +

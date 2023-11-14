@@ -27,9 +27,9 @@ import (
 type InstallSession struct {
 	mu sync.Mutex
 
-	INST_SESSION map[*websocket.Conn]*[]byte
+	INST_SESSION map[string]*[]byte
 
-	INST_RESULT map[*websocket.Conn]string
+	INST_RESULT map[string]string
 }
 
 var ADDR = flag.String("addr", "0.0.0.0:7331", "service address")
@@ -47,8 +47,8 @@ var SERVER_CONNECTION_KEY = make(map[*websocket.Conn]string)
 var SERVER_CONNECTION_FRONT = make(map[*websocket.Conn]string)
 
 var FI_SESSIONS = InstallSession{
-	INST_SESSION: make(map[*websocket.Conn]*[]byte),
-	INST_RESULT:  make(map[*websocket.Conn]string),
+	INST_SESSION: make(map[string]*[]byte),
+	INST_RESULT:  make(map[string]string),
 }
 
 func O_Init() error {

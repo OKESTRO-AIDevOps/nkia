@@ -18,12 +18,13 @@ type API_STD map[string][]string
 
 var API_DEFINITION string = "" +
 	//            id          :       keys
-	"CONNCHK                  :id                                                                                         " + "\n" +
-	"KEYGEN                   :id                                                                                         " + "\n" +
-	"ADDCLUSTER               :id, clusterid                                                                              " + "\n" +
-	"INSTALLCLUSTER           :id, clusterid, targetip, targetid, targetpw, localip, osnm, cv, updatetoken                " + "\n" +
-	"INSTALLCLUSTERLOG        :id, clusterid, targetip, targetid, targetpw                                                " + "\n" +
+	"ORCH-CONNCHK             :id                                                                                         " + "\n" +
+	"ORCH-KEYGEN              :id                                                                                         " + "\n" +
+	"ORCH-ADDCL               :id, clusterid                                                                              " + "\n" +
+	"ORCH-INSTCL              :id, clusterid, targetip, targetid, targetpw, localip, osnm, cv, updatetoken                " + "\n" +
+	"ORCH-INSTCLLOG           :id, clusterid, targetip, targetid, targetpw                                                " + "\n" +
 	"NKLET-CONNUP             :id, clusterid, updatetoken                                                                 " + "\n" +
+	"NKLET-CONN               :id, clusterid                                                                              " + "\n" +
 	// "NKADM-INSTENV            :id, localip                                                                                " + "\n" +
 	// "NKADM-INSTENVRES         :id, localip                                                                                " + "\n" +
 	"NKADM-INSTCTRL           :id, localip, osnm, cv                                                                      " + "\n" +

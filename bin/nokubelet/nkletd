@@ -1,0 +1,29 @@
+#!/bin/bash
+
+nkletd(){
+
+    CLUSTER_ID=""
+
+    while true
+    do
+
+        CHECK=$(pgrep ./nokubelet | grep "" -c)
+        if [ $CHECK -eq 0 ] && [ -z "$CLUSTER_ID" ]
+        then
+            ./nokubelet "$@"
+        fi 
+
+        if [ $CHECK -eq 0 ] && [ ! -z "$CLUSTER_ID" ]
+        then
+            ./nokubelet io connect --clusterid "$CLUSTER_ID"
+        fi
+
+        CLUSTER_ID=$(cat ./.npia/cluster_id)
+
+        sleep 3
+
+    done
+
+}
+
+nkletd "$@" >/dev/null &

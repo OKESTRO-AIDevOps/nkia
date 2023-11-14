@@ -188,3 +188,33 @@ func (conn *ShellConnection) SendCommands(cmds string) ([]byte, error) {
 	}
 	return stdoutB.Bytes(), nil
 }
+
+func (conn *ShellConnection) SendCommandsBackground(cmds string) ([]byte, error) {
+	session, err := conn.NewSession()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer session.Close()
+
+	stdoutB := new(bytes.Buffer)
+	session.Stdout = stdoutB
+	in, _ := session.StdinPipe()
+
+	go func(in io.Writer, output *bytes.Buffer) {
+		for {
+			if strings.Contains(string(output.Bytes()), "[sudo] password for ") {
+				_, err = in.Write([]byte(conn.password + "\n"))
+				if err != nil {
+					break
+				}
+				break
+			}
+		}
+	}(in, stdoutB)
+
+	err = session.Start(cmds)
+	if err != nil {
+		return []byte{}, err
+	}
+	return stdoutB.Bytes(), nil
+}
