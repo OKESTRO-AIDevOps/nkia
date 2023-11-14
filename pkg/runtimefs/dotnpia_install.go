@@ -201,7 +201,7 @@ func GetOngoingInstallLog() ([]byte, error) {
 
 	}
 
-	head_dir += "/"
+	head_dir += head_value + "/"
 
 	head_dir_open := head_dir + "open"
 
