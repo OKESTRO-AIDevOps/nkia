@@ -537,7 +537,7 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 		if req_option == "admin" {
 
-			ret, err := AdminRequest(c, email, query_str)
+			ret, err := AdminRequest(email, query_str)
 
 			if err != nil {
 				res_orchestrator.ServerMessage = err.Error()

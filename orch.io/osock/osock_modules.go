@@ -11,7 +11,6 @@ import (
 
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/utils"
-	"github.com/gorilla/websocket"
 )
 
 var DB *sql.DB
@@ -334,7 +333,7 @@ func GetConfigChallengeByEmailAndClusterID(email string, cluster_id string) (str
 
 	diff := t_now.Sub(t)
 
-	if diff.Seconds() > 300 {
+	if diff.Seconds() > 3000 {
 
 		q =
 			`
@@ -437,13 +436,13 @@ func AddClusterByEmailAndClusterID(email string, cluster_id string, config strin
 	return nil
 }
 
-func InstallCluster(c *websocket.Conn, cluster_id string, targetip string, targetid string, targetpw string, localip string, osnm string, cv string, update_token string) {
+func InstallCluster(sess_key string, cluster_id string, targetip string, targetid string, targetpw string, localip string, osnm string, cv string, update_token string) {
 
 	conn, err := utils.ShellConnect(targetip, targetid, targetpw)
 
 	if err != nil {
 
-		WriteToInstallSessionWithLock(c, cluster_id, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
 
 		return
 
@@ -452,53 +451,53 @@ func InstallCluster(c *websocket.Conn, cluster_id string, targetip string, targe
 	output, err := conn.SendCommands("sudo mkdir -p /npia && ls -la /npia")
 
 	if err != nil {
-		WriteToInstallSessionWithLock(c, cluster_id, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
 
 		return
 	}
 
 	output = append(output, []byte("\n----------ROOT NPIA CREATED----------\n")...)
 
-	WriteToInstallSessionWithLock(c, cluster_id, string(output))
+	WriteToInstallSessionWithLock(sess_key, string(output))
 
 	output, err = conn.SendCommands("sudo curl -L https://github.com/OKESTRO-AIDevOps/nkia/releases/download/latest/bin.tgz -o /npia/bin.tgz")
 	if err != nil {
-		WriteToInstallSessionWithLock(c, cluster_id, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
 		return
 	}
 
 	output = append(output, []byte("\n----------NPIA BIN DOWNLOADED----------\n")...)
 
-	WriteToInstallSessionWithLock(c, cluster_id, string(output))
+	WriteToInstallSessionWithLock(sess_key, string(output))
 
 	output, err = conn.SendCommands("sudo tar -xzf /npia/bin.tgz -C /npia")
 	if err != nil {
 
-		WriteToInstallSessionWithLock(c, cluster_id, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
 		return
 	}
 
 	output = append(output, []byte("\n----------NPIA BIN INSTALLED----------\n")...)
 
-	WriteToInstallSessionWithLock(c, cluster_id, string(output))
+	WriteToInstallSessionWithLock(sess_key, string(output))
 
 	output, err = conn.SendCommands("cd /npia/bin/nokubeadm && sudo ./nokubeadm init-npia-default")
 	if err != nil {
 
-		WriteToInstallSessionWithLock(c, cluster_id, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
 		return
 	}
 
 	output = append(output, []byte("\n----------NPIA INITIATED----------\n")...)
 
-	WriteToInstallSessionWithLock(c, cluster_id, string(output))
+	WriteToInstallSessionWithLock(sess_key, string(output))
 
 	options := " " + "--localip " + localip + " " + "--osnm " + osnm + " " + "--cv " + cv
 
 	output, err = conn.SendCommands("cd /npia/bin/nokubeadm && sudo ./nokubeadm install mainctrl" + options)
 	if err != nil {
 
-		WriteToInstallSessionWithLock(c, cluster_id, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
 		return
 	}
 
@@ -507,7 +506,7 @@ func InstallCluster(c *websocket.Conn, cluster_id string, targetip string, targe
 	output, err = conn.SendCommands("cd /npia/bin/nokubelet && sudo ./nokubelet init-npia-default" + options)
 	if err != nil {
 
-		WriteToInstallSessionWithLock(c, cluster_id, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
 		return
 	}
 
@@ -518,7 +517,7 @@ func InstallCluster(c *websocket.Conn, cluster_id string, targetip string, targe
 	output, err = conn.SendCommands("cd /npia/bin/nokubelet && sudo ./nokubelet io connect update" + options + " " + "&")
 	if err != nil {
 
-		WriteToInstallSessionWithLock(c, cluster_id, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
 		return
 	}
 
@@ -527,11 +526,11 @@ func InstallCluster(c *websocket.Conn, cluster_id string, targetip string, targe
 	return
 }
 
-func InstallClusterLog(c *websocket.Conn, cluster_id string, targetip string, targetid string, targetpw string) ([]byte, error) {
+func InstallClusterLog(sess_key string, cluster_id string, targetip string, targetid string, targetpw string) ([]byte, error) {
 
 	var ret_byte []byte
 
-	result, err := ReadFromInstallResult(c, cluster_id)
+	result, err := ReadFromInstallResult(sess_key)
 
 	if err != nil {
 		return ret_byte, fmt.Errorf("install result: %s", err.Error())
@@ -543,19 +542,19 @@ func InstallClusterLog(c *websocket.Conn, cluster_id string, targetip string, ta
 
 		ret_byte = []byte("SUCCESS")
 
-		RemoveFromInstallSessionWithLock(c, cluster_id)
+		RemoveFromInstallSessionWithLock(sess_key)
 
 		return ret_byte, nil
 
 	} else if res_str == "-" {
 
-		sess_b, err := ReadFromInstallSession(c, cluster_id)
+		sess_b, err := ReadFromInstallSession(sess_key)
 
 		if err != nil {
 			return ret_byte, fmt.Errorf("install log: %s", err.Error())
 		}
 
-		log_b, err := FetchInstallClusterLog(c, cluster_id, targetip, targetid, targetpw)
+		log_b, err := FetchInstallClusterLog(sess_key, targetip, targetid, targetpw)
 
 		if err != nil {
 			return ret_byte, fmt.Errorf("install log: %s", err.Error())
@@ -565,7 +564,7 @@ func InstallClusterLog(c *websocket.Conn, cluster_id string, targetip string, ta
 
 	} else {
 
-		sess_b, err := ReadFromInstallSession(c, cluster_id)
+		sess_b, err := ReadFromInstallSession(sess_key)
 
 		if err != nil {
 			return ret_byte, fmt.Errorf("install log: %s", err.Error())
@@ -573,7 +572,7 @@ func InstallClusterLog(c *websocket.Conn, cluster_id string, targetip string, ta
 
 		ret_byte = append(ret_byte, sess_b...)
 
-		RemoveFromInstallSessionWithLock(c, cluster_id)
+		RemoveFromInstallSessionWithLock(sess_key)
 
 		return ret_byte, nil
 
@@ -583,7 +582,7 @@ func InstallClusterLog(c *websocket.Conn, cluster_id string, targetip string, ta
 
 }
 
-func WriteToInstallSessionWithLock(c *websocket.Conn, id string, new_msg string) {
+func WriteToInstallSessionWithLock(sess_key string, new_msg string) {
 
 	FI_SESSIONS.mu.Lock()
 
@@ -591,10 +590,10 @@ func WriteToInstallSessionWithLock(c *websocket.Conn, id string, new_msg string)
 
 	new_bytes := []byte(new_msg)
 
-	ret_byte, okay := FI_SESSIONS.INST_SESSION[c]
+	ret_byte, okay := FI_SESSIONS.INST_SESSION[sess_key]
 
 	if !okay {
-		EventLogger("in write to install sess could not find session for: " + id)
+		EventLogger("in write to install sess could not find session for: " + sess_key)
 		return
 	}
 
@@ -603,33 +602,33 @@ func WriteToInstallSessionWithLock(c *websocket.Conn, id string, new_msg string)
 	return
 }
 
-func WriteToInstallResultWithLock(c *websocket.Conn, id string, result string) {
+func WriteToInstallResultWithLock(sess_key string, result string) {
 
 	FI_SESSIONS.mu.Lock()
 
 	defer FI_SESSIONS.mu.Unlock()
 
-	_, okay := FI_SESSIONS.INST_SESSION[c]
+	_, okay := FI_SESSIONS.INST_SESSION[sess_key]
 
 	if !okay {
-		EventLogger("in write to install result could not find session for: " + id)
+		EventLogger("in write to install result could not find session for: " + sess_key)
 		return
 	}
 
-	FI_SESSIONS.INST_RESULT[c] = result
+	FI_SESSIONS.INST_RESULT[sess_key] = result
 
 	return
 
 }
 
-func ReadFromInstallSession(c *websocket.Conn, id string) ([]byte, error) {
+func ReadFromInstallSession(sess_key string) ([]byte, error) {
 
 	var ret_byte []byte
 
-	sess_log, okay := FI_SESSIONS.INST_SESSION[c]
+	sess_log, okay := FI_SESSIONS.INST_SESSION[sess_key]
 
 	if !okay {
-		msg := "in remove session could not find session for: " + id
+		msg := "in remove session could not find session for: " + sess_key
 		EventLogger(msg)
 		return ret_byte, fmt.Errorf(msg)
 	}
@@ -640,14 +639,14 @@ func ReadFromInstallSession(c *websocket.Conn, id string) ([]byte, error) {
 
 }
 
-func ReadFromInstallResult(c *websocket.Conn, id string) ([]byte, error) {
+func ReadFromInstallResult(sess_key string) ([]byte, error) {
 
 	var ret_byte []byte
 
-	result, okay := FI_SESSIONS.INST_RESULT[c]
+	result, okay := FI_SESSIONS.INST_RESULT[sess_key]
 
 	if !okay {
-		msg := "in remove session could not find result for: " + id
+		msg := "in remove session could not find result for: " + sess_key
 		EventLogger(msg)
 		return ret_byte, fmt.Errorf(msg)
 	}
@@ -658,35 +657,35 @@ func ReadFromInstallResult(c *websocket.Conn, id string) ([]byte, error) {
 
 }
 
-func RemoveFromInstallSessionWithLock(c *websocket.Conn, id string) {
+func RemoveFromInstallSessionWithLock(sess_key string) {
 
 	FI_SESSIONS.mu.Lock()
 
 	defer FI_SESSIONS.mu.Unlock()
 
-	_, okay := FI_SESSIONS.INST_SESSION[c]
+	_, okay := FI_SESSIONS.INST_SESSION[sess_key]
 
 	if !okay {
-		EventLogger("in remove session could not find session for: " + id)
+		EventLogger("in remove session could not find session for: " + sess_key)
 		return
 	}
 
-	_, okay = FI_SESSIONS.INST_RESULT[c]
+	_, okay = FI_SESSIONS.INST_RESULT[sess_key]
 
 	if !okay {
-		EventLogger("in remove session could not find result for: " + id)
+		EventLogger("in remove session could not find result for: " + sess_key)
 		return
 	}
 
-	delete(FI_SESSIONS.INST_SESSION, c)
+	delete(FI_SESSIONS.INST_SESSION, sess_key)
 
-	delete(FI_SESSIONS.INST_RESULT, c)
+	delete(FI_SESSIONS.INST_RESULT, sess_key)
 
 	return
 
 }
 
-func FetchInstallClusterLog(c *websocket.Conn, cluster_id string, targetip string, targetid string, targetpw string) ([]byte, error) {
+func FetchInstallClusterLog(sess_key string, targetip string, targetid string, targetpw string) ([]byte, error) {
 
 	var ret_byte []byte
 
@@ -696,7 +695,7 @@ func FetchInstallClusterLog(c *websocket.Conn, cluster_id string, targetip strin
 
 		message := fmt.Sprintf("failed to install cluster: %s", err.Error())
 
-		WriteToInstallSessionWithLock(c, cluster_id, message)
+		WriteToInstallSessionWithLock(sess_key, message)
 
 		return ret_byte, fmt.Errorf(message)
 
@@ -707,7 +706,7 @@ func FetchInstallClusterLog(c *websocket.Conn, cluster_id string, targetip strin
 	if err != nil {
 
 		message := fmt.Sprintf("failed to install cluster: %s", err.Error())
-		WriteToInstallSessionWithLock(c, cluster_id, message)
+		WriteToInstallSessionWithLock(sess_key, message)
 
 		return ret_byte, fmt.Errorf(message)
 	}

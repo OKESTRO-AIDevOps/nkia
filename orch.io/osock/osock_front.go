@@ -16,7 +16,6 @@ import (
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
 
-	"github.com/gorilla/websocket"
 	_ "github.com/gorilla/websocket"
 )
 
@@ -110,7 +109,7 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 
 		if req_option == "admin" {
 
-			ret, err := AdminRequest(c, email, query_str)
+			ret, err := AdminRequest(email, query_str)
 
 			if err != nil {
 				res_orchestrator.ServerMessage = err.Error()
@@ -175,7 +174,7 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func AdminRequest(c *websocket.Conn, email string, query string) ([]byte, error) {
+func AdminRequest(email string, query string) ([]byte, error) {
 
 	var ret []byte
 
@@ -279,12 +278,6 @@ func AdminRequest(c *websocket.Conn, email string, query string) ([]byte, error)
 			return ret, fmt.Errorf("admin req: too many remote install sessions")
 		}
 
-		_, okay := FI_SESSIONS.INST_SESSION[c]
-
-		if okay {
-			return ret, fmt.Errorf("admin req: already an ongoing installation")
-		}
-
 		cluster_id := args[0]
 		targetip := args[1]
 		targetid := args[2]
@@ -294,11 +287,19 @@ func AdminRequest(c *websocket.Conn, email string, query string) ([]byte, error)
 		cv := args[6]
 		update_token := args[7]
 
-		FI_SESSIONS.INST_SESSION[c] = &[]byte{}
+		session_key := email + ":" + cluster_id
 
-		FI_SESSIONS.INST_RESULT[c] = "-"
+		_, okay := FI_SESSIONS.INST_SESSION[session_key]
 
-		go InstallCluster(c, cluster_id, targetip, targetid, targetpw, localip, osnm, cv, update_token)
+		if okay {
+			return ret, fmt.Errorf("admin req: already an ongoing installation")
+		}
+
+		FI_SESSIONS.INST_SESSION[session_key] = &[]byte{}
+
+		FI_SESSIONS.INST_RESULT[session_key] = "-"
+
+		go InstallCluster(session_key, cluster_id, targetip, targetid, targetpw, localip, osnm, cv, update_token)
 
 		ret_apiout.BODY = "remote cluster installation started\n"
 
@@ -315,7 +316,9 @@ func AdminRequest(c *websocket.Conn, email string, query string) ([]byte, error)
 		targetid := args[2]
 		targetpw := args[3]
 
-		log_b, err := InstallClusterLog(c, cluster_id, targetip, targetid, targetpw)
+		session_key := email + ":" + cluster_id
+
+		log_b, err := InstallClusterLog(session_key, cluster_id, targetip, targetid, targetpw)
 
 		if err != nil {
 			return ret, fmt.Errorf("admin req: %s", err.Error())
