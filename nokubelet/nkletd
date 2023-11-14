@@ -9,7 +9,7 @@ nkletd(){
         CHECK=$(pgrep ./nokubelet | grep "" -c)
         if [ $CHECK -eq 0 ]
         then
-            ./nokubelet "$@"
+            nohup ./nokubelet "$@"
         fi 
         sleep 3
 

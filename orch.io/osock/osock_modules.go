@@ -514,7 +514,7 @@ func InstallCluster(sess_key string, cluster_id string, targetip string, targeti
 
 	options = " " + "--clusterid " + cluster_id + " " + "--updatetoken " + update_token
 
-	output, err = conn.SendCommands("cd /npia/bin/nokubelet && sudo ./nkletd io connect update" + options)
+	output, err = conn.SendCommands("cd /npia/bin/nokubelet && sudo nohub ./nkletd io connect update" + options)
 	if err != nil {
 
 		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))

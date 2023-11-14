@@ -1287,7 +1287,7 @@ func remote_shell_background() {
 
 	fmt.Println(string(output))
 
-	output, err = conn.SendCommandsBackground("/bin/sh -c 'nc -lvn 1234 &'")
+	output, err = conn.SendCommands("sudo nohup /home/ubuntu/test.sh -lvn 1234")
 	if err != nil {
 
 		fmt.Println(err.Error())
