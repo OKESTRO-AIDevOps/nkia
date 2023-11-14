@@ -1,1 +1,1 @@
-{"request_option":"admin","request_target":"","query":"ORCH-INSTCLLOG:test-cs,192.168.50.94:22,ubuntu,ubuntu"}
+{"request_option":"admin","request_target":"","query":"ORCH-INSTCL:test-cs,192.168.50.94:22,ubuntu,ubuntu,192.168.50.94,ubuntu,1.27,bd7e54e8c578fb4d636d425811670420"}

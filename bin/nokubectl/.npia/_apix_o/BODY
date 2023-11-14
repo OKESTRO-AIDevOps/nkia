@@ -1,143 +1,1 @@
-[sudo] password for ubuntu: 
-total 8
-drwxr-xr-x  2 root root 4096 Nov 14 09:35 .
-drwxr-xr-x 20 root root 4096 Nov 14 09:35 ..
-
-----------ROOT NPIA CREATED----------
-[sudo] password for ubuntu: 
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
- 27 19.7M   27 5552k    0     0  4399k      0  0:00:04  0:00:01  0:00:03 4399k100 19.7M  100 19.7M    0     0  9517k      0  0:00:02  0:00:02 --:--:-- 16.6M
-
-----------NPIA BIN DOWNLOADED----------
-[sudo] password for ubuntu: 
-
-----------NPIA BIN INSTALLED----------
-[sudo] password for ubuntu: 
-existing configuration: 
-MODE: test
-BASE_URL: http://localhost:13337
-EMAIL: seantywork@gmail.com
------INITLOG-----
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-  0 18.5M    0 97697    0     0   113k      0  0:02:47 --:--:--  0:02:47  113k100 18.5M  100 18.5M    0     0  10.2M      0  0:00:01  0:00:01 --:--:-- 19.1M
-lib/
-lib/base/
-lib/base/hacfg
-lib/base/admininstanctrlol-ubuntu20
-lib/base/admininstenvres-ubuntu20
-lib/base/admininit-ubuntu20
-lib/base/settingcrtvol-ubuntu20
-lib/base/admininstwkol-ubuntu20
-lib/base/admininstvolol-ubuntu20
-lib/base/admininsttkol-ubuntu20
-lib/base/admininstctrl-ubuntu20
-lib/base/admininstenv-ubuntu20
-lib/base/settingcrtmon-ubuntu20
-lib/bin/
-lib/bin/docker-compose
-lib/bin/kompose
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  1699  100  1699    0     0   4953      0 --:--:-- --:--:-- --:--:--  4953
-Reading package lists...
-Building dependency tree...
-Reading state information...
-The following NEW packages will be installed:
-  apt-transport-https
-0 upgraded, 1 newly installed, 0 to remove and 46 not upgraded.
-Need to get 1704 B of archives.
-After this operation, 162 kB of additional disk space will be used.
-Get:1 http://kr.archive.ubuntu.com/ubuntu focal-updates/universe amd64 apt-transport-https all 2.0.9 [1704 B]
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LANGUAGE = (unset),
-	LC_ALL = (unset),
-	LANG = "en_US.UTF-8"
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
-locale: Cannot set LC_CTYPE to default locale: No such file or directory
-locale: Cannot set LC_MESSAGES to default locale: No such file or directory
-locale: Cannot set LC_ALL to default locale: No such file or directory
-Fetched 1704 B in 1s (2055 B/s)
-Selecting previously unselected package apt-transport-https.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 72314 files and directories currently installed.)
-Preparing to unpack .../apt-transport-https_2.0.9_all.deb ...
-Unpacking apt-transport-https (2.0.9) ...
-Setting up apt-transport-https (2.0.9) ...
-deb [arch=amd64 signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main
-Hit:1 http://kr.archive.ubuntu.com/ubuntu focal InRelease
-Get:2 https://baltocdn.com/helm/stable/debian all InRelease [7651 B]
-Get:3 http://kr.archive.ubuntu.com/ubuntu focal-updates InRelease [114 kB]
-Get:4 https://baltocdn.com/helm/stable/debian all/main amd64 Packages [3852 B]
-Get:5 http://kr.archive.ubuntu.com/ubuntu focal-backports InRelease [108 kB]
-Get:6 http://kr.archive.ubuntu.com/ubuntu focal-security InRelease [114 kB]
-Get:7 http://kr.archive.ubuntu.com/ubuntu focal-updates/main amd64 Packages [2960 kB]
-Get:8 http://kr.archive.ubuntu.com/ubuntu focal-updates/main Translation-en [481 kB]
-Get:9 http://kr.archive.ubuntu.com/ubuntu focal-updates/main amd64 c-n-f Metadata [17.2 kB]
-Get:10 http://kr.archive.ubuntu.com/ubuntu focal-updates/restricted amd64 Packages [2479 kB]
-Get:11 http://kr.archive.ubuntu.com/ubuntu focal-updates/restricted Translation-en [346 kB]
-Get:12 http://kr.archive.ubuntu.com/ubuntu focal-updates/restricted amd64 c-n-f Metadata [552 B]
-Get:13 http://kr.archive.ubuntu.com/ubuntu focal-updates/universe amd64 Packages [1130 kB]
-Get:14 http://kr.archive.ubuntu.com/ubuntu focal-updates/universe Translation-en [270 kB]
-Get:15 http://kr.archive.ubuntu.com/ubuntu focal-updates/universe amd64 c-n-f Metadata [25.7 kB]
-Get:16 http://kr.archive.ubuntu.com/ubuntu focal-updates/multiverse amd64 Packages [25.8 kB]
-Get:17 http://kr.archive.ubuntu.com/ubuntu focal-updates/multiverse amd64 c-n-f Metadata [620 B]
-Get:18 http://kr.archive.ubuntu.com/ubuntu focal-security/main amd64 Packages [2569 kB]
-Get:19 http://kr.archive.ubuntu.com/ubuntu focal-security/main Translation-en [398 kB]
-Get:20 http://kr.archive.ubuntu.com/ubuntu focal-security/main amd64 c-n-f Metadata [13.2 kB]
-Get:21 http://kr.archive.ubuntu.com/ubuntu focal-security/restricted amd64 Packages [2367 kB]
-Get:22 http://kr.archive.ubuntu.com/ubuntu focal-security/restricted Translation-en [329 kB]
-Get:23 http://kr.archive.ubuntu.com/ubuntu focal-security/restricted amd64 c-n-f Metadata [552 B]
-Get:24 http://kr.archive.ubuntu.com/ubuntu focal-security/universe amd64 Packages [897 kB]
-Get:25 http://kr.archive.ubuntu.com/ubuntu focal-security/universe Translation-en [188 kB]
-Get:26 http://kr.archive.ubuntu.com/ubuntu focal-security/universe amd64 c-n-f Metadata [19.2 kB]
-Get:27 http://kr.archive.ubuntu.com/ubuntu focal-security/multiverse amd64 Packages [23.6 kB]
-Get:28 http://kr.archive.ubuntu.com/ubuntu focal-security/multiverse amd64 c-n-f Metadata [548 B]
-Fetched 14.9 MB in 4s (3406 kB/s)
-Reading package lists...
-Reading package lists...
-Building dependency tree...
-Reading state information...
-The following NEW packages will be installed:
-  helm
-0 upgraded, 1 newly installed, 0 to remove and 80 not upgraded.
-Need to get 16.0 MB of archives.
-After this operation, 50.6 MB of additional disk space will be used.
-Get:1 https://baltocdn.com/helm/stable/debian all/main amd64 helm amd64 3.12.1-1 [16.0 MB]
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LANGUAGE = (unset),
-	LC_ALL = (unset),
-	LANG = "en_US.UTF-8"
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
-locale: Cannot set LC_CTYPE to default locale: No such file or directory
-locale: Cannot set LC_MESSAGES to default locale: No such file or directory
-locale: Cannot set LC_ALL to default locale: No such file or directory
-Fetched 16.0 MB in 2s (6635 kB/s)
-Selecting previously unselected package helm.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 72318 files and directories currently installed.)
-Preparing to unpack .../helm_3.12.1-1_amd64.deb ...
-Unpacking helm (3.12.1-1) ...
-Setting up helm (3.12.1-1) ...
-Processing triggers for man-db (2.9.1-1) ...
-npia init success
-
------------------
-successfully initiated
-
-----------NPIA INITIATED----------
-
-
-----------**********----------
-
----------*   LOG    *---------
-
-----------**********----------
-
-[sudo] password for ubuntu: 
-failed: request handler: run failed: : failed to get ongoing install log: stat .npia/install//open: no such file or directory
+bd7e54e8c578fb4d636d425811670420

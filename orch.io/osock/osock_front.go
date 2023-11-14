@@ -112,6 +112,9 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 			ret, err := AdminRequest(email, query_str)
 
 			if err != nil {
+
+				EventLogger("read front: " + err.Error())
+
 				res_orchestrator.ServerMessage = err.Error()
 
 				c.WriteJSON(&res_orchestrator)
