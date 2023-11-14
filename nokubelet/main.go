@@ -302,6 +302,8 @@ func RunLetCmd(args []string) {
 
 	update_token, ut_okay := apistd_in["updatetoken"]
 
+	_ = os.WriteFile(".npia/cluster_id", []byte(cluster_id), 0644)
+
 	if config.MODE == "test" && config.DEBUG == "true" && ut_okay {
 
 		if err := sock.DetachedServerCommunicatorWithUpdate_Test_Debug(address, email, cluster_id, update_token); err != nil {

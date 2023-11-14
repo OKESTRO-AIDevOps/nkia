@@ -1287,15 +1287,26 @@ func remote_shell_background() {
 
 	fmt.Println(string(output))
 
-	output, err = conn.SendCommands("sudo nohup /home/ubuntu/test.sh -lvn 1234")
+	options := " " + "--clusterid " + "test-cs" + " " + "--updatetoken " + "b076a4216e06c2ddbdb42e3af4e0acf2"
+
+	output, err = conn.SendCommands("cd /npia/bin/nokubelet && sudo nohup ./nkletd io connect update" + options)
 	if err != nil {
 
 		fmt.Println(err.Error())
 		return
 	}
 
-	fmt.Println("check if background process is working")
+	/*
+		output, err = conn.SendCommands("sudo nohup /home/ubuntu/test.sh -lvn 1234")
+		if err != nil {
 
+			fmt.Println(err.Error())
+			return
+		}
+
+		fmt.Println("check if background process is working")
+
+	*/
 }
 
 func main() {
