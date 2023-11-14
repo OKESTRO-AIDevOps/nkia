@@ -169,7 +169,11 @@ async function Test_OrchestratorQuery(){
 
     if (test_option == "admin"){
 
-        var text = atob(TEST_READ_CHANNEL["query_result"])
+        var result = atob(TEST_READ_CHANNEL["query_result"])
+
+        var result_js = JSON.parse(result)
+
+        var text = result_js["BODY"]
 
         const file = new File([text], 'priv',{
             type: "text/plain",
