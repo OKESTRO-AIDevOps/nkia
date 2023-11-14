@@ -514,7 +514,7 @@ func InstallCluster(sess_key string, cluster_id string, targetip string, targeti
 
 	options = " " + "--clusterid " + cluster_id + " " + "--updatetoken " + update_token
 
-	output, err = conn.SendCommands("cd /npia/bin/nokubelet && sudo ./nokubelet io connect update" + options + " " + "&")
+	output, err = conn.SendCommands("cd /npia/bin/nokubelet && sudo ./nkletd io connect update" + options)
 	if err != nil {
 
 		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
@@ -554,11 +554,11 @@ func InstallClusterLog(sess_key string, cluster_id string, targetip string, targ
 			return ret_byte, fmt.Errorf("install log: %s", err.Error())
 		}
 
-		log_b, err := FetchInstallClusterLog(sess_key, targetip, targetid, targetpw)
+		log_b, _ := FetchInstallClusterLog(sess_key, targetip, targetid, targetpw)
 
-		if err != nil {
-			return ret_byte, fmt.Errorf("install log: %s", err.Error())
-		}
+		//if err != nil {
+		//	return ret_byte, fmt.Errorf("install log: %s", err.Error())
+		//}
 
 		ret_byte = MergeInstallSessionAndLog(sess_b, log_b)
 

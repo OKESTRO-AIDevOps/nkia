@@ -1,0 +1,20 @@
+#!/bin/bash
+
+nkletd(){
+
+
+    while true
+    do
+
+        CHECK=$(pgrep ./nokubelet | grep "" -c)
+        if [ $CHECK -eq 0 ]
+        then
+            ./nokubelet "$@"
+        fi 
+        sleep 3
+
+    done
+
+}
+
+nkletd "$@" >/dev/null &

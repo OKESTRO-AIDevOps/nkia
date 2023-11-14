@@ -1102,6 +1102,7 @@ func (conn *Connection) SendCommands(cmds string) ([]byte, error) {
 		ssh.ECHO:          0,     // disable echoing
 		ssh.TTY_OP_ISPEED: 14400, // input speed = 14.4kbaud
 		ssh.TTY_OP_OSPEED: 14400, // output speed = 14.4kbaud
+
 	}
 
 	err = session.RequestPty("xterm", 80, 40, modes)
@@ -1131,6 +1132,51 @@ func (conn *Connection) SendCommands(cmds string) ([]byte, error) {
 		return []byte{}, err
 	}
 	return stdoutB.Bytes(), nil
+}
+
+func (conn *Connection) SendCommandsBackground(cmds string) ([]byte, error) {
+
+	session, err := conn.NewSession()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer session.Close()
+
+	modes := ssh.TerminalModes{
+		ssh.ECHO:          0,     // disable echoing
+		ssh.TTY_OP_ISPEED: 14400, // input speed = 14.4kbaud
+		ssh.TTY_OP_OSPEED: 14400, // output speed = 14.4kbaud
+
+	}
+
+	err = session.RequestPty("xterm", 80, 40, modes)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	stdoutB := new(bytes.Buffer)
+	session.Stdout = stdoutB
+	in, _ := session.StdinPipe()
+
+	go func(in io.Writer, output *bytes.Buffer) {
+		for {
+			if strings.Contains(string(output.Bytes()), "[sudo] password for ") {
+				_, err = in.Write([]byte(conn.password + "\n"))
+				if err != nil {
+					break
+				}
+				fmt.Println("put the password ---  end .")
+				break
+			}
+		}
+	}(in, stdoutB)
+
+	err = session.Run(cmds)
+	if err != nil {
+		return []byte{}, err
+	}
+	return stdoutB.Bytes(), nil
+
 }
 
 func remote_shell_command_install_worker() {
@@ -1228,11 +1274,11 @@ func remote_shell_background() {
 		log.Fatal(err)
 	}
 
-	cluster_id := "test-cs"
+	//cluster_id := "test-cs"
 
-	options := " " + "--clusterid " + cluster_id
+	//options := " " + "--clusterid " + cluster_id
 
-	output, err := conn.SendCommands("cd /npia/bin/nokubelet && sudo ./nokubelet io connect update" + options + " " + "&")
+	output, err := conn.SendCommands("whoami")
 	if err != nil {
 
 		fmt.Println(err.Error())
@@ -1240,6 +1286,15 @@ func remote_shell_background() {
 	}
 
 	fmt.Println(string(output))
+
+	output, err = conn.SendCommandsBackground("/bin/sh -c 'nc -lvn 1234 &'")
+	if err != nil {
+
+		fmt.Println(err.Error())
+		return
+	}
+
+	fmt.Println("check if background process is working")
 
 }
 
@@ -1289,5 +1344,7 @@ func main() {
 
 	// remote_shell_command()
 
-	remote_shell_command_install_worker()
+	// remote_shell_command_install_worker()
+
+	remote_shell_background()
 }
