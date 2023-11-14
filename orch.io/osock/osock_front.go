@@ -346,7 +346,7 @@ func AdminRequestParser_Linear(query string) (string, []string, error) {
 
 	args := make([]string, 0)
 
-	linear_list := strings.Split(query, ":")
+	linear_list := strings.SplitN(query, ":", 2)
 
 	operand = linear_list[0]
 
