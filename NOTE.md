@@ -1,10 +1,5 @@
 # note
 
-# TODO
-
-- install log status check and attach to session log
-
-
 
 # 20231114
 
@@ -20,7 +15,7 @@ keygen from the website
 ./nokubectl --as admin orch add cl --clusterid test-cs
 
 
-./nokubectl --as admin orch install cl --clusterid test-cs --targetip 192.168.50.94:22 --targetid ubuntu --targetpw ubuntu --localip 192.168.50.94 --osnm ubuntu --cv 1.27 --updatetoken 8c5b871631794bc2e5dfe3b8004b924a
+./nokubectl --as admin orch install cl --clusterid test-cs --targetip 192.168.50.94:22 --targetid ubuntu --targetpw ubuntu --localip 192.168.50.94 --osnm ubuntu --cv 1.27 --updatetoken e9da329b84747821c81ea2f5ef8412a5
 
 
 ./nokubectl --as admin orch install cl log --clusterid test-cs --targetip 192.168.50.94:22 --targetid ubuntu --targetpw ubuntu 
