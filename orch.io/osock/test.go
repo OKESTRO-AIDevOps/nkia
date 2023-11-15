@@ -40,7 +40,7 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 		var req = ctrl.AuthChallenge{}
 		var resp = ctrl.AuthChallenge{}
 
-		if iter_count > 5 {
+		if iter_count > 10 {
 			err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 			if err != nil {
 				EventLogger("auth iter write close:" + err.Error())
@@ -337,8 +337,8 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 		err := c.ReadJSON(&res_server)
 		if err != nil {
-			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-
+			ServerDestructor(c)
+			c.Close()
 			EventLogger("response:" + err.Error())
 			return
 		}
@@ -351,6 +351,7 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 		if !okay {
 
+			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
 			EventLogger("response key:" + err.Error())
@@ -362,6 +363,7 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 		if !okay {
 
+			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
 			EventLogger("response front:" + err.Error())
@@ -373,6 +375,7 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 		if !okay {
 
+			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
 			EventLogger("response front conn:" + err.Error())
@@ -383,6 +386,7 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 		session_sym_key, err := modules.AccessAuth_Detached(key_id)
 
 		if err != nil {
+			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
 			EventLogger("response access:" + err.Error())
@@ -397,6 +401,7 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 		resp_enc_b, err := hex.DecodeString(resp_enc)
 
 		if err != nil {
+			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
 			EventLogger("response dec:" + err.Error())
@@ -406,6 +411,7 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 		resp_dec, err := modules.DecryptWithSymmetricKey([]byte(session_sym_key), resp_enc_b)
 
 		if err != nil {
+			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
 			EventLogger("response dec 2:" + err.Error())
@@ -421,8 +427,8 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(res_orchestrator)
 
 		if err != nil {
-			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-
+			ServerDestructor(c)
+			c.Close()
 			EventLogger("response send:" + err.Error())
 			return
 		}
@@ -510,6 +516,8 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 		err := c.ReadJSON(&req_orchestrator)
 
 		if err != nil {
+			FrontDestructor(c)
+			c.Close()
 			EventLogger("read front:" + err.Error())
 			return
 		}
@@ -523,6 +531,9 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 		email, okay := FRONT_CONNECTION_FRONT[c]
 
 		if !okay {
+			FrontDestructor(c)
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
 			EventLogger("read front: no connected front name")
 			fmt.Println("front conntction front ------ ")
 			fmt.Println(FRONT_CONNECTION_FRONT)
@@ -540,9 +551,15 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 			ret, err := AdminRequest(email, query_str)
 
 			if err != nil {
+				EventLogger("read front: " + err.Error())
+
+				FrontDestructor(c)
+
 				res_orchestrator.ServerMessage = err.Error()
 
 				c.WriteJSON(&res_orchestrator)
+
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
 				return
 			}
@@ -560,6 +577,8 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 		server_c, okay := SERVER_CONNECTION[email_context]
 
 		if !okay {
+			FrontDestructor(c)
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 			EventLogger("read front: no connected server context")
 			return
 		}
@@ -567,6 +586,8 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 		key_id, okay := SERVER_CONNECTION_KEY[server_c]
 
 		if !okay {
+			FrontDestructor(c)
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 			EventLogger("read front: no server context key")
 			return
 		}
@@ -574,7 +595,9 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 		session_sym_key, err := modules.AccessAuth_Detached(key_id)
 
 		if err != nil {
-			EventLogger("read front: " + err.Error())
+			FrontDestructor(c)
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+			EventLogger("read front: no server context key")
 			return
 		}
 
@@ -583,7 +606,9 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 		query_enc, err := modules.EncryptWithSymmetricKey([]byte(session_sym_key), query_b)
 
 		if err != nil {
-			EventLogger("read front: " + err.Error())
+			FrontDestructor(c)
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+			EventLogger("read front: no server context key")
 			return
 		}
 
@@ -598,6 +623,8 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(req_server)
 
 		if err != nil {
+			FrontDestructor(c)
+			c.Close()
 			EventLogger("write to server: " + err.Error())
 			return
 		}
