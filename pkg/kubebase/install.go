@@ -439,11 +439,104 @@ func InstallVolumeOnLocal(localip string) error {
 	return nil
 }
 
-//func InstallVolumeOnRemote(targetip string, targetid string, targetpw string) ([]byte, error) {
-//	var ret_byte []byte
+func InstallVolumeOnRemote(targetip string, targetid string, targetpw string, localip string) {
 
-//	return ret_byte, nil
-//}
+	fp, err := runfs.OpenFilePointerForNpiaInstallRemoteLog()
+
+	conn, err := utils.ShellConnect(targetip, targetid, targetpw)
+
+	if err != nil {
+
+		close_msg := err.Error()
+
+		fp.Write([]byte(close_msg))
+
+		runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, close_msg)
+
+		return
+	}
+
+	_, err = conn.SendCommands("ls -la /npia")
+
+	if err != nil {
+		output, err := conn.SendCommands("sudo mkdir -p /npia && ls -la /npia")
+		if err != nil {
+			close_msg := err.Error()
+
+			fp.Write([]byte(close_msg))
+
+			runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, close_msg)
+
+		}
+
+		fp.Write(output)
+
+		fp.Write([]byte("\n----------ROOT NPIA CREATED----------\n"))
+
+		output, err = conn.SendCommands("sudo curl -L https://github.com/OKESTRO-AIDevOps/nkia/releases/download/latest/bin.tgz -o /npia/bin.tgz")
+		if err != nil {
+			close_msg := err.Error()
+
+			fp.Write([]byte(close_msg))
+
+			runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, close_msg)
+
+		}
+
+		fp.Write(output)
+
+		fp.Write([]byte("\n----------NPIA BIN DOWNLOADED----------\n"))
+
+		output, err = conn.SendCommands("sudo tar -xzf /npia/bin.tgz -C /npia")
+		if err != nil {
+			close_msg := err.Error()
+
+			fp.Write([]byte(close_msg))
+
+			runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, close_msg)
+
+		}
+
+		fp.Write(output)
+
+		fp.Write([]byte("\n----------NPIA BIN INSTALLED----------\n"))
+
+		output, err = conn.SendCommands("cd /npia/bin/nokubeadm && sudo ./nokubeadm init-npia-default")
+		if err != nil {
+			close_msg := err.Error()
+
+			fp.Write([]byte(close_msg))
+
+			runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, close_msg)
+
+		}
+
+		fp.Write(output)
+
+		fp.Write([]byte("\n----------NPIA INITIATED----------\n"))
+
+	}
+
+	options := " " + "--localip " + localip
+
+	output, err := conn.SendCommands("cd /npia/bin/nokubeadm && sudo ./nokubeadm install volume" + options)
+	if err != nil {
+		close_msg := err.Error()
+
+		fp.Write([]byte(close_msg))
+
+		runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, close_msg)
+
+	}
+
+	fp.Write(output)
+
+	fp.Write([]byte("\n----------VOLUME INSTALLED----------\n"))
+
+	runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, "SUCCESS")
+
+	return
+}
 
 func InstallToolKitOnLocal() error {
 
@@ -520,11 +613,101 @@ func InstallToolKitOnLocal() error {
 	return nil
 }
 
-//func InstallToolKitOnRemote(targetip string, targetid string, targetpw string) ([]byte, error) {
-//	var ret_byte []byte
+func InstallToolKitOnRemote(targetip string, targetid string, targetpw string) {
 
-//	return ret_byte, nil
-//}
+	fp, err := runfs.OpenFilePointerForNpiaInstallRemoteLog()
+
+	conn, err := utils.ShellConnect(targetip, targetid, targetpw)
+
+	if err != nil {
+
+		close_msg := err.Error()
+
+		fp.Write([]byte(close_msg))
+
+		runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, close_msg)
+
+		return
+	}
+
+	_, err = conn.SendCommands("ls -la /npia")
+
+	if err != nil {
+		output, err := conn.SendCommands("sudo mkdir -p /npia && ls -la /npia")
+		if err != nil {
+			close_msg := err.Error()
+
+			fp.Write([]byte(close_msg))
+
+			runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, close_msg)
+
+		}
+
+		fp.Write(output)
+
+		fp.Write([]byte("\n----------ROOT NPIA CREATED----------\n"))
+
+		output, err = conn.SendCommands("sudo curl -L https://github.com/OKESTRO-AIDevOps/nkia/releases/download/latest/bin.tgz -o /npia/bin.tgz")
+		if err != nil {
+			close_msg := err.Error()
+
+			fp.Write([]byte(close_msg))
+
+			runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, close_msg)
+
+		}
+
+		fp.Write(output)
+
+		fp.Write([]byte("\n----------NPIA BIN DOWNLOADED----------\n"))
+
+		output, err = conn.SendCommands("sudo tar -xzf /npia/bin.tgz -C /npia")
+		if err != nil {
+			close_msg := err.Error()
+
+			fp.Write([]byte(close_msg))
+
+			runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, close_msg)
+
+		}
+
+		fp.Write(output)
+
+		fp.Write([]byte("\n----------NPIA BIN INSTALLED----------\n"))
+
+		output, err = conn.SendCommands("cd /npia/bin/nokubeadm && sudo ./nokubeadm init-npia-default")
+		if err != nil {
+			close_msg := err.Error()
+
+			fp.Write([]byte(close_msg))
+
+			runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, close_msg)
+
+		}
+
+		fp.Write(output)
+
+		fp.Write([]byte("\n----------NPIA INITIATED----------\n"))
+
+	}
+
+	output, err := conn.SendCommands("cd /npia/bin/nokubeadm && sudo ./nokubeadm install toolkit")
+	if err != nil {
+		close_msg := err.Error()
+
+		fp.Write([]byte(close_msg))
+
+		runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, close_msg)
+
+	}
+
+	fp.Write(output)
+
+	fp.Write([]byte("\n----------TOOLKIT INSTALLED----------\n"))
+
+	runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, "SUCCESS")
+
+}
 
 func InstallLogOnLocal() ([]byte, error) {
 

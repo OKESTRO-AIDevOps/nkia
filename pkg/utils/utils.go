@@ -11,6 +11,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/promquery"
 	"golang.org/x/crypto/ssh"
@@ -201,7 +202,15 @@ func (conn *ShellConnection) SendCommandsBackground(cmds string) ([]byte, error)
 	in, _ := session.StdinPipe()
 
 	go func(in io.Writer, output *bytes.Buffer) {
+
+		t_start := time.Now()
+
 		for {
+
+			t_now := time.Now()
+
+			diff := t_now.Sub(t_start)
+
 			if strings.Contains(string(output.Bytes()), "[sudo] password for ") {
 				_, err = in.Write([]byte(conn.password + "\n"))
 				if err != nil {
@@ -209,6 +218,11 @@ func (conn *ShellConnection) SendCommandsBackground(cmds string) ([]byte, error)
 				}
 				break
 			}
+
+			if diff.Seconds() > 30 {
+				break
+			}
+
 		}
 	}(in, stdoutB)
 

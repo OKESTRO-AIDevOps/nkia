@@ -16,8 +16,22 @@ import (
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
 
+	"github.com/gorilla/websocket"
 	_ "github.com/gorilla/websocket"
 )
+
+func FrontDestructor(c *websocket.Conn) {
+
+	EventLogger("Front destructor called")
+
+	fc, _ := FRONT_CONNECTION_FRONT[c]
+
+	delete(FRONT_CONNECTION_FRONT, c)
+
+	delete(FRONT_CONNECTION, fc)
+
+	EventLogger("Front destructor exit")
+}
 
 func FrontHandler(w http.ResponseWriter, r *http.Request) {
 
@@ -88,6 +102,9 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 		err := c.ReadJSON(&req_orchestrator)
 
 		if err != nil {
+
+			FrontDestructor(c)
+			c.Close()
 			EventLogger("read front:" + err.Error())
 			return
 		}
@@ -97,7 +114,11 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 		email, okay := FRONT_CONNECTION_FRONT[c]
 
 		if !okay {
+			FrontDestructor(c)
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
 			EventLogger("read front: no connected front name")
+
 			return
 		}
 
@@ -115,9 +136,13 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 
 				EventLogger("read front: " + err.Error())
 
+				FrontDestructor(c)
+
 				res_orchestrator.ServerMessage = err.Error()
 
 				c.WriteJSON(&res_orchestrator)
+
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
 				return
 			}
@@ -135,22 +160,33 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 		server_c, okay := SERVER_CONNECTION[email_context]
 
 		if !okay {
+			FrontDestructor(c)
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 			EventLogger("read front: no connected server context")
+
 			return
 		}
 
 		key_id, okay := SERVER_CONNECTION_KEY[server_c]
 
 		if !okay {
+
+			FrontDestructor(c)
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 			EventLogger("read front: no server context key")
+
 			return
 		}
 
 		session_sym_key, err := modules.AccessAuth_Detached(key_id)
 
 		if err != nil {
+
+			FrontDestructor(c)
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 			EventLogger("read front: " + err.Error())
 			return
+
 		}
 
 		query_b := []byte(query_str)
@@ -158,7 +194,10 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 		query_enc, err := modules.EncryptWithSymmetricKey([]byte(session_sym_key), query_b)
 
 		if err != nil {
+			FrontDestructor(c)
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 			EventLogger("read front: " + err.Error())
+
 			return
 		}
 
@@ -169,7 +208,10 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 		err = server_c.WriteJSON(&req_server)
 
 		if err != nil {
+			FrontDestructor(c)
+			c.Close()
 			EventLogger("write to server: " + err.Error())
+
 			return
 		}
 

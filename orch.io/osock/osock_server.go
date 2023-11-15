@@ -11,6 +11,21 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+func ServerDestructor(c *websocket.Conn) {
+
+	EventLogger("Front destructor called")
+
+	sc, _ := SERVER_CONNECTION_FRONT[c]
+
+	delete(SERVER_CONNECTION_FRONT, c)
+
+	delete(FRONT_CONNECTION, sc)
+
+	delete(SERVER_CONNECTION_KEY, c)
+
+	EventLogger("Front destructor exit")
+}
+
 func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 	EventLogger("Server access")
@@ -38,7 +53,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 		var req = ctrl.AuthChallenge{}
 		var resp = ctrl.AuthChallenge{}
 
-		if iter_count > 5 {
+		if iter_count > 10 {
 			err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 			if err != nil {
 				EventLogger("auth iter write close:" + err.Error())
@@ -324,9 +339,10 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 		err := c.ReadJSON(&res_server)
 		if err != nil {
-			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-
+			ServerDestructor(c)
+			c.Close()
 			EventLogger("response:" + err.Error())
+
 			return
 		}
 
@@ -334,9 +350,11 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 		if !okay {
 
+			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
 			EventLogger("response key:" + err.Error())
+
 			return
 
 		}
@@ -344,10 +362,11 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 		front_name, okay := SERVER_CONNECTION_FRONT[c]
 
 		if !okay {
-
+			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
 			EventLogger("response front:" + err.Error())
+
 			return
 
 		}
@@ -355,10 +374,11 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 		front_c, okay := FRONT_CONNECTION[front_name]
 
 		if !okay {
-
+			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
 			EventLogger("response front conn:" + err.Error())
+
 			return
 
 		}
@@ -366,9 +386,11 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 		session_sym_key, err := modules.AccessAuth_Detached(key_id)
 
 		if err != nil {
+			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
 			EventLogger("response access:" + err.Error())
+
 			return
 
 		}
@@ -380,18 +402,22 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 		resp_enc_b, err := hex.DecodeString(resp_enc)
 
 		if err != nil {
+			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
 			EventLogger("response dec:" + err.Error())
+
 			return
 		}
 
 		resp_dec, err := modules.DecryptWithSymmetricKey([]byte(session_sym_key), resp_enc_b)
 
 		if err != nil {
+			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
 			EventLogger("response dec 2:" + err.Error())
+
 			return
 		}
 
@@ -400,9 +426,10 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 		err = front_c.WriteJSON(&res_orchestrator)
 
 		if err != nil {
-			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-
+			ServerDestructor(c)
+			c.Close()
 			EventLogger("response send:" + err.Error())
+
 			return
 		}
 

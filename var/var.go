@@ -1309,6 +1309,24 @@ func remote_shell_background() {
 	*/
 }
 
+func remote_directory_check() {
+
+	conn, err := Connect("192.168.50.94:22", "ubuntu", "ubuntu")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	output, err := conn.SendCommands("ls -la /npia")
+	if err != nil {
+
+		fmt.Println("err: " + err.Error())
+		return
+	}
+
+	fmt.Println(string(output))
+
+}
+
 func main() {
 
 	//	ASgi := apistandard.ASgi
@@ -1357,5 +1375,7 @@ func main() {
 
 	// remote_shell_command_install_worker()
 
-	remote_shell_background()
+	// remote_shell_background()
+
+	remote_directory_check()
 }

@@ -34,9 +34,9 @@ var API_DEFINITION string = "" +
 	"NKADM-INSTWKOL           :id, localip, osnm, cv, token                                                               " + "\n" +
 	"ADMIN-INSTWKOR           :id, targetip, targetid, targetpw, localip, osnm, cv, token                                 " + "\n" +
 	"NKADM-INSTVOLOL          :id, localip                                                                                " + "\n" +
-	// "ADMIN-INSTVOLOR          :id, targetip, targetid, targetpw, localip                                                  " + "\n" +
+	"ADMIN-INSTVOLOR          :id, targetip, targetid, targetpw, localip                                                  " + "\n" +
 	"NKADM-INSTTKOL           :id                                                                                         " + "\n" +
-	// "ADMIN-INSTTKOR           :id, targetip, targetid, targetpw                                                           " + "\n" +
+	"ADMIN-INSTTKOR           :id, targetip, targetid, targetpw                                                           " + "\n" +
 	"NKADM-INSTLOGOL          :id                                                                                         " + "\n" +
 	"ADMIN-INSTLOGOR          :id, targetip, targetid, targetpw                                                           " + "\n" +
 	//	"DELND                    :id                                                                                       " + "\n" +
