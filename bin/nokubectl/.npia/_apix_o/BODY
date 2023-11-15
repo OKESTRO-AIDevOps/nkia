@@ -1,223 +1,4 @@
-[sudo] password for ubuntu: 
-total 20256
-drwxr-xr-x  3 root   root       4096 Nov 15 07:57 .
-drwxr-xr-x 20 root   root       4096 Nov 15 07:57 ..
-drwxrwxr-x  5 ubuntu ubuntu     4096 Oct 18 08:48 bin
--rw-r--r--  1 root   root   20728584 Nov 15 07:57 bin.tgz
-
-----------ROOT NPIA CREATED----------
-[sudo] password for ubuntu: 
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100 19.7M  100 19.7M    0     0  17.9M      0  0:00:01  0:00:01 --:--:-- 39.6M
-
-----------NPIA BIN DOWNLOADED----------
-[sudo] password for ubuntu: 
-
-----------NPIA BIN INSTALLED----------
-[sudo] password for ubuntu: 
-existing configuration: 
-MODE: test
-BASE_URL: http://localhost:13337
-EMAIL: seantywork@gmail.com
------INITLOG-----
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-  0 18.5M    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0 33 18.5M   33 6346k    0     0  3679k      0  0:00:05  0:00:01  0:00:04 7665k100 18.5M  100 18.5M    0     0  7419k      0  0:00:02  0:00:02 --:--:-- 11.1M
-lib/
-lib/base/
-lib/base/hacfg
-lib/base/admininstanctrlol-ubuntu20
-lib/base/admininstenvres-ubuntu20
-lib/base/admininit-ubuntu20
-lib/base/settingcrtvol-ubuntu20
-lib/base/admininstwkol-ubuntu20
-lib/base/admininstvolol-ubuntu20
-lib/base/admininsttkol-ubuntu20
-lib/base/admininstctrl-ubuntu20
-lib/base/admininstenv-ubuntu20
-lib/base/settingcrtmon-ubuntu20
-lib/bin/
-lib/bin/docker-compose
-lib/bin/kompose
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  1699  100  1699    0     0   4799      0 --:--:-- --:--:-- --:--:--  4799
-Reading package lists...
-Building dependency tree...
-Reading state information...
-The following NEW packages will be installed:
-  apt-transport-https
-0 upgraded, 1 newly installed, 0 to remove and 46 not upgraded.
-Need to get 1704 B of archives.
-After this operation, 162 kB of additional disk space will be used.
-Get:1 http://kr.archive.ubuntu.com/ubuntu focal-updates/universe amd64 apt-transport-https all 2.0.9 [1704 B]
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LANGUAGE = (unset),
-	LC_ALL = (unset),
-	LANG = "en_US.UTF-8"
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
-locale: Cannot set LC_CTYPE to default locale: No such file or directory
-locale: Cannot set LC_MESSAGES to default locale: No such file or directory
-locale: Cannot set LC_ALL to default locale: No such file or directory
-Fetched 1704 B in 1s (2880 B/s)
-Selecting previously unselected package apt-transport-https.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 72314 files and directories currently installed.)
-Preparing to unpack .../apt-transport-https_2.0.9_all.deb ...
-Unpacking apt-transport-https (2.0.9) ...
-Setting up apt-transport-https (2.0.9) ...
-deb [arch=amd64 signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main
-Hit:1 http://kr.archive.ubuntu.com/ubuntu focal InRelease
-Get:2 https://baltocdn.com/helm/stable/debian all InRelease [7651 B]
-Get:3 http://kr.archive.ubuntu.com/ubuntu focal-updates InRelease [114 kB]
-Get:4 https://baltocdn.com/helm/stable/debian all/main amd64 Packages [3852 B]
-Get:5 http://kr.archive.ubuntu.com/ubuntu focal-backports InRelease [108 kB]
-Get:6 http://kr.archive.ubuntu.com/ubuntu focal-security InRelease [114 kB]
-Get:7 http://kr.archive.ubuntu.com/ubuntu focal-updates/main amd64 Packages [2959 kB]
-Get:8 http://kr.archive.ubuntu.com/ubuntu focal-updates/main Translation-en [481 kB]
-Get:9 http://kr.archive.ubuntu.com/ubuntu focal-updates/main amd64 c-n-f Metadata [17.2 kB]
-Get:10 http://kr.archive.ubuntu.com/ubuntu focal-updates/restricted amd64 Packages [2479 kB]
-Get:11 http://kr.archive.ubuntu.com/ubuntu focal-updates/restricted Translation-en [346 kB]
-Get:12 http://kr.archive.ubuntu.com/ubuntu focal-updates/restricted amd64 c-n-f Metadata [552 B]
-Get:13 http://kr.archive.ubuntu.com/ubuntu focal-updates/universe amd64 Packages [1130 kB]
-Get:14 http://kr.archive.ubuntu.com/ubuntu focal-updates/universe Translation-en [270 kB]
-Get:15 http://kr.archive.ubuntu.com/ubuntu focal-updates/universe amd64 c-n-f Metadata [25.7 kB]
-Get:16 http://kr.archive.ubuntu.com/ubuntu focal-updates/multiverse amd64 Packages [25.8 kB]
-Get:17 http://kr.archive.ubuntu.com/ubuntu focal-updates/multiverse amd64 c-n-f Metadata [620 B]
-Get:18 http://kr.archive.ubuntu.com/ubuntu focal-security/main amd64 Packages [2569 kB]
-Get:19 http://kr.archive.ubuntu.com/ubuntu focal-security/main Translation-en [398 kB]
-Get:20 http://kr.archive.ubuntu.com/ubuntu focal-security/main amd64 c-n-f Metadata [13.2 kB]
-Get:21 http://kr.archive.ubuntu.com/ubuntu focal-security/restricted amd64 Packages [2367 kB]
-Get:22 http://kr.archive.ubuntu.com/ubuntu focal-security/restricted Translation-en [329 kB]
-Get:23 http://kr.archive.ubuntu.com/ubuntu focal-security/restricted amd64 c-n-f Metadata [552 B]
-Get:24 http://kr.archive.ubuntu.com/ubuntu focal-security/universe amd64 Packages [897 kB]
-Get:25 http://kr.archive.ubuntu.com/ubuntu focal-security/universe Translation-en [188 kB]
-Get:26 http://kr.archive.ubuntu.com/ubuntu focal-security/universe amd64 c-n-f Metadata [19.2 kB]
-Get:27 http://kr.archive.ubuntu.com/ubuntu focal-security/multiverse amd64 Packages [23.6 kB]
-Get:28 http://kr.archive.ubuntu.com/ubuntu focal-security/multiverse amd64 c-n-f Metadata [548 B]
-Fetched 14.9 MB in 5s (3187 kB/s)
-Reading package lists...
-Reading package lists...
-Building dependency tree...
-Reading state information...
-The following NEW packages will be installed:
-  helm
-0 upgraded, 1 newly installed, 0 to remove and 82 not upgraded.
-Need to get 16.0 MB of archives.
-After this operation, 50.6 MB of additional disk space will be used.
-Get:1 https://baltocdn.com/helm/stable/debian all/main amd64 helm amd64 3.12.1-1 [16.0 MB]
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LANGUAGE = (unset),
-	LC_ALL = (unset),
-	LANG = "en_US.UTF-8"
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").
-locale: Cannot set LC_CTYPE to default locale: No such file or directory
-locale: Cannot set LC_MESSAGES to default locale: No such file or directory
-locale: Cannot set LC_ALL to default locale: No such file or directory
-Fetched 16.0 MB in 2s (8649 kB/s)
-Selecting previously unselected package helm.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 72318 files and directories currently installed.)
-Preparing to unpack .../helm_3.12.1-1_amd64.deb ...
-Unpacking helm (3.12.1-1) ...
-Setting up helm (3.12.1-1) ...
-Processing triggers for man-db (2.9.1-1) ...
-npia init success
-
------------------
-successfully initiated
-
-----------NPIA INITIATED----------
-
-
-----------**********----------
-
----------*   LOG    *---------
-
-----------**********----------
-
-[sudo] password for ubuntu: 
-----------MESSAGE----------
-+ HOME=/root
-+ sudo swapoff -a
-+ crontab -
-+ crontab -l
-+ echo '@reboot /sbin/swapoff -a'
-+ sudo apt-get update -y
-Hit:1 https://baltocdn.com/helm/stable/debian all InRelease
-Get:2 http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04  InRelease [1642 B]
-Get:3 http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.27/xUbuntu_20.04  InRelease [1632 B]
-Hit:4 http://kr.archive.ubuntu.com/ubuntu focal InRelease
-Hit:5 http://kr.archive.ubuntu.com/ubuntu focal-updates InRelease
-Hit:6 http://kr.archive.ubuntu.com/ubuntu focal-backports InRelease
-Hit:7 http://kr.archive.ubuntu.com/ubuntu focal-security InRelease
-Fetched 3274 B in 7s (484 B/s)
-Reading package lists...
-+ OS=xUbuntu_20.04
-+ OSNM=ubuntu
-+ VERSION=1.27
-+ cat
-+ sudo tee /etc/modules-load.d/crio.conf
-overlay
-br_netfilter
-+ sudo modprobe overlay
-+ sudo modprobe br_netfilter
-+ sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
-+ cat
-net.bridge.bridge-nf-call-iptables  = 1
-net.ipv4.ip_forward                 = 1
-net.bridge.bridge-nf-call-ip6tables = 1
-+ sudo sysctl --system
-* Applying /etc/sysctl.d/10-console-messages.conf ...
-kernel.printk = 4 4 1 7
-* Applying /etc/sysctl.d/10-ipv6-privacy.conf ...
-net.ipv6.conf.all.use_tempaddr = 2
-net.ipv6.conf.default.use_tempaddr = 2
-* Applying /etc/sysctl.d/10-kernel-hardening.conf ...
-kernel.kptr_restrict = 1
-* Applying /etc/sysctl.d/10-link-restrictions.conf ...
-fs.protected_hardlinks = 1
-fs.protected_symlinks = 1
-* Applying /etc/sysctl.d/10-magic-sysrq.conf ...
-kernel.sysrq = 176
-* Applying /etc/sysctl.d/10-network-security.conf ...
-net.ipv4.conf.default.rp_filter = 2
-net.ipv4.conf.all.rp_filter = 2
-* Applying /etc/sysctl.d/10-ptrace.conf ...
-kernel.yama.ptrace_scope = 1
-* Applying /etc/sysctl.d/10-zeropage.conf ...
-vm.mmap_min_addr = 65536
-* Applying /usr/lib/sysctl.d/50-default.conf ...
-net.ipv4.conf.default.promote_secondaries = 1
-sysctl: setting key "net.ipv4.conf.all.promote_secondaries": Invalid argument
-net.ipv4.ping_group_range = 0 2147483647
-net.core.default_qdisc = fq_codel
-fs.protected_regular = 1
-fs.protected_fifos = 1
-* Applying /usr/lib/sysctl.d/50-pid-max.conf ...
-kernel.pid_max = 4194304
-* Applying /etc/sysctl.d/99-kubernetes-cri.conf ...
-net.bridge.bridge-nf-call-iptables = 1
-net.ipv4.ip_forward = 1
-net.bridge.bridge-nf-call-ip6tables = 1
-* Applying /etc/sysctl.d/99-sysctl.conf ...
-* Applying /usr/lib/sysctl.d/protect-links.conf ...
-fs.protected_fifos = 1
-fs.protected_hardlinks = 1
-fs.protected_regular = 2
-fs.protected_symlinks = 1
-* Applying /etc/sysctl.conf ...
-+ echo 'deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg] http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/ /'
-+ echo 'deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg] http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.27/xUbuntu_20.04/ /'
-+ mkdir -p /usr/share/keyrings
-+ gpg --dearmor -o /usr/share/keyrings/libcontainers-archive-keyring.gpg
-+ curl -L http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/Release.key
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  1093  100  1093    0     0   1843      0 --:--:-- --:--:-- --:--:--  1843
-
+NAME                                         STATUS     ROLES           AGE   VERSION
+ctrl-ubuntu-192-168-50-94-e3d26dafa2e10f4d   Ready      control-plane   90m   v1.27.7
+wk-ubuntu-192-168-50-95-4a095151             Ready      <none>          49s   v1.27.7
+wk-ubuntu-192-168-50-95-cb9662e9             NotReady   <none>          23m   v1.27.7

@@ -15,7 +15,7 @@ keygen from the website
 ./nokubectl --as admin orch add cl --clusterid test-cs
 
 
-./nokubectl --as admin orch install cl --clusterid test-cs --targetip 192.168.50.94:22 --targetid ubuntu --targetpw ubuntu --localip 192.168.50.94 --osnm ubuntu --cv 1.27 --updatetoken e9da329b84747821c81ea2f5ef8412a5
+./nokubectl --as admin orch install cl --clusterid test-cs --targetip 192.168.50.94:22 --targetid ubuntu --targetpw ubuntu --localip 192.168.50.94 --osnm ubuntu --cv 1.27 --updatetoken 7197e96927f341354aa385fa1d0088f6
 
 
 ./nokubectl --as admin orch install cl log --clusterid test-cs --targetip 192.168.50.94:22 --targetid ubuntu --targetpw ubuntu 
@@ -28,6 +28,9 @@ keygen from the website
 
 
 ./nokubectl --to test-cs resource nodes --ns -
+
+
+# 20231116
 
 
 ./nokubectl --to test-cs install volume --localip 192.168.50.94 
