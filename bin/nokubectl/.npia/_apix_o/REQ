@@ -1,1 +1,1 @@
-{"request_option":"admin","request_target":"","query":"ORCH-INSTCLLOG:test-cs2,192.168.50.94:22,ubuntu,ubuntu"}
+{"request_option":"","request_target":"test-cs","query":"RESOURCE-NDS:-"}
