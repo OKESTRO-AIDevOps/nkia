@@ -1,3 +1,3 @@
 NAME                                         STATUS   ROLES           AGE   VERSION
-ctrl-ubuntu-192-168-50-94-edf7aa98b401dd4c   Ready    control-plane   16m   v1.27.7
-wk-ubuntu-192-168-50-95-ee25bab9             Ready    <none>          13m   v1.27.7
+ctrl-ubuntu-192-168-50-94-40c3fdedd3931e2e   Ready    control-plane   18m   v1.27.7
+wk-ubuntu-192-168-50-95-706650a3             Ready    <none>          16m   v1.27.7
