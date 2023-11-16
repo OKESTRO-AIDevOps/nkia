@@ -36,6 +36,10 @@ build-commit:
 
 	cd ./orch.io && make build
 
+	/bin/cp -Rf ./hack/libupdate.sh ./bin/
+
+	/bin/cp -Rf ./hack/binupdate.sh ./bin/
+
 	tar -czvf lib.tgz lib
 
 	tar -czvf bin.tgz bin

@@ -1,4 +1,2 @@
-NAME                                         STATUS     ROLES           AGE   VERSION
-ctrl-ubuntu-192-168-50-94-e3d26dafa2e10f4d   Ready      control-plane   90m   v1.27.7
-wk-ubuntu-192-168-50-95-4a095151             Ready      <none>          49s   v1.27.7
-wk-ubuntu-192-168-50-95-cb9662e9             NotReady   <none>          23m   v1.27.7
+[sudo] password for ubuntu: 
+failed: request handler: run failed: : failed to get ongoing install log: installation already closed

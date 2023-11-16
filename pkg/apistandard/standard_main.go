@@ -111,7 +111,16 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 
 		ret_api_out.BODY = string(b_out)
 
-	// case "ADMIN-INSTVOLOR":
+	case "ADMIN-INSTVOLOR":
+
+		targetip := std_cmd["targetip"]
+		targetid := std_cmd["targetid"]
+		targetpw := std_cmd["targetpw"]
+		localip := std_cmd["localip"]
+
+		go kubebase.InstallVolumeOnRemote(targetip, targetid, targetpw, localip)
+
+		ret_api_out.BODY = string([]byte("remote volume installation started\n"))
 
 	case "NKADM-INSTTKOL":
 
@@ -127,7 +136,15 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 
 		ret_api_out.BODY = string(b_out)
 
-	// case "ADMIN-INSTTKOR":
+	case "ADMIN-INSTTKOR":
+
+		targetip := std_cmd["targetip"]
+		targetid := std_cmd["targetid"]
+		targetpw := std_cmd["targetpw"]
+
+		go kubebase.InstallToolKitOnRemote(targetip, targetid, targetpw)
+
+		ret_api_out.BODY = string([]byte("remote toolkit installation started\n"))
 
 	case "NKADM-INSTLOGOL":
 
