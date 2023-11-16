@@ -707,6 +707,7 @@ func InstallToolKitOnRemote(targetip string, targetid string, targetpw string) {
 
 	runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, "SUCCESS")
 
+	return
 }
 
 func InstallLogOnLocal() ([]byte, error) {
