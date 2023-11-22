@@ -175,6 +175,8 @@ func GetOngoingInstallLog() ([]byte, error) {
 
 	var ret_byte []byte
 
+	already_closed := 0
+
 	head_dir := ".npia/install/"
 
 	ERR_MSG := "failed to get ongoing install log: %s"
@@ -192,6 +194,10 @@ func GetOngoingInstallLog() ([]byte, error) {
 	}
 
 	head_value := string(head_value_b)
+
+	if head_value == "" {
+		return ret_byte, fmt.Errorf(ERR_MSG, "empty HEAD, re-run previous command to retry initiation")
+	}
 
 	head_dir += head_value
 
@@ -217,7 +223,7 @@ func GetOngoingInstallLog() ([]byte, error) {
 
 	if _, err := os.Stat(head_dir_close); err == nil {
 
-		return ret_byte, fmt.Errorf(ERR_MSG, "installation already closed")
+		already_closed = 1
 
 	}
 
@@ -225,6 +231,12 @@ func GetOngoingInstallLog() ([]byte, error) {
 
 	if err != nil {
 		return ret_byte, fmt.Errorf(ERR_MSG, err.Error())
+	}
+
+	if already_closed == 1 {
+		file_b = append(file_b, []byte("\n-----------INSTALLATION CLOSED-----------\n")...)
+	} else {
+		file_b = append(file_b, []byte("\n-----------INSTALLATION ONGOING-----------\n")...)
 	}
 
 	ret_byte = file_b

@@ -442,7 +442,11 @@ func InstallCluster(sess_key string, cluster_id string, targetip string, targeti
 
 	if err != nil {
 
-		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		err_msg := fmt.Sprintf("failed to install cluster: %s", err.Error())
+
+		WriteToInstallSessionWithLock(sess_key, err_msg)
+
+		WriteToInstallResultWithLock(sess_key, err_msg)
 
 		return
 
@@ -451,7 +455,12 @@ func InstallCluster(sess_key string, cluster_id string, targetip string, targeti
 	output, err := conn.SendCommands("sudo mkdir -p /npia && ls -la /npia")
 
 	if err != nil {
-		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+
+		err_msg := fmt.Sprintf("failed to install cluster: %s", err.Error())
+
+		WriteToInstallSessionWithLock(sess_key, err_msg)
+
+		WriteToInstallResultWithLock(sess_key, err_msg)
 
 		return
 	}
@@ -462,7 +471,13 @@ func InstallCluster(sess_key string, cluster_id string, targetip string, targeti
 
 	output, err = conn.SendCommands("sudo curl -L https://github.com/OKESTRO-AIDevOps/nkia/releases/download/latest/bin.tgz -o /npia/bin.tgz")
 	if err != nil {
-		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+
+		err_msg := fmt.Sprintf("failed to install cluster: %s", err.Error())
+
+		WriteToInstallSessionWithLock(sess_key, err_msg)
+
+		WriteToInstallResultWithLock(sess_key, err_msg)
+
 		return
 	}
 
@@ -473,7 +488,12 @@ func InstallCluster(sess_key string, cluster_id string, targetip string, targeti
 	output, err = conn.SendCommands("sudo tar -xzf /npia/bin.tgz -C /npia")
 	if err != nil {
 
-		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		err_msg := fmt.Sprintf("failed to install cluster: %s", err.Error())
+
+		WriteToInstallSessionWithLock(sess_key, err_msg)
+
+		WriteToInstallResultWithLock(sess_key, err_msg)
+
 		return
 	}
 
@@ -484,7 +504,12 @@ func InstallCluster(sess_key string, cluster_id string, targetip string, targeti
 	output, err = conn.SendCommands("cd /npia/bin/nokubeadm && sudo ./nokubeadm init-npia-default")
 	if err != nil {
 
-		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		err_msg := fmt.Sprintf("failed to install cluster: %s", err.Error())
+
+		WriteToInstallSessionWithLock(sess_key, err_msg)
+
+		WriteToInstallResultWithLock(sess_key, err_msg)
+
 		return
 	}
 
@@ -497,31 +522,54 @@ func InstallCluster(sess_key string, cluster_id string, targetip string, targeti
 	output, err = conn.SendCommands("cd /npia/bin/nokubeadm && sudo ./nokubeadm install mainctrl" + options)
 	if err != nil {
 
+		err_msg := fmt.Sprintf("failed to install cluster: %s", err.Error())
+
 		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+
+		WriteToInstallResultWithLock(sess_key, err_msg)
+
 		return
 	}
 
 	output = append(output, []byte("\n----------CONTROL PLANE INSTALLED----------\n")...)
 
+	WriteToInstallSessionWithLock(sess_key, string(output))
+
 	output, err = conn.SendCommands("cd /npia/bin/nokubelet && sudo ./nokubelet init-npia-default" + options)
 	if err != nil {
 
+		err_msg := fmt.Sprintf("failed to install cluster: %s", err.Error())
+
 		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+
+		WriteToInstallResultWithLock(sess_key, err_msg)
+
 		return
 	}
 
 	output = append(output, []byte("\n----------NOKUBELET INITIATED----------\n")...)
+
+	WriteToInstallSessionWithLock(sess_key, string(output))
 
 	options = " " + "--clusterid " + cluster_id + " " + "--updatetoken " + update_token
 
 	output, err = conn.SendCommands("cd /npia/bin/nokubelet && sudo nohup ./nkletd io connect update" + options)
 	if err != nil {
 
-		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
+		err_msg := fmt.Sprintf("failed to install cluster: %s", err.Error())
+
+		WriteToInstallSessionWithLock(sess_key, err_msg)
+
+		WriteToInstallResultWithLock(sess_key, err_msg)
+
 		return
 	}
 
 	output = append(output, []byte("\n----------NOKUBELET CONNECTED----------\n")...)
+
+	WriteToInstallSessionWithLock(sess_key, string(output))
+
+	WriteToInstallResultWithLock(sess_key, "SUCCESS")
 
 	return
 }
