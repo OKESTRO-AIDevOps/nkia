@@ -10,12 +10,9 @@ run:
 	sudo docker-compose up --build
 
 
-run-newkey: 
+gen-okey: 
 
 	go run ./_okeygen/keygen.go
 
 	cp okey osock/okey
 
-	rm okey
-
-	sudo docker-compose up --build

@@ -443,6 +443,26 @@ func InstallVolumeOnRemote(targetip string, targetid string, targetpw string, lo
 
 	fp, err := runfs.OpenFilePointerForNpiaInstallRemoteLog()
 
+	plugins, err := runfs.MakePluginJSON()
+
+	if err != nil {
+		close_msg := err.Error()
+
+		fp.Write([]byte(close_msg))
+		runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, close_msg)
+	}
+
+	kv := map[string]string{
+		"targetip": targetip,
+		"targetid": targetid,
+		"targetpw": targetpw,
+	}
+
+	pj := runfs.PluginJSON{
+		Name:   "volume",
+		Keyval: kv,
+	}
+
 	conn, err := utils.ShellConnect(targetip, targetid, targetpw)
 
 	if err != nil {
@@ -535,6 +555,10 @@ func InstallVolumeOnRemote(targetip string, targetid string, targetpw string, lo
 
 	runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, "SUCCESS")
 
+	plugins, _ = runfs.AddMapToPluginJSON(plugins, pj)
+
+	_ = runfs.SavePluginJSON(plugins)
+
 	return
 }
 
@@ -616,6 +640,26 @@ func InstallToolKitOnLocal() error {
 func InstallToolKitOnRemote(targetip string, targetid string, targetpw string) {
 
 	fp, err := runfs.OpenFilePointerForNpiaInstallRemoteLog()
+
+	plugins, err := runfs.MakePluginJSON()
+
+	if err != nil {
+		close_msg := err.Error()
+
+		fp.Write([]byte(close_msg))
+		runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, close_msg)
+	}
+
+	kv := map[string]string{
+		"targetip": targetip,
+		"targetid": targetid,
+		"targetpw": targetpw,
+	}
+
+	pj := runfs.PluginJSON{
+		Name:   "toolkit",
+		Keyval: kv,
+	}
 
 	conn, err := utils.ShellConnect(targetip, targetid, targetpw)
 
@@ -706,6 +750,10 @@ func InstallToolKitOnRemote(targetip string, targetid string, targetpw string) {
 	fp.Write([]byte("\n----------TOOLKIT INSTALLED----------\n"))
 
 	runfs.CloseFilePointerForNpiaInstallRemoteLogAndMarkDone(fp, "SUCCESS")
+
+	plugins, _ = runfs.AddMapToPluginJSON(plugins, pj)
+
+	_ = runfs.SavePluginJSON(plugins)
 
 	return
 }
