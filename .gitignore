@@ -7,3 +7,4 @@ orch.io/osock/okey
 *.tar
 *.tar.gz
 *.tgz
+*.out
