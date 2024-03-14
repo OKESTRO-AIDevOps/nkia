@@ -6,7 +6,7 @@ import (
 	"strings"
 	"syscall"
 
-	ci "github.com/OKESTRO-AIDevOps/nkia/test/ci"
+	ci "github.com/OKESTRO-AIDevOps/nkia/infra/ci"
 	"gopkg.in/yaml.v3"
 
 	"golang.org/x/term"
@@ -74,20 +74,11 @@ func ReadCIFile() {
 
 		if k == "target.v1" {
 
-			var target_arr []interface{}
-
-			err := yaml.Unmarshal(v, &target_arr)
-
-			if err != nil {
-				fmt.Println(err.Error())
-				return
-			}
-
-			for i := 0; i < len(target_arr); i++ {
+			for i := 0; i < len(v); i++ {
 
 				var target_ci ci.TargetV1
 
-				yaml_b, err := yaml.Marshal(target_arr[i])
+				yaml_b, err := yaml.Marshal(v[i])
 
 				if err != nil {
 					fmt.Println(err.Error())

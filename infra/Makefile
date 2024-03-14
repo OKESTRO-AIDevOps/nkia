@@ -10,12 +10,12 @@ all:
 
 build: 
 
-	go build -v -o cibot ./robot
+	go build -o infra.out .
 
 
 build-commit:
 
-	go build -v -o cibot ./robot
+	go build -v -o infra.out .
 
 
 
@@ -27,4 +27,4 @@ var:
 
 clean :
 
-	rm -r cibot test
+	rm -r *.out 

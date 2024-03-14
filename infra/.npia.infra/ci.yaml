@@ -1,21 +1,6 @@
 target.v1:
 - gitPackage: 
-    address: 'github.com/seantywork/seantywork'
-    name: nkia-nokubeadm
-    strategy: reset 
-    lock: 
-    - "go.mod"
-    - "LICENSE"
-    - "README.md"
-  root: "."
-  select:
-  - what: 
-      - "*" 
-    from: "nokubeadm"
-    not: [] 
-    as: "*" # * means selected files will be located directly inside the package
-- gitPackage: 
-    address: 'github.com/seantywork/seantywork'
+    address: 'github.com/seantywork/hi'
     name: nkia-nokubeadm
     strategy: reset 
     lock: 
@@ -29,9 +14,9 @@ target.v1:
     from: "nokubectl"
     not: [] 
     as: "*" # * means selected files will be located directly inside the package
-- git: ''
-  package: 
-    name: nkia-nokubelet
+- gitPackage: 
+    address: 'github.com/seantywork/world'
+    name: nkia-nokubeadm
     strategy: reset 
     lock: 
     - "go.mod"
@@ -41,12 +26,12 @@ target.v1:
   select:
   - what: 
       - "*" 
-    from: "nokubelet"
+    from: "nokubectl"
     not: [] 
     as: "*" # * means selected files will be located directly inside the package
-- git: ''
-  package: 
-    name: nkia-orch.io
+- gitPackage: 
+    address: 'github.com/seantywork/bye'
+    name: nkia-nokubeadm
     strategy: reset 
     lock: 
     - "go.mod"
@@ -56,12 +41,12 @@ target.v1:
   select:
   - what: 
       - "*" 
-    from: "orch.io"
+    from: "nokubectl"
     not: [] 
     as: "*" # * means selected files will be located directly inside the package
-- git: ''
-  package: 
-    name: nkia-pkg
+- gitPackage: 
+    address: 'github.com/seantywork/sky'
+    name: nkia-nokubeadm
     strategy: reset 
     lock: 
     - "go.mod"
@@ -71,6 +56,6 @@ target.v1:
   select:
   - what: 
       - "*" 
-    from: "pkg"
+    from: "nokubectl"
     not: [] 
     as: "*" # * means selected files will be located directly inside the package
