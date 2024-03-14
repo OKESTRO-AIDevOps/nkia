@@ -1,4 +1,9 @@
 build:
-	/bin/cp -Rf ./.npia ../bin/nokubelet/
-	go build -o ../bin/nokubelet .
-	cp ./nkletd ../bin/nokubelet
+
+	go build -o nokubelet .
+
+
+release:
+	/bin/cp -Rf ./.npia ../nkia/nokubelet/
+	go build -o ../nkia/nokubelet .
+	cp ./nkletd ../nkia/nokubelet

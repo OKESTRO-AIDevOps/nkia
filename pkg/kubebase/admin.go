@@ -160,6 +160,28 @@ func AdminInitNPIA() {
 		return
 	}
 
+	LIBIF_SCRIPTS_ADMIN_INIT_DEPENDENCY2, err := libif.GetLibComponentAddress("bin", lib_base_name)
+
+	if err != nil {
+		AdminBlindResetNPIA()
+		outfile.Write([]byte(err.Error()))
+		return
+	}
+
+	cmd = exec.Command(LIBIF_SCRIPTS_ADMIN_INIT_DEPENDENCY2)
+
+	cmd.Stdout = outfile
+
+	cmd.Stderr = outfile
+
+	err = cmd.Run()
+
+	if err != nil {
+		AdminBlindResetNPIA()
+		outfile.Write([]byte(err.Error()))
+		return
+	}
+
 	outfile.Write([]byte("npia init success\n"))
 
 	err = outfile.Close()

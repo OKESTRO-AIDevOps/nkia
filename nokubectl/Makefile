@@ -1,3 +1,7 @@
 build:
-	/bin/cp -Rf ./.npia ../bin/nokubectl/
-	go build -o ../bin/nokubectl .
+
+	go build -o nokubectl .
+
+release:
+	/bin/cp -Rf ./.npia ../nkia/nokubectl/
+	go build -o ../nkia/nokubectl .
