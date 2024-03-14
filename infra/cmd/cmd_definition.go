@@ -8,7 +8,8 @@ var NKIACI_FLAGS = "" +
 	"id       : repository id, if" + "\n" +
 	"token    : repository password (or token)," + "\n" +
 	"name     : repository name for using as a workspace " + "\n" +
-	"from-yaml: repo, id, token, name from yaml" + "\n" +
+	"plan     : what to do with all this? test? ci? etc? " + "\n" +
+	"from-yaml: repo, id, token, name, plan from yaml" + "\n" +
 	""
 
 type NKIA_CI_OPTIONS map[string]string
