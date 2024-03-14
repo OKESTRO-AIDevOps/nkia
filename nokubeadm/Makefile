@@ -1,3 +1,9 @@
 build:
-	/bin/cp -Rf ./.npia ../bin/nokubeadm/
-	go build -o ../bin/nokubeadm .
+
+	go build -o nokubeadm .
+
+
+release:
+
+	/bin/cp -Rf ./.npia ../nkia/nokubeadm/
+	go build -o ../nkia/nokubeadm .

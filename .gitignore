@@ -8,3 +8,5 @@ orch.io/osock/okey
 *.tar.gz
 *.tgz
 *.out
+lib
+nkia

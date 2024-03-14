@@ -1,8 +1,11 @@
 
 all:
 	@echo "specify option"
-	@echo "build : build and push runnable(testable) environment"
-	@echo "run   : run orch.io"
+	@echo "build   : build and push runnable(testable) environment"
+	@echo "commit  : commit"
+	@echo "release : build, commit and generate release binary"
+	@echo "run     : run orch.io"
+	@echo "stage   : stage to all downstream repos including docs"
 
 build:
 
@@ -20,29 +23,44 @@ build:
 
 	cd ./orch.io && make build
 
-build-commit:
 
-	mkdir -p bin/nokubeadm
+commit:
 
-	mkdir -p bin/nokubectl
+	git pull
 
-	mkdir -p bin/nokubelet
+	git add .
 
-	cd ./nokubeadm && make build
+	git commit 
 
-	cd ./nokubectl && make build
+	git fetch --all
 
-	cd ./nokubelet && make build
+	git rebase upstream/main
+
+	git push
+
+release:
+
+	mkdir -p nkia/nokubeadm
+
+	mkdir -p nkia/nokubectl
+
+	mkdir -p nkia/nokubelet
+
+	cd ./nokubeadm && make release
+
+	cd ./nokubectl && make release
+
+	cd ./nokubelet && make release
 
 	cd ./orch.io && make build
 
-	/bin/cp -Rf ./hack/libupdate.sh ./bin/
+	cd hack && ./libgen.sh
 
-	/bin/cp -Rf ./hack/binupdate.sh ./bin/
+	/bin/cp -Rf ./hack/binupdate.sh ./nkia/
 
 	tar -czvf lib.tgz lib
 
-	tar -czvf bin.tgz bin
+	tar -czvf nkia.tgz nkia
 
 	git pull
 
@@ -60,4 +78,9 @@ run:
 
 	cd ./orch.io && make run
 
+
+stage:
+
+
+	@echo "not implemented"
 
