@@ -6,4 +6,4 @@ services:
                 build: .
                 container_name: nkiax64ubuntu22
                 volumes:
-                        - _output:/workspace/_output
+                        - ./_output:/workspace/_output

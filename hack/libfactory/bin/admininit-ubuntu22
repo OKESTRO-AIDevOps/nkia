@@ -1,0 +1,14 @@
+#/bin/bash
+
+
+curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o docker-compose
+
+sudo chmod +x docker-compose
+
+echo "docker-compose download successful"
+
+curl -L https://github.com/kubernetes/kompose/releases/download/v1.26.0/kompose-linux-amd64 -o kompose
+
+sudo chmod +x kompose
+
+echo "kompose download successful"

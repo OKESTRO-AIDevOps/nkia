@@ -1,0 +1,31 @@
+#!/bin/bash
+
+apt-get update
+
+apt-get install -y nfs-kernel-server
+
+apt-get install -y nfs-common
+
+apt-get install -y jq
+
+mkdir -p /npia-data
+
+chown -R root:root /npia-data
+
+chmod -R 777 /npia-data
+
+
+
+local_ip=$1
+
+IP=$local_ip
+
+cat << EOF > /etc/exports
+
+/npia-data $IP/24(rw,sync,no_subtree_check,no_root_squash) 10.10.0.0/16(rw,sync,no_subtree_check,no_root_squash)
+
+EOF
+
+exportfs -a
+
+systemctl restart nfs-kernel-server
