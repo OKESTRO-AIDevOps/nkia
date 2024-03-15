@@ -2,4 +2,5 @@
 *.css linguist-vendored
 *.go linguist-vendored=false
 *.sh linguist-vendored=false
-*.js linguist-vendored=false
+*.js linguist-vendored
+*.py linguist-vendored

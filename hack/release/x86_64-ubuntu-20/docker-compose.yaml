@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+
+        nkiax64ubuntu20:
+                build: .
+                container_name: nkiax64ubuntu20
+                volumes:
+                        - ./_output:/workspace/_output
