@@ -1,8 +1,8 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 RUN apt-get update
 
-RUN apt-get install -y ca-certificates curl
+RUN apt-get install -y ca-certificates curl git make build-essential
 
 COPY --from=golang:1.21 /usr/local/go/ /usr/local/go/
  
@@ -10,12 +10,16 @@ ENV PATH="/usr/local/go/bin:${PATH}"
 
 RUN mkdir /workspace
 
-WORKDIR /workspace
+RUN mkdir /workspace/_output
 
-COPY . .
+RUN cd /workspace && git clone https://github.com/OKESTRO-AIDevOps/nkia.git 
 
-WORKDIR /workspace/srv
+RUN go clean -cache && go clean -modcache
 
-RUN go build -o runo .
+RUN cd /workspace/nkia && go mod tidy && go get all
 
-CMD ["/workspace/srv/runo"]
+RUN cd /workspace/nkia && make release
+
+RUN cp /workspace/nkia/nkia.tgz /workspace/_output
+
+CMD ["/bin/bash", "-c", "/bin/cp -Rf /workspace/nkia/nkia.tgz /workspace/_output; /bin/cp -Rf /workspace/nkia/lib.tgz /workspace/_output; echo SUCCESS."]

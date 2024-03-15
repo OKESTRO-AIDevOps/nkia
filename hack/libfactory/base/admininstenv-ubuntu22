@@ -1,0 +1,21 @@
+#!/bin/bash
+
+
+apt-get update
+
+apt-get install -y haproxy
+
+# HA_PATH="$(echo $PWD)"
+
+# HA_PATH="$HA_PATH/kiwi/kw_agent/AGT/haproxy.cfg"
+
+# /bin/cp -rf $HA_PATH /etc/haproxy/haproxy.cfg
+
+# rand="$(openssl rand -hex 4)"
+
+# IP=$local_ip
+
+# RAND=$rand
+
+# sed -i "s/->/master-$RAND $IP:6443/" /etc/haproxy/haproxy.cfg
+

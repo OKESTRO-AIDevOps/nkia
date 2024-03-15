@@ -4,7 +4,7 @@ RUN apt-get update
 
 RUN apt-get install -y ca-certificates curl git make build-essential
 
-COPY --from=golang:1.20 /usr/local/go/ /usr/local/go/
+COPY --from=golang:1.21 /usr/local/go/ /usr/local/go/
  
 ENV PATH="/usr/local/go/bin:${PATH}"
 
@@ -22,4 +22,4 @@ RUN cd /workspace/nkia && make release
 
 RUN cp /workspace/nkia/nkia.tgz /workspace/_output
 
-CMD ["echo","SUCCESS."]
+CMD ["/bin/bash", "-c", "/bin/cp -Rf /workspace/nkia/nkia.tgz /workspace/_output; /bin/cp -Rf /workspace/nkia/lib.tgz /workspace/_output; echo SUCCESS."]
