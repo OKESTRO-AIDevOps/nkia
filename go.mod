@@ -10,7 +10,9 @@ require (
 	github.com/goccy/go-yaml v1.11.0
 	github.com/gorilla/websocket v1.5.0
 	github.com/guptarohit/asciigraph v0.5.6
+	golang.org/x/crypto v0.11.0
 	golang.org/x/oauth2 v0.10.0
+	golang.org/x/term v0.13.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -43,10 +45,8 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	golang.org/x/arch v0.3.0 // indirect
-	golang.org/x/crypto v0.11.0 // indirect
 	golang.org/x/net v0.12.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
-	golang.org/x/term v0.13.0 // indirect
 	golang.org/x/text v0.11.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.7 // indirect

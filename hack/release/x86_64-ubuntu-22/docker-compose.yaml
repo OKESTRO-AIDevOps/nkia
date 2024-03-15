@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+
+        nkiax64ubuntu22:
+                build: .
+                container_name: nkiax64ubuntu22
+                volumes:
+                        - _output:/workspace/_output
