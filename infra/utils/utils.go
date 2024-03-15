@@ -18,3 +18,25 @@ func PushBackSlice[K comparable](a []K, value K) []K {
 func DeleteFromSlice[K comparable](slice []K, s int) []K {
 	return append(slice[:s], slice[s+1:]...)
 }
+
+func FindFromSlice[K comparable](slice []K, el K) int {
+
+	slice_len := len(slice)
+
+	return_stat := -1
+
+	for i := 0; i < slice_len; i++ {
+
+		if slice[i] == el {
+
+			return_stat = i
+
+			break
+
+		}
+
+	}
+
+	return return_stat
+
+}

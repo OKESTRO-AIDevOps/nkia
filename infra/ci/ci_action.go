@@ -42,13 +42,8 @@ func ActionV1(targets *CITargetsCtl, tidx int) {
 	CILOCK.Unlock()
 	//CILOCK.Unlock()
 
-	if tid > 1 {
-		targets.CI_TARGETS[tidx].CI_STAT_FROM <- SIG_SUCCESS
-	} else {
+	targets.CI_TARGETS[tidx].CI_STAT_FROM <- SIG_SUCCESS
 
-		targets.CI_TARGETS[tidx].CI_STAT_FROM <- SIG_FAILED
-
-	}
-
+	return
 	//time.Sleep(1000 * time.Second)
 }
