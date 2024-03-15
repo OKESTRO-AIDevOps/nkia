@@ -45,12 +45,66 @@ func LoadTargetsFromFile() (CITargets, error) {
 	return ci_targets, nil
 }
 
+func VerifyTargetProperty(ci_targets CITargets) error {
+
+	var unique_names []string
+
+	for k, v := range ci_targets {
+
+		if k == "target.v1" {
+
+			for i := 0; i < len(v); i++ {
+
+				yaml_b, err := yaml.Marshal(v[i])
+
+				if err != nil {
+
+					return fmt.Errorf("failed to marshal at: version 1, target %d", i)
+
+				}
+
+				var target_ci TargetV1
+
+				err = yaml.Unmarshal(yaml_b, &target_ci)
+
+				if err != nil {
+
+					return fmt.Errorf("failed to unmarshal at: version 1, target %d", i)
+
+				}
+
+				t_name := target_ci.GitPackage.Name
+
+				flag := infutils.FindFromSlice[string](unique_names, t_name)
+
+				if flag >= 0 {
+
+					return fmt.Errorf("failed to verify: duplicate name: %s", t_name)
+
+				}
+
+				unique_names = append(unique_names, t_name)
+
+			}
+		}
+
+	}
+
+	return nil
+}
+
 func StartTargetsFromCIFile(ci_targets_ctl *CITargetsCtl, ci_cred *CICredStore) error {
 
 	ci_targets, err := LoadTargetsFromFile()
 
 	if err != nil {
-		fmt.Println(err.Error())
+		return fmt.Errorf("failed to start from ci file: %s", err.Error())
+	}
+
+	err = VerifyTargetProperty(ci_targets)
+
+	if err != nil {
+		return fmt.Errorf("failed to verify: %s", err.Error())
 	}
 
 	target_idx := 0
