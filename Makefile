@@ -38,7 +38,33 @@ commit:
 
 	git push
 
+
 release:
+
+	mkdir -p nkia/nokubeadm
+
+	mkdir -p nkia/nokubectl
+
+	mkdir -p nkia/nokubelet
+
+	cd ./nokubeadm && make release
+
+	cd ./nokubectl && make release
+
+	cd ./nokubelet && make release
+
+	cd ./orch.io && make build
+
+	cd hack && ./libgen.sh
+
+	/bin/cp -Rf ./hack/binupdate.sh ./nkia/
+
+	tar -czvf lib.tgz lib
+
+	tar -czvf nkia.tgz nkia
+
+
+release-commit:
 
 	mkdir -p nkia/nokubeadm
 
