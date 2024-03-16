@@ -1365,38 +1365,76 @@ func list_all_files(dir_name string) {
 
 }
 
-func list_all_dir() {
+func list_all_dir_recursive(tdir string) ([]string, []string, error) {
 
-	dir_entry, err := os.ReadDir(".")
+	var dir_list []string
+
+	var file_list []string
+
+	dir_entry, err := os.ReadDir(tdir)
 
 	if err != nil {
 
-		fmt.Println(err.Error())
-
-		return
+		return dir_list, file_list, fmt.Errorf("failed readdir: %s", err.Error())
 
 	}
 
 	for i := 0; i < len(dir_entry); i++ {
 
-		fmt.Println(dir_entry[i].Name())
+		if dir_entry[i].IsDir() {
 
-		if dir_entry[i].Name() == "var" {
+			dir_list = append(dir_list, tdir+"/"+dir_entry[i].Name())
 
-			fmt.Println("skipping var")
+			d_r, f_r, e_r := list_all_dir_recursive(tdir + "/" + dir_entry[i].Name())
 
-			continue
+			if e_r != nil {
+
+				return []string{}, []string{}, fmt.Errorf("failed recurse: %s", e_r.Error())
+
+			}
+
+			dir_list = append(dir_list, d_r...)
+
+			file_list = append(file_list, f_r...)
+
+		} else {
+
+			file_list = append(file_list, tdir+"/"+dir_entry[i].Name())
+
 		}
 
-		if !dir_entry[i].IsDir() {
+	}
 
-			fmt.Printf("skipping file %s", dir_entry[i].Name())
+	return dir_list, file_list, nil
 
-			continue
+}
 
-		}
+func list_recursive_dir_and_files() {
 
-		list_all_files(dir_entry[i].Name())
+	dt, ft, err := list_all_dir_recursive(".test")
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	dt_len := len(dt)
+
+	ft_len := len(ft)
+
+	fmt.Println("DIR")
+
+	for i := 0; i < dt_len; i++ {
+
+		fmt.Println(dt[i])
+
+	}
+
+	fmt.Println("FILE")
+
+	for i := 0; i < ft_len; i++ {
+
+		fmt.Println(ft[i])
 
 	}
 
@@ -1456,5 +1494,8 @@ func main() {
 
 	//list_all_files()
 
-	list_all_dir()
+	// list_all_dir()
+
+	list_recursive_dir_and_files()
+
 }

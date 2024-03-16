@@ -3,9 +3,7 @@ target.v1:
     address: 'github.com/seantywork/test-a'
     name: nkia-nokubeadm
     strategy: reset 
-    lock: 
-    - "LICENSE"
-    - "README.md"
+    lock: []
   root: "nkia"
   select:
   - what: 
@@ -17,9 +15,7 @@ target.v1:
     address: 'github.com/seantywork/test-b'
     name: nkia-nokubectl
     strategy: reset 
-    lock: 
-    - "LICENSE"
-    - "README.md"
+    lock: []
   root: "nkia"
   select:
   - what: 
@@ -31,9 +27,7 @@ target.v1:
     address: 'github.com/seantywork/test-c'
     name: nkia-nokubelet
     strategy: reset 
-    lock: 
-    - "LICENSE"
-    - "README.md"
+    lock: []
   root: "nkia"
   select:
   - what: 
