@@ -109,7 +109,7 @@ func GetDestRepo(repo_addr string, repo_id string, repo_pw string, repo_nm strin
 
 	repo_addr = fmt.Sprintf(repo_addr, repo_id, repo_pw)
 
-	repo_addr += "https://" + repo_addr
+	repo_addr = "https://" + repo_addr
 
 	cmd := exec.Command("git", "clone", repo_addr, repo_nm)
 
@@ -120,4 +120,16 @@ func GetDestRepo(repo_addr string, repo_id string, repo_pw string, repo_nm strin
 	}
 
 	return nil
+}
+
+func CommitDestRepo() error {
+
+	return nil
+
+}
+
+func PushDestRepo() error {
+
+	return nil
+
 }

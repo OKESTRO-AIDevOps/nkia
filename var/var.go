@@ -20,6 +20,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"syscall"
 
@@ -1327,6 +1328,80 @@ func remote_directory_check() {
 
 }
 
+func list_all_files(dir_name string) {
+
+	var f_list []string
+
+	err := filepath.Walk(dir_name,
+		func(path string, f_info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+
+			if !f_info.IsDir() {
+				f_list = append(f_list, path)
+			}
+
+			return nil
+		})
+	if err != nil {
+		log.Println(err)
+	}
+
+	list_len := len(f_list)
+
+	if list_len == 0 {
+
+		log.Println("list 0")
+	} else {
+
+		for i := 0; i < list_len; i++ {
+
+			fmt.Println(f_list[i])
+
+		}
+
+	}
+
+}
+
+func list_all_dir() {
+
+	dir_entry, err := os.ReadDir(".")
+
+	if err != nil {
+
+		fmt.Println(err.Error())
+
+		return
+
+	}
+
+	for i := 0; i < len(dir_entry); i++ {
+
+		fmt.Println(dir_entry[i].Name())
+
+		if dir_entry[i].Name() == "var" {
+
+			fmt.Println("skipping var")
+
+			continue
+		}
+
+		if !dir_entry[i].IsDir() {
+
+			fmt.Printf("skipping file %s", dir_entry[i].Name())
+
+			continue
+
+		}
+
+		list_all_files(dir_entry[i].Name())
+
+	}
+
+}
+
 func main() {
 
 	//	ASgi := apistandard.ASgi
@@ -1377,5 +1452,9 @@ func main() {
 
 	// remote_shell_background()
 
-	remote_directory_check()
+	// remote_directory_check()
+
+	//list_all_files()
+
+	list_all_dir()
 }

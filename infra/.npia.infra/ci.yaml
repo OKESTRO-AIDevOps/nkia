@@ -1,13 +1,26 @@
 target.v1:
 - gitPackage: 
-    address: 'github.com/seantywork/hi'
+    address: 'github.com/seantywork/test-a'
     name: nkia-nokubeadm
     strategy: reset 
     lock: 
-    - "go.mod"
     - "LICENSE"
     - "README.md"
-  root: "."
+  root: "nkia"
+  select:
+  - what: 
+      - "*" 
+    from: "nokubeadm"
+    not: [] 
+    as: "*" # * means selected files will be located directly inside the package
+- gitPackage: 
+    address: 'github.com/seantywork/test-b'
+    name: nkia-nokubectl
+    strategy: reset 
+    lock: 
+    - "LICENSE"
+    - "README.md"
+  root: "nkia"
   select:
   - what: 
       - "*" 
@@ -15,47 +28,16 @@ target.v1:
     not: [] 
     as: "*" # * means selected files will be located directly inside the package
 - gitPackage: 
-    address: 'github.com/seantywork/world'
-    name: nkia-nokubeadm
+    address: 'github.com/seantywork/test-c'
+    name: nkia-nokubelet
     strategy: reset 
     lock: 
-    - "go.mod"
     - "LICENSE"
     - "README.md"
-  root: "."
+  root: "nkia"
   select:
   - what: 
       - "*" 
-    from: "nokubectl"
-    not: [] 
-    as: "*" # * means selected files will be located directly inside the package
-- gitPackage: 
-    address: 'github.com/seantywork/bye'
-    name: nkia-nokubeadm
-    strategy: reset 
-    lock: 
-    - "go.mod"
-    - "LICENSE"
-    - "README.md"
-  root: "."
-  select:
-  - what: 
-      - "*" 
-    from: "nokubectl"
-    not: [] 
-    as: "*" # * means selected files will be located directly inside the package
-- gitPackage: 
-    address: 'github.com/seantywork/sky'
-    name: nkia-nokubeadm
-    strategy: reset 
-    lock: 
-    - "go.mod"
-    - "LICENSE"
-    - "README.md"
-  root: "."
-  select:
-  - what: 
-      - "*" 
-    from: "nokubectl"
+    from: "nokubelet"
     not: [] 
     as: "*" # * means selected files will be located directly inside the package

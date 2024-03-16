@@ -9,12 +9,6 @@ all:
 
 build:
 
-	mkdir -p bin/nokubeadm
-
-	mkdir -p bin/nokubectl
-
-	mkdir -p bin/nokubelet
-
 	cd ./nokubeadm && make build
 
 	cd ./nokubectl && make build
@@ -23,10 +17,11 @@ build:
 
 	cd ./orch.io && make build
 
+	cd ./infra && make build
+
 
 commit:
 
-	git pull
 
 	git add .
 
@@ -53,8 +48,6 @@ release:
 
 	cd ./nokubelet && make release
 
-	cd ./orch.io && make build
-
 	cd hack && ./libgen.sh
 
 	/bin/cp -Rf ./hack/binupdate.sh ./nkia/
@@ -78,8 +71,6 @@ release-commit:
 
 	cd ./nokubelet && make release
 
-	cd ./orch.io && make build
-
 	cd hack && ./libgen.sh
 
 	/bin/cp -Rf ./hack/binupdate.sh ./nkia/
@@ -87,8 +78,6 @@ release-commit:
 	tar -czvf lib.tgz lib
 
 	tar -czvf nkia.tgz nkia
-
-	git pull
 
 	git add .
 
@@ -107,6 +96,15 @@ run:
 
 stage:
 
+	cd ./infra && /bin/cp -Rf infractl ../ && /bin/cp -Rf ./.npia.infra ../
 
-	@echo "not implemented"
+
+	./infractl 	--repo https://github.com/OKESTRO-AIDevOps/nkia.git \
+			   	--id seantywork \
+			   	--token - \
+			    --name nkia \
+				--plan ci \
+
+
+	rm -rf ./infractl ./.npia.infra
 

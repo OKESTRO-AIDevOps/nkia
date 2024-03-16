@@ -7,7 +7,7 @@ build:
 
 run: 
 
-	sudo docker-compose up --build
+	sudo docker compose up --build
 
 
 gen-okey: 
