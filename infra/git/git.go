@@ -122,13 +122,122 @@ func GetDestRepo(repo_addr string, repo_id string, repo_pw string, repo_nm strin
 	return nil
 }
 
-func CommitDestRepo() error {
+func ConfigDestRepo(repo_nm string, repo_id string, repo_pw string, repo_email string) error {
+
+	repo_nm = ".npia.infra/" + repo_nm
+
+	if _, err := os.Stat(repo_nm); err != nil {
+
+		return fmt.Errorf("failed to config dest repo: %s", err.Error())
+
+	}
+
+	cmd := exec.Command("git", "-C", repo_nm, "config", "user.email", repo_email)
+
+	if err := cmd.Run(); err != nil {
+
+		return fmt.Errorf("cmd run failed: %s", err.Error())
+
+	}
+
+	cmd = exec.Command("git", "-C", repo_nm, "config", "user.name", repo_id)
+
+	if err := cmd.Run(); err != nil {
+
+		return fmt.Errorf("cmd run failed: %s", err.Error())
+
+	}
+
+	return nil
+}
+
+func CommitDestRepo(repo_nm string, commit_message string) error {
+
+	repo_nm = ".npia.infra/" + repo_nm
+
+	if _, err := os.Stat(repo_nm); err != nil {
+
+		return fmt.Errorf("failed to commit dest repo: %s", err.Error())
+
+	}
+
+	cmd := exec.Command("git", "-C", repo_nm, "add", ".")
+
+	if err := cmd.Run(); err != nil {
+
+		return fmt.Errorf("cmd run failed: %s", err.Error())
+
+	}
+
+	cmd = exec.Command("git", "-C", repo_nm, "commit", "-m", commit_message)
+
+	if err := cmd.Run(); err != nil {
+
+		return fmt.Errorf("cmd run failed: %s", err.Error())
+
+	}
 
 	return nil
 
 }
 
-func PushDestRepo() error {
+func CommitDestRepoBlind(repo_nm string, commit_message string) error {
+
+	repo_nm = ".npia.infra/" + repo_nm
+
+	if _, err := os.Stat(repo_nm); err != nil {
+
+		return fmt.Errorf("failed to commit dest repo: %s", err.Error())
+
+	}
+
+	cmd := exec.Command("git", "-C", repo_nm, "add", ".")
+
+	if err := cmd.Run(); err != nil {
+
+		return fmt.Errorf("cmd run failed: %s", err.Error())
+
+	}
+
+	cmd = exec.Command("git", "-C", repo_nm, "commit", "-m", commit_message)
+
+	cmd.Run()
+
+	return nil
+
+}
+
+func PushDestRepo(repo_addr string, repo_id string, repo_pw string, repo_nm string) error {
+
+	repo_nm = ".npia.infra/" + repo_nm
+
+	if strings.HasPrefix(repo_addr, "http://") {
+
+		return fmt.Errorf("plain http:// unsupported, use https:// instead")
+
+	}
+
+	if strings.HasPrefix(repo_addr, "https://") {
+
+		repo_addr = strings.Replace(repo_addr, "https://", "", 1)
+
+	}
+
+	insert := "%s:%s@"
+
+	repo_addr = insert + repo_addr
+
+	repo_addr = fmt.Sprintf(repo_addr, repo_id, repo_pw)
+
+	repo_addr = "https://" + repo_addr
+
+	cmd := exec.Command("git", "-C", repo_nm, "push", "-f", repo_addr, "--all")
+
+	if err := cmd.Run(); err != nil {
+
+		return fmt.Errorf("cmd run failed: %s", err.Error())
+
+	}
 
 	return nil
 

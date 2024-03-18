@@ -28,9 +28,15 @@ func QueryV1(target_ci *TargetV1) error {
 
 	if st == "reset" {
 
-		//err = ExecuteResetV1(dest_loc, &ndir_tb, &nfile_tb, &dir_tb, &file_tb)
+		err = ExecuteResetV1(dest_loc, &ndir_tb, &nfile_tb, &dir_tb, &file_tb)
 
-		err = ExecuteResetV1_Test(target_ci.GitPackage.Name, dest_loc, &ndir_tb, &nfile_tb, &dir_tb, &file_tb)
+		// err = ExecuteResetV1_Test(target_ci.GitPackage.Name, dest_loc, &ndir_tb, &nfile_tb, &dir_tb, &file_tb)
+
+		if err != nil {
+
+			return fmt.Errorf("v1 reset: %s", err.Error())
+
+		}
 
 	} else {
 
@@ -311,9 +317,30 @@ func ExecuteResetV1_DeleteWildCard(dest_loc string) error {
 
 func ExecuteResetV1_ForceCreateAtDest(dest_loc string, ndir_tb *N_DIR_TABLE, dir_tb *DIR_TABLE) error {
 
+	ndir_len := len(*ndir_tb)
+
 	dir_len := len(*dir_tb)
 
-	for i := 0; i < dir_len; i++ {
+	if ndir_len != dir_len {
+
+		return fmt.Errorf("v1 force create at dest: length not matched: %d", ndir_len-dir_len)
+
+	}
+
+	total_dir_len := ndir_len
+
+	for i := 0; i < total_dir_len; i++ {
+
+		dest_dir_name := dest_loc + "/" + (*ndir_tb)[i]
+
+		// src_dir_name := (*dir_tb)[i]
+
+		err := os.MkdirAll(dest_dir_name, 0644)
+
+		if err != nil {
+
+			return fmt.Errorf("v1 force create at dest: %s", err.Error())
+		}
 
 	}
 
@@ -321,6 +348,39 @@ func ExecuteResetV1_ForceCreateAtDest(dest_loc string, ndir_tb *N_DIR_TABLE, dir
 }
 
 func ExecuteResetV1_ForceCopyToDest(dest_loc string, nfile_tb *N_FILE_TABLE, file_tb *FILE_TABLE) error {
+
+	nfile_len := len(*nfile_tb)
+
+	file_len := len(*file_tb)
+
+	if nfile_len != file_len {
+
+		return fmt.Errorf("v1 force copy to dest: length not matched: %d", nfile_len-file_len)
+	}
+
+	total_file_len := nfile_len
+
+	for i := 0; i < total_file_len; i++ {
+
+		dest_file_name := dest_loc + "/" + (*nfile_tb)[i]
+
+		src_file_name := (*file_tb)[i]
+
+		file_b, err := os.ReadFile(src_file_name)
+
+		if err != nil {
+
+			return fmt.Errorf("v1 force copy to dest: read: %s", err.Error())
+		}
+
+		err = os.WriteFile(dest_file_name, file_b, 0644)
+
+		if err != nil {
+
+			return fmt.Errorf("v1 force copy to dest: write: %s", err.Error())
+		}
+
+	}
 
 	return nil
 }
