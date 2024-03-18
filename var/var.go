@@ -1440,6 +1440,76 @@ func list_recursive_dir_and_files() {
 
 }
 
+func push_git(user_id string, user_pw string) error {
+
+	repo_nm := "test-a"
+
+	commit_message := "auto test commit"
+
+	cmd := exec.Command("git", "-C", repo_nm, "add", ".")
+
+	_, err := cmd.Output()
+
+	if err != nil {
+
+		return fmt.Errorf("cmd run 1 failed: %s", err.Error())
+
+	}
+
+	cmd = exec.Command("git", "-C", repo_nm, "commit", "-m", commit_message)
+
+	_, err = cmd.Output()
+
+	if err != nil {
+
+		return fmt.Errorf("cmd run 2 failed: %s", err.Error())
+
+	}
+
+	git_addr := "https://%s:%s@github.com/seantywork/test-a.git"
+
+	git_addr = fmt.Sprintf(git_addr, user_id, user_pw)
+
+	cmd = exec.Command("git", "-C", repo_nm, "push", "-f", git_addr, "--all")
+
+	_, err = cmd.Output()
+
+	if err != nil {
+
+		return fmt.Errorf("cmd run 3 failed: %s", err.Error())
+
+	}
+
+	return nil
+
+}
+
+func test_push_git() {
+
+	var user_id string
+
+	var user_pw string
+
+	fmt.Println("user id: ")
+
+	fmt.Scanln(&user_id)
+
+	fmt.Println("user pw: ")
+
+	fmt.Scanln(&user_pw)
+
+	err := push_git(user_id, user_pw)
+
+	if err != nil {
+		fmt.Println(err.Error())
+
+		return
+	}
+
+	fmt.Println("successfully pushed")
+
+}
+
 func main() {
 
 	//	ASgi := apistandard.ASgi
@@ -1496,6 +1566,8 @@ func main() {
 
 	// list_all_dir()
 
-	list_recursive_dir_and_files()
+	// list_recursive_dir_and_files()
+
+	test_push_git()
 
 }

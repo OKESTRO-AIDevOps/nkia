@@ -183,6 +183,8 @@ func SetCredForCITarget(cit *CITargetCtl, ci_cred *CICredStore) error {
 
 			cit.CI_USER_PW = ci_cred.CI_CRED[i].USER_PW
 
+			cit.CI_USER_EMAIL = ci_cred.CI_CRED[i].USER_EMAIL
+
 			hit = 1
 
 			break

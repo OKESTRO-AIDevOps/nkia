@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	cigit "github.com/OKESTRO-AIDevOps/nkia/infra/git"
+	infutils "github.com/OKESTRO-AIDevOps/nkia/infra/utils"
 	"gopkg.in/yaml.v3"
 )
 
@@ -38,6 +39,8 @@ func ActionV1(targets *CITargetsCtl, tidx int) {
 
 	repo_pw := targets.CI_TARGETS[tidx].CI_USER_PW
 
+	repo_email := targets.CI_TARGETS[tidx].CI_USER_EMAIL
+
 	repo_nm := target_ci.GitPackage.Name
 
 	err = cigit.GetDestRepo(repo_addr, repo_id, repo_pw, repo_nm)
@@ -56,6 +59,22 @@ func ActionV1(targets *CITargetsCtl, tidx int) {
 
 	LogV1(targets, tidx, log_line)
 
+	err = cigit.ConfigDestRepo(repo_nm, repo_id, repo_pw, repo_email)
+
+	if err != nil {
+
+		log_line = fmt.Sprintf("failed to config dest repo: %s", err.Error())
+
+		LogErrAbortV1(targets, tidx, log_line)
+
+		return
+
+	}
+
+	log_line = "successfully configured destination repo"
+
+	LogV1(targets, tidx, log_line)
+
 	err = QueryV1(&target_ci)
 
 	if err != nil {
@@ -69,6 +88,40 @@ func ActionV1(targets *CITargetsCtl, tidx int) {
 	}
 
 	log_line = "successfully executed query defined in CI description"
+
+	LogV1(targets, tidx, log_line)
+
+	time_now := infutils.GetStringTimeNow()
+
+	commit_message := "[ " + time_now + " ]: Automated CI push"
+
+	err = cigit.CommitDestRepoBlind(repo_nm, commit_message)
+
+	if err != nil {
+		log_line = fmt.Sprintf("failed to commit: %s", err.Error())
+
+		LogErrAbortV1(targets, tidx, log_line)
+
+		return
+
+	}
+
+	log_line = "successfully committed all changes"
+
+	LogV1(targets, tidx, log_line)
+
+	err = cigit.PushDestRepo(repo_addr, repo_id, repo_pw, repo_nm)
+
+	if err != nil {
+
+		log_line = fmt.Sprintf("failed to push: %s", err.Error())
+
+		LogErrAbortV1(targets, tidx, log_line)
+
+		return
+	}
+
+	log_line = "SUCCESS."
 
 	LogV1(targets, tidx, log_line)
 

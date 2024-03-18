@@ -99,12 +99,12 @@ stage:
 	cd ./infra && /bin/cp -Rf infractl ../ && /bin/cp -Rf ./.npia.infra ../
 
 
-	./infractl 	--repo https://github.com/OKESTRO-AIDevOps/nkia.git \
-			   	--id seantywork \
-			   	--token - \
-			    --name nkia \
-				--plan ci \
+	sudo ./infractl 	--repo https://github.com/OKESTRO-AIDevOps/nkia.git \
+			   	        --id seantywork \
+			   	        --token - \
+			            --name nkia \
+				        --plan ci \
 
 
-	rm -rf ./infractl ./.npia.infra
+	sudo rm -rf ./infractl ./.npia.infra
 

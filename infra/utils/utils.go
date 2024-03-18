@@ -1,5 +1,7 @@
 package utils
 
+import "time"
+
 func InsertIntoSlice[K comparable](a []K, index int, value K) []K {
 	if len(a) == index {
 		return append(a, value)
@@ -39,4 +41,13 @@ func FindFromSlice[K comparable](slice []K, el K) int {
 
 	return return_stat
 
+}
+
+func GetStringTimeNow() string {
+
+	c_time := time.Now()
+
+	str_time_now := c_time.Format("2006-01-02 15:04:05")
+
+	return str_time_now
 }

@@ -51,7 +51,7 @@ func StoreCICredStdin(ci_cred *CICredStore, ci_targets CITargets) error {
 
 	q_in := ""
 
-	fmt.Printf("\ndo all repos share the same credentials?: [y/n] ")
+	fmt.Printf("\ndo all dest repos share the same credentials?: [y/n] ")
 
 	fmt.Scanln(&q_in)
 
@@ -63,6 +63,7 @@ func StoreCICredStdin(ci_cred *CICredStore, ci_targets CITargets) error {
 
 	user_id := ""
 	user_pw := ""
+	user_email := ""
 
 	index := 0
 
@@ -119,9 +120,14 @@ func StoreCICredStdin(ci_cred *CICredStore, ci_targets CITargets) error {
 
 				user_pw = string(pw_b)
 
+				fmt.Printf("\nemail for %s: ", target_ci.GitPackage.Address)
+				fmt.Scanln(&user_email)
+
 				ci_target_cred.USER_ID = user_id
 
 				ci_target_cred.USER_PW = user_pw
+
+				ci_target_cred.USER_EMAIL = user_email
 
 				ci_cred.CI_CRED = append(ci_cred.CI_CRED, ci_target_cred)
 

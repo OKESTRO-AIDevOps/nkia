@@ -20,6 +20,7 @@ type CITargetCred struct {
 	CI_TARGET_ID  int
 	USER_ID       string
 	USER_PW       string
+	USER_EMAIL    string
 }
 
 type CITargetID struct {
@@ -32,6 +33,7 @@ type CITargetCtl struct {
 	CI_TARGET_ID  int
 	CI_USER_ID    string
 	CI_USER_PW    string
+	CI_USER_EMAIL string
 	CI_CMD_TO     chan int
 	CI_STAT_FROM  chan int
 	CI_DONE       int
