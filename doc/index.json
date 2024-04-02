@@ -1,0 +1,56 @@
+{
+
+    "0": {
+        "id":"nokubectl",
+        "title": "NKIA client",
+        "index":"client nokubectl"
+    },
+
+    "1": {
+        "id":"orch.io",
+        "title": "NKIA server",
+        "index":"server orch.io"
+    },
+
+    "2": {
+        "id":"nokubeadm",
+        "title": "NKIA manager",
+        "index":"manage admin nokubeadm"
+    },
+
+    "3": {
+        "id":"nokubelet",
+        "title": "NKIA agent",
+        "index":"servlet agent nokubelet"
+    },
+
+
+    "4": {
+        "id": "pkg",
+        "title": "NKIA package",
+        "index": "modules package common pkg"
+        
+    },
+
+    "5": {
+        "id": "infra",
+        "title": "NKIA infra",
+        "index": "infra ci test infractl"
+        
+    },
+
+    "6": {
+        "id": "hack",
+        "title": "NKIA hack",
+        "index": "utils hack"
+        
+    },
+
+    "7": {
+        "id": "doc",
+        "title": "NKIA doc",
+        "index": "documentation document doc"
+        
+    }
+
+}
