@@ -6,12 +6,17 @@
 [Functionalities](#functionalities)\
 [How to use](#how-to-use)
 
+
+![nkia-pkg overview](img/nkia-pkg.jpg)
+
+
 ## Overview
 
 
 What this piece of code does is to offer the final execution layer of the\
-functionalities targeted by the nokubectl(or its equivalent) user.
-Using this piece of code, a user can read cluster node and application\ information, write desired lifecycle status to the cluster, which involves\
+functionalities targeted by the nokubectl(or its equivalent) user.\
+Using this piece of code, a user can read cluster node and application\
+information, write desired lifecycle status to the cluster, which involves\
 not only deployment but also updating, rolling-back, deletion and even qos\
 management and auto-scaling, build and prepare the targets of deployment (or\
 the applications) with user-supplied info into a Kubernetes-deployable apps,\

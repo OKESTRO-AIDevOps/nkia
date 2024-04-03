@@ -5,6 +5,10 @@
 [Functionalities](#functionalities)\
 [How to use](#how-to-use)
 
+
+
+![nokubelet](img/nkia-nokubelet.jpg)
+
 ## Overview
 
 What this piece of code does is to receive request relayed by orch.io from nokubectl and process\

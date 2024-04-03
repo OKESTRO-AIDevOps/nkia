@@ -2,10 +2,10 @@
 
 
 [Description](#description)\
-[Where to start](#where-to-start)
+[Where to start](#where-to-start)\
 [Core components](#core-components)\
-[Peripheral components](#peripheral-components)
-[Navigate](#navigate)
+[Peripheral components](#peripheral-components)\
+[Search](#search)
 
 ## Description
 
@@ -58,6 +58,6 @@ But here is the overall picture of how everything works in conjunction
 
 [doc](doc)
 
-## Navigate
+## Search
 
-[search](index.md)
+[Click here to search](index.md)
