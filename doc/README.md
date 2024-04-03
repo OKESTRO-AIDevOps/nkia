@@ -1,11 +1,16 @@
 # nkia-doc
 
-
+[Search](#search)\
 [Description](#description)\
 [Where to start](#where-to-start)\
 [Core components](#core-components)\
-[Peripheral components](#peripheral-components)\
-[Search](#search)
+[Peripheral components](#peripheral-components)
+
+## Search
+
+[https://okestro-aidevops.github.io/nkia-doc/](https://okestro-aidevops.github.io/nkia-doc/)
+
+
 
 ## Description
 
@@ -58,6 +63,3 @@ But here is the overall picture of how everything works in conjunction
 
 [doc](doc)
 
-## Search
-
-[Click here to search](index.md)
