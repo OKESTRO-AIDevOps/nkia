@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-07-28T00:22:54.500Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="pCwUI9HiOZ1uHLe9OQl2" version="21.6.5" type="device">
+<mxfile host="app.diagrams.net" modified="2024-04-02T23:37:39.650Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="vJ5fMt4M9FmHeH8uxLgD" version="24.2.1" type="device">
   <diagram name="페이지-1" id="7S5lTNuC7zaxYhMuyJxt">
-    <mxGraphModel dx="1465" dy="895" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="1231" dy="683" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -13,7 +13,7 @@
         <mxCell id="tPTaoLydg7z53Rz1t_cY-1" value="Kubernetes Cluster&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=1;fontSize=16;fillColor=#3399FF;" parent="1" vertex="1">
           <mxGeometry x="240" y="680" width="890" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="tPTaoLydg7z53Rz1t_cY-3" value="npia-api Runtime" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=1;fontSize=16;fillColor=#FF8000;gradientColor=#FFFF00;gradientDirection=radial;" parent="1" vertex="1">
+        <mxCell id="tPTaoLydg7z53Rz1t_cY-3" value="nkia-pkg Runtime" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=1;fontSize=16;fillColor=#FF8000;gradientColor=#FFFF00;gradientDirection=radial;" parent="1" vertex="1">
           <mxGeometry x="20" y="600" width="340" height="60" as="geometry" />
         </mxCell>
         <mxCell id="tPTaoLydg7z53Rz1t_cY-4" value="External Machine" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=1;fontSize=16;fillColor=#999999;" parent="1" vertex="1">
@@ -31,7 +31,7 @@
         <mxCell id="tPTaoLydg7z53Rz1t_cY-8" value="Cluster Node" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=1;fontSize=16;fillColor=#CCCCCC;" parent="1" vertex="1">
           <mxGeometry x="940" y="760" width="170" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="tPTaoLydg7z53Rz1t_cY-9" value="npia-api&lt;br&gt;compliant&lt;br&gt;system&lt;br&gt;&lt;br&gt;(npia-server)&lt;br&gt;(npia-server-sock)" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1;fontSize=16;fillColor=#FF8000;gradientColor=#FFFF00;gradientDirection=radial;" parent="1" vertex="1">
+        <mxCell id="tPTaoLydg7z53Rz1t_cY-9" value="nkia-pkg&lt;br&gt;compliant&lt;br&gt;system&lt;br&gt;&lt;br&gt;(nokubelet)" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1;fontSize=16;fillColor=#FF8000;gradientColor=#FFFF00;gradientDirection=radial;" parent="1" vertex="1">
           <mxGeometry x="160" y="110" width="120" height="440" as="geometry" />
         </mxCell>
         <mxCell id="tPTaoLydg7z53Rz1t_cY-11" value="apistandard" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1;fontSize=16;fillColor=#FF8000;" parent="1" vertex="1">
@@ -59,7 +59,7 @@
           <mxGeometry x="570" y="390" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="tPTaoLydg7z53Rz1t_cY-20" value="runtimefs" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1;fontSize=16;fillColor=#FFFF00;" parent="1" vertex="1">
-          <mxGeometry x="502.5" y="590" width="120" height="60" as="geometry" />
+          <mxGeometry x="570" y="590" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="tPTaoLydg7z53Rz1t_cY-22" value="Kubernetes&lt;br&gt;API&lt;br&gt;Server" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1;fontSize=16;fillColor=#3399FF;" parent="1" vertex="1">
           <mxGeometry x="980" y="100" width="120" height="540" as="geometry" />
@@ -120,6 +120,10 @@
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="540" y="460" as="sourcePoint" />
             <mxPoint x="590" y="410" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="563" y="570" />
+              <mxPoint x="630" y="570" />
+            </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="tPTaoLydg7z53Rz1t_cY-33" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeWidth=2;" parent="1" target="tPTaoLydg7z53Rz1t_cY-12" edge="1">
@@ -155,7 +159,7 @@
         <mxCell id="tPTaoLydg7z53Rz1t_cY-39" value="Core API Layer" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=1;fontSize=16;fillColor=#FF8000;" parent="1" vertex="1">
           <mxGeometry x="710" y="460" width="140" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="tPTaoLydg7z53Rz1t_cY-40" value="npia-api&lt;br&gt;Runtime Layer" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=1;fontSize=16;fillColor=#FFFF00;" parent="1" vertex="1">
+        <mxCell id="tPTaoLydg7z53Rz1t_cY-40" value="nkia-pkg&lt;br&gt;Runtime Layer" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=1;fontSize=16;fillColor=#FFFF00;" parent="1" vertex="1">
           <mxGeometry x="810" y="570" width="140" height="80" as="geometry" />
         </mxCell>
         <mxCell id="tPTaoLydg7z53Rz1t_cY-41" value="promquery" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1;fontSize=16;fillColor=#FFFF00;" parent="1" vertex="1">
@@ -182,6 +186,19 @@
         </mxCell>
         <mxCell id="tPTaoLydg7z53Rz1t_cY-46" value="call" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=2;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="900" y="280" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="7uUCEZZxFcmNvUfiWT3J-1" value="kaleidofs" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1;fontSize=16;fillColor=#FFFF00;" vertex="1" parent="1">
+          <mxGeometry x="420" y="590" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7uUCEZZxFcmNvUfiWT3J-2" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;exitX=0.388;exitY=1.005;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2;exitPerimeter=0;" edge="1" parent="1" source="tPTaoLydg7z53Rz1t_cY-30" target="7uUCEZZxFcmNvUfiWT3J-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="573" y="560" as="sourcePoint" />
+            <mxPoint x="640" y="600" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="525" y="570" />
+              <mxPoint x="480" y="570" />
+            </Array>
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>

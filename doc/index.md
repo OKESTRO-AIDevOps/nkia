@@ -6,15 +6,16 @@
 <link rel="stylesheet" href="index.css">
 <div class="topnav">
     <a class="active" href="https://github.com/OKESTRO-AIDevOps/nkia">Github</a>
-    <input id="seantywork-index-query" type="text" placeholder="Search..">
+    <input id="nkia-doc-index-query" type="text" placeholder="Search..">
 </div>
 
-<ul id="seantywork-search-result">
+<ul id="nkia-doc-search-result">
 
 </ul>
 
-<div id="seantywork-index"> 
+<div id="nkia-doc-index"> 
     <p>Go to <a href="https://github.com/OKESTRO-AIDevOps/nkia"></a></p>
 </div>
+
 <script src="index.js"></script>
 

@@ -5,6 +5,9 @@
 [Functionalities](#functionalities)\
 [How to use](#how-to-use)
 
+
+![nokubeadm-overview](img/nkia-nokubeadm.jpg)
+
 ## Overview
 
 What this piece of code does is to handle a request for the fundamental processes to set up\

@@ -5,6 +5,10 @@
 [Functionalities](#functionalities)\
 [How to use](#how-to-use)
 
+
+![nokubectl-overview](img/nkia-nokubectl.jpg)
+
+
 ## Overview
 
 What this piece of code does is to make a request to orch.io component of NKIA project, \

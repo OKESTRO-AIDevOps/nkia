@@ -9,10 +9,10 @@ async function FetchAndSetUpIndex(){
         index_html += `<p><a href="${id}">${seq}. ${title}</a></p>`
     }
  
-    $("#seantywork-index").html(index_html)
+    $("#nkia-doc-index").html(index_html)
 }
 function Search(){
-    var query_line = $("#seantywork-index-query").val()
+    var query_line = $("#nkia-doc-index-query").val()
     var query_split = query_line.split(" ")
     var search_result = []
     var search_result_html = ''
@@ -35,8 +35,8 @@ function Search(){
             }
         }
     }
-    $("#seantywork-search-result").html(search_result_html)
+    $("#nkia-doc-search-result").html(search_result_html)
     
 }
 FetchAndSetUpIndex()
-$("#seantywork-index-query").on("input",Search)
+$("#nkia-doc-index-query").on("input",Search)
