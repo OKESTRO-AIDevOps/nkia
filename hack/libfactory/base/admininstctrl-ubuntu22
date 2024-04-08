@@ -51,7 +51,7 @@ curl -C - -L https://download.opensuse.org/repositories/devel:/kubic:/libcontain
 curl -C - -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/Release.key | gpg --batch --yes --dearmor -o /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg
 
 sudo apt-get update
-sudo apt-get install cri-o cri-o-runc -y
+sudo apt-get install cri-o cri-o-runc crun -y
 
 sudo systemctl daemon-reload
 sudo systemctl enable crio --now
