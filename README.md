@@ -2,7 +2,7 @@
 
 don't get me wrong. I love Kubernetes. it's just that i have a lot of spare time.
 
-# Offcially: eNabling Kubernetes Integration Architecture
+# Offcially: No-Kubernetes Integration Architecture
 
 *Unofficially but preferably: No Kube In the A-S*
 
