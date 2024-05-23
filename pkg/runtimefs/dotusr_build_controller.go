@@ -42,9 +42,11 @@ func BuildOpenForward() (string, error) {
 
 		_ = os.WriteFile(".usr/build/0/open", []byte(t_str), 0644)
 
-		_ = os.WriteFile(".usr/build/0/close", []byte(t_str), 0644)
-
 		_ = os.WriteFile(".usr/build/HEAD", []byte("0"), 0644)
+
+		build_dir = ".usr/build/0/log"
+
+		return build_dir, nil
 	}
 
 	head, err := os.ReadFile(".usr/build/HEAD")
