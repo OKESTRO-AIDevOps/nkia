@@ -89,6 +89,44 @@ release-commit:
 
 	git push
 
+
+release-publish:
+
+
+	mkdir -p nkia/nokubeadm
+
+	mkdir -p nkia/nokubectl
+
+	mkdir -p nkia/nokubelet
+
+	cd ./nokubeadm && make release
+
+	cd ./nokubectl && make release
+
+	cd ./nokubelet && make release
+
+	cd hack && ./libgen.sh
+
+	/bin/cp -Rf ./hack/binupdate.sh ./nkia/
+
+	tar -czvf lib.tgz lib
+
+	tar -czvf nkia.tgz nkia
+
+
+	cd ./infra && /bin/cp -Rf infractl ../ && /bin/cp -Rf ./.npia.infra ../
+
+
+	sudo ./infractl 	--repo https://github.com/OKESTRO-AIDevOps/nkia.git \
+			   	        --id seantywork \
+			   	        --token - \
+			            --name nkia \
+				        --plan pub \
+
+
+	sudo rm -rf ./infractl ./.npia.infra
+
+
 run:
 
 	cd ./orch.io && make run
