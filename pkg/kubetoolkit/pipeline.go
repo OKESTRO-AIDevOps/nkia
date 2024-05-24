@@ -8,15 +8,10 @@ import (
 	"strings"
 
 	runfs "github.com/OKESTRO-AIDevOps/nkia/pkg/runtimefs"
+	goya "github.com/goccy/go-yaml"
 )
 
 func PipelineBuildStart(main_ns string, repoaddr string, regaddr string) {
-
-	bpctl, err := runfs.OpenFilePointersForUsrBuildPipelineController()
-
-	if err != nil {
-		return
-	}
 
 	app_origin, _ := runfs.LoadAdmOrigin()
 
@@ -24,24 +19,222 @@ func PipelineBuildStart(main_ns string, repoaddr string, regaddr string) {
 
 	if !ns_found {
 
-		close_msg := "namespace not found in ADMorigin\n"
+		return
+	}
 
-		AbortAll(bpctl, close_msg)
+	err := runfs.InitUsrTargetForPipeline(repoaddr)
+
+	if err != nil {
 
 		return
 	}
 
-	err = runfs.InitUsrTarget(repoaddr)
+	bpctl, err := runfs.OpenFilePointersForUsrBuildPipelineController()
 
 	if err != nil {
-
-		AbortAll(bpctl, err.Error())
 		return
 	}
 
 	RunPipe(bpctl)
 
 	return
+}
+
+func PipelineBuildStart_Test() {
+
+	bpctl, err := runfs.OpenFilePointersForUsrBuildPipelineController()
+
+	if err != nil {
+		return
+	}
+
+	RunPipe(bpctl)
+
+	return
+}
+
+func PipelineBuildSetVariablesEx(varnm string, varval string) ([]byte, error) {
+
+	status := "failed"
+
+	var_list := make(map[string]string)
+
+	var_list[varnm] = varval
+
+	err := PipelineBuildSetVariables(var_list)
+
+	if err != nil {
+
+		return []byte(status), fmt.Errorf("failed to set var: %s", err.Error())
+	}
+
+	status = "success"
+
+	return []byte(status), nil
+
+}
+
+func PipelineBuildSetVariables(var_list map[string]string) error {
+
+	varmap, _ := PipelineBuildGetVariableMap()
+
+	for k, v := range var_list {
+
+		varmap[k] = v
+
+	}
+
+	new_b, err := goya.Marshal(varmap)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to set variable: %s", err.Error())
+	}
+
+	err = runfs.CreateUsrPipelineVariables(new_b)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to write new variables: %s", err.Error())
+	}
+
+	return nil
+}
+
+func PipelineBuildGetVariableMapEx() ([]byte, error) {
+
+	var ret []byte
+
+	varmap, err := PipelineBuildGetVariableMap()
+
+	if err != nil {
+
+		return ret, fmt.Errorf("failed to get variable map: %s", err.Error())
+
+	}
+
+	ret, err = goya.Marshal(varmap)
+
+	if err != nil {
+
+		return ret, fmt.Errorf("failed to get variable map: %s", err.Error())
+	}
+
+	return ret, nil
+
+}
+
+func PipelineBuildGetVariableMap() (map[string]string, error) {
+
+	varmap := make(map[string]string)
+
+	var_b, err := runfs.LoadUsrPipelineVariables()
+
+	if err != nil {
+
+		return varmap, fmt.Errorf("failed to load build var: %s", err.Error())
+
+	}
+
+	err = goya.Unmarshal(var_b, &varmap)
+
+	if err != nil {
+
+		return varmap, fmt.Errorf("failed to marshalr build var: %s", err.Error())
+
+	}
+
+	return varmap, nil
+
+}
+
+func PipelineBuildGetLog() ([]byte, error) {
+
+	var ret_byte []byte
+
+	ret_byte, err := runfs.GetUsrPipelineLog()
+
+	if err != nil {
+
+		return ret_byte, fmt.Errorf("failed to get pipe build log: %s", err.Error())
+
+	}
+
+	return ret_byte, nil
+}
+
+func GetEffectiveCommands(raw_cmd string) []string {
+
+	cmd_args := strings.Fields(raw_cmd)
+
+	cmd_len := len(cmd_args)
+
+	for i := 0; i < cmd_len; i++ {
+
+		replace_flag := 0
+
+		if strings.HasPrefix(cmd_args[i], "$(") && strings.HasSuffix(cmd_args[i], ")") {
+
+			replace_flag = 1
+
+		}
+
+		if replace_flag == 1 {
+
+			stripped_arg := strings.ReplaceAll(cmd_args[i], "$(", "")
+
+			stripped_arg = strings.ReplaceAll(stripped_arg, ")", "")
+
+			new_arg, err := GetPipeVariable(stripped_arg)
+
+			if err != nil {
+
+				continue
+
+			}
+
+			cmd_args[i] = new_arg
+
+		}
+
+	}
+
+	return cmd_args
+
+}
+
+func GetPipeVariable(key string) (string, error) {
+
+	var ans string
+
+	varmap := make(map[string]string)
+
+	var_b, err := runfs.LoadUsrPipelineVariables()
+
+	if err != nil {
+
+		return ans, fmt.Errorf("failed to get pipe var: %s", err.Error())
+
+	}
+
+	err = goya.Unmarshal(var_b, &varmap)
+
+	if err != nil {
+
+		return ans, fmt.Errorf("failed to make map: %s", err.Error())
+
+	}
+
+	ans, okay := varmap[key]
+
+	if !okay {
+
+		return ans, fmt.Errorf("failed to retrieve key val for: %s", key)
+
+	}
+
+	return ans, nil
+
 }
 
 func RunPipe(bpctl *runfs.BuildPipelineController) {
@@ -141,7 +334,7 @@ func RunJob(bpctl *runfs.BuildPipelineController, job_id int) {
 
 	for i := 0; i < com_len; i++ {
 
-		cmd_args := strings.Fields(command_list[i])
+		cmd_args := GetEffectiveCommands(command_list[i])
 
 		var cmd *exec.Cmd
 
@@ -180,7 +373,7 @@ func RunJob(bpctl *runfs.BuildPipelineController, job_id int) {
 
 	}
 
-	runfs.CloseFilePointerForUsrBuildPipelineLog(bpctl, job_name, 1, "success\n")
+	runfs.CloseFilePointerForUsrBuildPipelineLog(bpctl, job_name, 1, "success")
 
 	bpctl.Jobs[job_id].SIGTERM <- 1
 

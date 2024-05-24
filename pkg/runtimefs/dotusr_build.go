@@ -184,17 +184,35 @@ func GetUsrBuildLog() ([]byte, error) {
 
 	var err error
 
-	if _, err = os.Stat(".usr/build_log"); err == nil {
+	head_dir := ".usr/build/"
 
-		ret_byte, err = os.ReadFile(".usr/build_log")
+	head, err := os.ReadFile(".usr/build/HEAD")
 
-	} else if _, err = os.Stat(".usr/build_done"); err == nil {
+	if err != nil {
 
-		ret_byte, err = os.ReadFile(".usr/build_done")
+		return ret_byte, fmt.Errorf("failed to get usr build log: %s", err.Error())
 
-	} else {
-		err = fmt.Errorf("failed to get build log: %s", "none found")
 	}
+
+	head_value := string(head)
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get usr build log: %s", err.Error())
+	}
+
+	head_dir += head_value + "/"
+
+	head_dir_log := head_dir + "log"
+
+	log_b, err := os.ReadFile(head_dir_log)
+
+	if err != nil {
+
+		return ret_byte, fmt.Errorf("failed to get usr build log: %s", err.Error())
+
+	}
+
+	ret_byte = log_b
 
 	return ret_byte, err
 }

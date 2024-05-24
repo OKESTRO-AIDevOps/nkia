@@ -58,6 +58,10 @@ var API_DEFINITION string = "" +
 	//	"TOOLKIT-PIPELOG          :id                                                                                       " + "\n" +
 	"TOOLKIT-BUILD            :id, ns, repoaddr, regaddr                                                                  " + "\n" +
 	"TOOLKIT-BUILDLOG         :id                                                                                         " + "\n" +
+	"TOOLKIT-PIPE             :id, ns, repoaddr, regaddr                                                                  " + "\n" +
+	"TOOLKIT-PIPELOG          :id                                                                                         " + "\n" +
+	"TOOLKIT-PIPESETVAR       :id, varnm, varval                                                                             " + "\n" +
+	"TOOLKIT-PIPEGETVAR       :id                                                                                         " + "\n" +
 	// "TOOLKIT-BUILDAGT         :id, ns, repoaddr, regaddr                                                                  " + "\n" +
 	// "TOOLKIT-BUILDLOGAGT      :id                                                                                         " + "\n" +
 	"RESOURCE-NDS             :id, ns                                                                                     " + "\n" +
