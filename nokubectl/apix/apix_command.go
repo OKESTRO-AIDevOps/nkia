@@ -32,6 +32,10 @@ var APIX_COMMAND = "" +
 	"setting-create-monitoring-persist                 : set monitoring api with persistent data    " + "\n" +
 	"toolkit-build                                     : build from docker-compose.yaml         " + "\n" +
 	"toolkit-build-log                                 : get build log      " + "\n" +
+	"toolkit-pipe                                      : start pipe from .npia/build.yaml          " + "\n" +
+	"toolkit-pipe-log                                  : get pipe log       " + "\n" +
+	"toolkit-pipe-set-var                              : set pipe variable    " + "\n" +
+	"toolkit-pipe-get-var                              : get variables set for pipe    " + "\n" +
 	"resource-nodes                                    : get nodes          " + "\n" +
 	"resource-pods                                     : get pods          " + "\n" +
 	"resource-pods-log                                 : get logs from a specific pod         " + "\n" +

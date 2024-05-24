@@ -296,6 +296,51 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 
 		ret_api_out.BODY = string(b_out)
 
+	case "TOOLKIT-PIPE":
+
+		ns := std_cmd["ns"]
+		repoaddr := std_cmd["repoaddr"]
+		regaddr := std_cmd["regaddr"]
+
+		go kubetoolkit.PipelineBuildStart(ns, repoaddr, regaddr)
+
+		b_out := []byte("build pipeline started\n")
+
+		ret_api_out.BODY = string(b_out)
+
+	case "TOOLKIT-PIPELOG":
+
+		b_out, cmd_err := kubetoolkit.PipelineBuildGetLog()
+
+		if cmd_err != nil {
+			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+		}
+
+		ret_api_out.BODY = string(b_out)
+
+	case "TOOLKIT-PIPESETVAR":
+
+		varnm := std_cmd["varnm"]
+		varval := std_cmd["varval"]
+
+		b_out, cmd_err := kubetoolkit.PipelineBuildSetVariablesEx(varnm, varval)
+
+		if cmd_err != nil {
+			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+		}
+
+		ret_api_out.BODY = string(b_out)
+
+	case "TOOLKIT-PIPEGETVAR":
+
+		b_out, cmd_err := kubetoolkit.PipelineBuildGetVariableMapEx()
+
+		if cmd_err != nil {
+			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+		}
+
+		ret_api_out.BODY = string(b_out)
+
 	case "RESOURCE-NDS":
 
 		ns := std_cmd["ns"]

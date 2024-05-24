@@ -1,6 +1,7 @@
 package runtimefs
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 
@@ -14,7 +15,7 @@ func OpenFilePointersForUsrBuildPipelineController() (*BuildPipelineController, 
 
 	var bp BuildPipeline
 
-	file_byte, err := os.ReadFile(".npia/build.yaml")
+	file_byte, err := os.ReadFile(".usr/target/.npia/build.yaml")
 
 	if err != nil {
 		return &pipe_controller, fmt.Errorf("failed to get build yaml: %s", err.Error())
@@ -56,7 +57,7 @@ func OpenFilePointersForUsrBuildPipelineController() (*BuildPipelineController, 
 
 		job_name := bp.Jobs[i].Name
 
-		if bp.Jobs[i].Needs == "" {
+		if bp.Jobs[i].Needs != "" {
 
 			pending = 1
 
@@ -144,4 +145,75 @@ func CloseFilePointerForUsrBuildPipelineLog(bpctl *BuildPipelineController, job_
 	}
 
 	return nil
+}
+
+func GetUsrPipelineLog() ([]byte, error) {
+
+	var ret_byte []byte
+
+	var err error
+
+	pipe_log_map := make(map[string]string)
+
+	head_dir := ".usr/build/"
+
+	head, err := os.ReadFile(".usr/build/HEAD")
+
+	if err != nil {
+
+		return ret_byte, fmt.Errorf("failed to get usr build log: %s", err.Error())
+
+	}
+
+	head_value := string(head)
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get usr build log: %s", err.Error())
+	}
+
+	head_dir += head_value + "/"
+
+	var dir_list []string
+
+	dir_entry, err := os.ReadDir(head_dir)
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get usr build log: %s", err.Error())
+	}
+
+	for i := 0; i < len(dir_entry); i++ {
+
+		if dir_entry[i].IsDir() {
+
+			dir_list = append(dir_list, dir_entry[i].Name())
+
+		}
+
+	}
+
+	for i := 0; i < len(dir_list); i++ {
+
+		target_dir_log := head_dir + dir_list[i] + "/log"
+
+		log_b, err := os.ReadFile(target_dir_log)
+
+		if err != nil {
+
+			return ret_byte, fmt.Errorf("failed to get log: at %s :%s", dir_list[i], err.Error())
+
+		}
+
+		pipe_log_map[dir_list[i]] = string(log_b)
+
+	}
+
+	ret_byte, err = json.Marshal(pipe_log_map)
+
+	if err != nil {
+
+		return ret_byte, fmt.Errorf("failed to get log: marshal: %s", err.Error())
+
+	}
+
+	return ret_byte, nil
 }

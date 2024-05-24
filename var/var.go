@@ -30,6 +30,7 @@ import (
 
 	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	kalfs "github.com/OKESTRO-AIDevOps/nkia/pkg/kaleidofs"
+	"github.com/OKESTRO-AIDevOps/nkia/pkg/kubetoolkit"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/runtimefs"
 	pkgutils "github.com/OKESTRO-AIDevOps/nkia/pkg/utils"
 
@@ -1831,6 +1832,44 @@ func BuildCloseWithName(job_name string, close_msg string) error {
 	return nil
 }
 
+func test_build() {
+
+	kubetoolkit.PipelineBuildStart_Test()
+}
+
+func test_pipeline() {
+
+	err := kubetoolkit.PipelineBuildSetVariables(map[string]string{
+		"USER": "helloworlduser",
+		"PATH": "/home/seantywork/.nvm/versions/node/v18.20.2/bin:/home/seantywork/.grpc/bin:",
+	})
+
+	if err != nil {
+
+		fmt.Println(err.Error())
+
+		return
+	}
+
+	kubetoolkit.PipelineBuildStart_Test()
+
+}
+
+func test_pipe_log() {
+
+	b_out, cmd_err := kubetoolkit.PipelineBuildGetLog()
+
+	if cmd_err != nil {
+
+		fmt.Println(cmd_err.Error())
+
+		return
+	}
+
+	fmt.Println(string(b_out))
+
+}
+
 func main() {
 
 	//	ASgi := apistandard.ASgi
@@ -1883,7 +1922,7 @@ func main() {
 
 	// remote_directory_check()
 
-	//list_all_files()
+	// list_all_files()
 
 	// list_all_dir()
 
@@ -1891,5 +1930,11 @@ func main() {
 
 	//test_push_git()
 
-	test_read_npia_build()
+	// test_read_npia_build()
+
+	// test_build()
+
+	//test_pipeline()
+
+	test_pipe_log()
 }

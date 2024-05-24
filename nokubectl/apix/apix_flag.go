@@ -22,6 +22,8 @@ var APIX_FLAGS = "" +
 	"repopw            : repository password" + "\n" +
 	"regid             : registry id" + "\n" +
 	"regpw             : registry password" + "\n" +
+	"varnm             : variable name (for pipe usually)" + "\n" +
+	"varval            : variable value (for pipe usually)" + "\n" +
 	"podnm             : pod name" + "\n" +
 	"resource          : resource type name such as [ deployment | service ]" + "\n" +
 	"resourcenm        : resource name that has a specific resource type" + "\n" +

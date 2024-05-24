@@ -229,3 +229,33 @@ func BuildCloseWithName(job_name string, close_msg string) error {
 
 	return nil
 }
+
+func CreateUsrPipelineVariables(stream_b []byte) error {
+
+	err := os.WriteFile(".usr/pipeline_variables.yaml", stream_b, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to create pipeline var: %s", err.Error())
+
+	}
+
+	return nil
+
+}
+
+func LoadUsrPipelineVariables() ([]byte, error) {
+
+	var ret_b []byte
+
+	ret_b, err := os.ReadFile(".usr/pipeline_variables.yaml")
+
+	if err != nil {
+
+		return ret_b, fmt.Errorf("failed to load pipeline var: %s", err.Error())
+
+	}
+
+	return ret_b, nil
+
+}

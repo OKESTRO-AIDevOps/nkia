@@ -42,6 +42,10 @@ var APIX_QUERY_MAP = "" +
 	"setting-create-monitoring-persist                 : SETTING-CRTMONPERS    " + "\n" +
 	"toolkit-build                                     : TOOLKIT-BUILD         " + "\n" +
 	"toolkit-build-log                                 : TOOLKIT-BUILDLOG      " + "\n" +
+	"toolkit-pipe                                      : TOOLKIT-PIPE          " + "\n" +
+	"toolkit-pipe-log                                  : TOOLKIT-PIPELOG       " + "\n" +
+	"toolkit-pipe-set-var                              : TOOLKIT-PIPESETVAR    " + "\n" +
+	"toolkit-pipe-get-var                              : TOOLKIT-PIPEGETVAR    " + "\n" +
 	"resource-nodes                                    : RESOURCE-NDS          " + "\n" +
 	"resource-pods                                     : RESOURCE-PDS          " + "\n" +
 	"resource-pods-log                                 : RESOURCE-PLOG         " + "\n" +
