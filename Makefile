@@ -18,19 +18,31 @@ build:
 
 release:
 
+	make -C nokubeadm build 
+
+	make -C nokubectl build
+
+	make -C nokubelet build
+
 	mkdir -p nkia/nokubeadm
 
 	mkdir -p nkia/nokubectl
 
 	mkdir -p nkia/nokubelet
 
-	make -C nokubeadm release
+	/bin/cp -Rf nokubeadm/.npia nkia/nokubeadm/
 
-	make -C nokubectl release
+	/bin/cp -Rf nokubectl/.npia nkia/nokubectl/
 
-	make -C nokubelet release
+	/bin/cp -Rf nokubelet/.npia nkia/nokubelet/
 
-	cd hack && ./libgen.sh
+	mv nokubeadm/nokubeadm nkia/nokubeadm/
+
+	mv nokubectl/nokubectl nkia/nokubectl/
+
+	mv nokubelet/nokubelet nkia/nokubelet/
+
+	cd hack && ./libgen.sh && mv lib ..
 
 	/bin/cp -Rf ./hack/binupdate.sh ./nkia/
 
