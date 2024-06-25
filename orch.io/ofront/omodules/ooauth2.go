@@ -5,7 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/gin-gonic/contrib/sessions"
@@ -16,7 +16,9 @@ import (
 
 const OauthGoogleUrlAPI = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
 
-var CONFIG_JSON = GetConfig()
+var CONFIG_JSON = GetConfigJSON()
+
+var OAUTH_JSON = GetOauthJSON()
 
 type OAuthStruct struct {
 	ID             string `json:"id"`
@@ -30,19 +32,19 @@ var GoogleOauthConfig = GenerateGoogleOauthConfig()
 func GenerateGoogleOauthConfig() *oauth2.Config {
 
 	google_oauth_config := &oauth2.Config{
-		ClientID:     CONFIG_JSON["GOOGLE_OAUTH_CLIENT_ID"],
-		ClientSecret: CONFIG_JSON["GOOGLE_OAUTH_CLIENT_SECRET"],
+		ClientID:     OAUTH_JSON.Web.ClientID,
+		ClientSecret: OAUTH_JSON.Web.ClientSecret,
 		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email"},
 		Endpoint:     google.Endpoint,
 	}
 
-	if CONFIG_JSON["DEBUG"] == "TRUE" {
+	if CONFIG_JSON.DEBUG {
 
-		google_oauth_config.RedirectURL = CONFIG_JSON["REDIRECT_URL_DEBUG"]
+		google_oauth_config.RedirectURL = OAUTH_JSON.Web.RedirectUris[0]
 
 	} else {
 
-		google_oauth_config.RedirectURL = CONFIG_JSON["REDIRECT_URL"]
+		google_oauth_config.RedirectURL = OAUTH_JSON.Web.RedirectUris[1]
 	}
 
 	return google_oauth_config
@@ -75,7 +77,7 @@ func GetUserDataFromGoogle(code string) ([]byte, error) {
 		return nil, fmt.Errorf("failed getting user info: %s", err.Error())
 	}
 	defer response.Body.Close()
-	contents, err := ioutil.ReadAll(response.Body)
+	contents, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, fmt.Errorf("failed read response: %s", err.Error())
 	}

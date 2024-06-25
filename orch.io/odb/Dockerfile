@@ -1,4 +1,4 @@
-FROM mysql
+FROM mysql:8
 
 ENV MYSQL_ROOT_PASSWORD youdonthavetoknow
 ENV MYSQL_HOST '%'
