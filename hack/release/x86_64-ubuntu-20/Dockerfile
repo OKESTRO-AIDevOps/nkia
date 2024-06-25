@@ -16,7 +16,7 @@ RUN cd /workspace && git clone https://github.com/OKESTRO-AIDevOps/nkia.git
 
 RUN go clean -cache && go clean -modcache
 
-RUN cd /workspace/nkia && go mod tidy && go get all
+RUN cd /workspace/nkia && go mod tidy 
 
 RUN cd /workspace/nkia && make release
 

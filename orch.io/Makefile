@@ -1,11 +1,12 @@
 
-build: 
+build:
 
-	go build -o ./ofront/ofront ./ofront/.
+	cd ofront && go build -o ofront.out .
 
-	go build -o ./osock/osock ./osock/.
+	cd osock && go build -o osock.out .
 
-run: 
+
+up: 
 
 	sudo docker compose up --build
 

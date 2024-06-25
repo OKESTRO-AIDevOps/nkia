@@ -7,32 +7,14 @@ all:
 	@echo "run     : run orch.io"
 	@echo "stage   : stage to all downstream repos including docs"
 
+
 build:
 
-	cd ./nokubeadm && make build
+	make -C nokubeadm build 
 
-	cd ./nokubectl && make build
+	make -C nokubectl build 
 
-	cd ./nokubelet && make build
-
-	cd ./orch.io && make build
-
-	cd ./infra && make build
-
-
-commit:
-
-
-	git add .
-
-	git commit 
-
-	git fetch --all
-
-	git rebase upstream/main
-
-	git push
-
+	make -C nokubelet build 
 
 release:
 
@@ -42,34 +24,11 @@ release:
 
 	mkdir -p nkia/nokubelet
 
-	cd ./nokubeadm && make release
+	make -C nokubeadm release
 
-	cd ./nokubectl && make release
+	make -C nokubectl release
 
-	cd ./nokubelet && make release
-
-	cd hack && ./libgen.sh
-
-	/bin/cp -Rf ./hack/binupdate.sh ./nkia/
-
-	tar -czvf lib.tgz lib
-
-	tar -czvf nkia.tgz nkia
-
-
-release-commit:
-
-	mkdir -p nkia/nokubeadm
-
-	mkdir -p nkia/nokubectl
-
-	mkdir -p nkia/nokubelet
-
-	cd ./nokubeadm && make release
-
-	cd ./nokubectl && make release
-
-	cd ./nokubelet && make release
+	make -C nokubelet release
 
 	cd hack && ./libgen.sh
 
@@ -79,60 +38,31 @@ release-commit:
 
 	tar -czvf nkia.tgz nkia
 
-	git add .
+	rm -r lib
 
-	git commit 
-
-	git fetch --all
-
-	git rebase upstream/main
-
-	git push
+	rm -r nkia
 
 
-release-publish:
+.PHONY: hack/release
+hack/release:
+
+	cd hack/release/x86_64-ubuntu-20 && docker compose up --build && cp -Rf _output ../../../_x86_64-ubuntu-20.out
+
+	cd hack/release/x86_64-ubuntu-22 && docker compose up --build && cp -Rf _output ../../../_x86_64-ubuntu-22.out
 
 
-	mkdir -p nkia/nokubeadm
+.PHONY: orch.io
+orch.io:
 
-	mkdir -p nkia/nokubectl
-
-	mkdir -p nkia/nokubelet
-
-	cd ./nokubeadm && make release
-
-	cd ./nokubectl && make release
-
-	cd ./nokubelet && make release
-
-	cd hack && ./libgen.sh
-
-	/bin/cp -Rf ./hack/binupdate.sh ./nkia/
-
-	tar -czvf lib.tgz lib
-
-	tar -czvf nkia.tgz nkia
+	cd ./orch.io && make up
 
 
-	cd ./infra && /bin/cp -Rf infractl ../ && /bin/cp -Rf ./.npia.infra ../
+.PHONY: infra
+infra:
 
+	make -C infra build
 
-	sudo ./infractl 	--repo https://github.com/OKESTRO-AIDevOps/nkia.git \
-			   	        --id seantywork \
-			   	        --token - \
-			            --name nkia \
-				        --plan pub \
-
-
-	sudo rm -rf ./infractl ./.npia.infra
-
-
-run:
-
-	cd ./orch.io && make run
-
-
-stage:
+infra-ci:
 
 	cd ./infra && /bin/cp -Rf infractl ../ && /bin/cp -Rf ./.npia.infra ../
 
