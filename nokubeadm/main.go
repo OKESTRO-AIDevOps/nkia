@@ -66,23 +66,13 @@ func InitAdm() error {
 
 				fmt.Println("existing configuration: ")
 
-				yn := "y"
-
 				for k, v := range CONFIG_YAML {
 
 					fmt.Printf("%s: %s\n", k, v)
 
 				}
 
-				fmt.Println("use the existing conf ? : [ y | n ]")
-
-				fmt.Scanln(&yn)
-
-				if yn == "y" || yn == "Y" {
-
-					return nil
-
-				}
+				return nil
 
 			}
 

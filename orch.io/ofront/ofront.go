@@ -5,13 +5,33 @@ import (
 
 	"github.com/OKESTRO-AIDevOps/nkia/orch.io/ofront/omodels"
 
+	"github.com/OKESTRO-AIDevOps/nkia/orch.io/ofront/omodules"
+
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 
-	omodels.DbEstablish()
+	omodules.LoadConfig()
+
+	if !omodules.CONFIG_JSON.DEBUG {
+
+		omodels.DbEstablish(
+			omodules.CONFIG_JSON.DB_ID,
+			omodules.CONFIG_JSON.DB_PW,
+			omodules.CONFIG_JSON.DB_HOST,
+			omodules.CONFIG_JSON.DB_NAME,
+		)
+
+	} else {
+		omodels.DbEstablish(
+			omodules.CONFIG_JSON.DB_ID,
+			omodules.CONFIG_JSON.DB_PW,
+			omodules.CONFIG_JSON.DB_HOST_DEV,
+			omodules.CONFIG_JSON.DB_NAME,
+		)
+	}
 
 	gin_srv := gin.Default()
 	store := sessions.NewCookieStore([]byte("secret"))

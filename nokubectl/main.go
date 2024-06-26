@@ -28,9 +28,11 @@ func InitCtl() error {
 		return fmt.Errorf("failed to init: %s", err.Error())
 	}
 
-	fmt.Println("enter privkey filepath: ")
+	if len(os.Args) < 3 {
+		return fmt.Errorf("failed to init: %s", "too few arguments")
+	}
 
-	fmt.Scanln(&priv_loc)
+	priv_loc = os.Args[2]
 
 	file_b, err = os.ReadFile(priv_loc)
 
@@ -53,7 +55,7 @@ func InitCtl() error {
 		return fmt.Errorf("failed to init: %s", err.Error())
 	}
 
-	cmd = exec.Command("mkdir", "-p", ".npia/_apix_o")
+	cmd = exec.Command("mkdir", "-p", ".npia/_output")
 
 	err = cmd.Run()
 
@@ -80,23 +82,13 @@ func InitCtl() error {
 
 				fmt.Println("existing configuration: ")
 
-				yn := "y"
-
 				for k, v := range CONFIG_YAML {
 
 					fmt.Printf("  %s: %s\n", k, v)
 
 				}
 
-				fmt.Println("use the existing conf ? : [ y | n ]")
-
-				fmt.Scanln(&yn)
-
-				if yn == "y" || yn == "Y" {
-
-					return nil
-
-				}
+				return nil
 
 			} else {
 				fmt.Println(err.Error())

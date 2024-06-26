@@ -6,19 +6,22 @@ import (
 )
 
 type ConfigJSON struct {
-	DEBUG bool `json:"DEBUG"`
+	DEBUG       bool   `json:"DEBUG"`
+	DB_HOST     string `json:"DB_HOST"`
+	DB_ID       string `json:"DB_ID"`
+	DB_PW       string `json:"DB_PW"`
+	DB_NAME     string `json:"DB_NAME"`
+	DB_HOST_DEV string `json:"DB_HOST_DEV"`
 }
 
-type OauthJSON struct {
-	Web struct {
-		ClientID                string   `json:"client_id"`
-		ProjectID               string   `json:"project_id"`
-		AuthURI                 string   `json:"auth_uri"`
-		TokenURI                string   `json:"token_uri"`
-		AuthProviderX509CertURL string   `json:"auth_provider_x509_cert_url"`
-		ClientSecret            string   `json:"client_secret"`
-		RedirectUris            []string `json:"redirect_uris"`
-	} `json:"web"`
+func LoadConfig() {
+
+	CONFIG_JSON = GetConfigJSON()
+
+	OAUTH_JSON = GetOauthJSON()
+
+	GoogleOauthConfig = GenerateGoogleOauthConfig()
+
 }
 
 func GetConfigJSON() ConfigJSON {

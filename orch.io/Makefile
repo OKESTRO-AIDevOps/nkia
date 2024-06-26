@@ -1,14 +1,20 @@
 
 build:
 
-	cd ofront && go build -o ofront.out .
+	cd ofront && go build -o ofront .
 
-	cd osock && go build -o osock.out .
+	cd osock && go build -o osock .
+
+db:
+
+	cd odb && sudo docker compose up --build
+
 
 
 up: 
 
 	sudo docker compose up --build
+
 
 
 gen-okey: 

@@ -16,6 +16,14 @@ build:
 
 	make -C nokubelet build 
 
+	cd hack && ./libgen.sh && mv lib ..
+
+	/bin/cp -Rf lib nokubeadm/
+
+	/bin/cp -Rf lib nokubelet/
+
+	rm -r lib
+
 release:
 
 	make -C nokubeadm build 
@@ -35,6 +43,8 @@ release:
 	/bin/cp -Rf nokubectl/.npia nkia/nokubectl/
 
 	/bin/cp -Rf nokubelet/.npia nkia/nokubelet/
+
+	/bin/cp -Rf nokubelet/nkletd nkia/nokubelet/nkletd
 
 	mv nokubeadm/nokubeadm nkia/nokubeadm/
 
@@ -66,8 +76,17 @@ hack/release:
 .PHONY: orch.io
 orch.io:
 
-	cd ./orch.io && make up
+	make -C orch.io build
 
+
+orch.io-db:
+
+	make -C orch.io db
+
+
+orch.io-up:
+
+	make -C orch.io up 
 
 .PHONY: infra
 infra:
@@ -88,3 +107,12 @@ infra-ci:
 
 	sudo rm -rf ./infractl ./.npia.infra
 
+clean:
+
+	rm -rf *.out
+
+	make -C nokubeadm clean 
+
+	make -C nokubectl clean 
+
+	make -C nokubelet clean

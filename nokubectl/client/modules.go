@@ -287,7 +287,7 @@ func RequestHandler_APIX_Store_Override(c *websocket.Conn, req_orchestrator ctrl
 
 	}
 
-	_ = os.WriteFile(".npia/_apix_o/REQ", req_b, 0644)
+	_ = os.WriteFile(".npia/_output/REQ", req_b, 0644)
 
 	go RequestHandler_ReadChannel(c, recv)
 
@@ -315,7 +315,7 @@ func RequestHandler_APIX_Store_Override(c *websocket.Conn, req_orchestrator ctrl
 				panic(err.Error())
 			}
 
-			_ = os.WriteFile(".npia/_apix_o/MSG", []byte(MSG), 0644)
+			_ = os.WriteFile(".npia/_output/MSG", []byte(MSG), 0644)
 
 			HEAD = OUT.HEAD
 
@@ -327,9 +327,9 @@ func RequestHandler_APIX_Store_Override(c *websocket.Conn, req_orchestrator ctrl
 				panic(err.Error())
 			}
 
-			_ = os.WriteFile(".npia/_apix_o/HEAD", head_b, 0644)
+			_ = os.WriteFile(".npia/_output/HEAD", head_b, 0644)
 
-			_ = os.WriteFile(".npia/_apix_o/BODY", []byte(BODY), 0644)
+			_ = os.WriteFile(".npia/_output/BODY", []byte(BODY), 0644)
 
 			fmt.Println("SUCCESS")
 

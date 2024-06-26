@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+
+        npiaorchestratordb:
+                build: .
+                container_name: npiaorchestratordb
+                ports:
+                        - "3306:3306"

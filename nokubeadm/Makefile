@@ -3,7 +3,6 @@ build:
 	go build -o nokubeadm .
 
 
-release:
+clean:
 
-	/bin/cp -Rf ./.npia ../nkia/nokubeadm/
-	go build -o ../nkia/nokubeadm .
+	rm -r lib nokubeadm

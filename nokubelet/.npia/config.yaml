@@ -1,4 +1,4 @@
 MODE: test
 DEBUG: "true"
-BASE_URL: ws://192.168.50.191:7331
+BASE_URL: ws://192.168.50.24:7331
 EMAIL: seantywork@gmail.com
