@@ -5,10 +5,16 @@ build:
 
 	cd osock && go build -o osock.out .
 
+db:
+
+	cd odb && sudo docker compose up --build
+
+
 
 up: 
 
 	sudo docker compose up --build
+
 
 
 gen-okey: 

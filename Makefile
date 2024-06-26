@@ -66,8 +66,17 @@ hack/release:
 .PHONY: orch.io
 orch.io:
 
-	cd ./orch.io && make up
+	make -C orch.io build
 
+
+orch.io-db:
+
+	make -C orch.io db
+
+
+orch.io-up:
+
+	make -C orch.io up 
 
 .PHONY: infra
 infra:
@@ -88,3 +97,6 @@ infra-ci:
 
 	sudo rm -rf ./infractl ./.npia.infra
 
+clean:
+
+	rm -rf *.out
