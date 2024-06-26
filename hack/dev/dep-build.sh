@@ -21,4 +21,5 @@ rm go.tar.gz
 
 sudo echo "export PATH=\$PATH:/usr/local/go/bin" | sudo tee "$U_PATH/.profile"
 
-source "$U_PATH/.profile"
+echo "successfully got build dependency"
+echo "do: source ~/.profile"
