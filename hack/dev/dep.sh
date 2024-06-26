@@ -19,13 +19,4 @@ sudo apt-get update
 
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-
-# GO
-
-
-curl -OL https://golang.org/dl/go1.21.8.linux-amd64.tar.gz
-
-sudo tar -C /usr/local -xvf go1.21.8.linux-amd64.tar.gz
-
-
-sudo nano ~/.profile
+./dep-build.sh
