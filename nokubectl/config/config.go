@@ -37,7 +37,9 @@ func _ConstructURL(url_path string) string {
 		return CONFIG_YAML["BASE_URL_SOCK"] + url_path
 
 	} else {
+
 		panic("mode option unavailable: " + CONFIG_YAML["MODE"])
+
 	}
 
 }

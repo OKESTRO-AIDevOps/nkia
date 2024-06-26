@@ -18,17 +18,17 @@ func main() {
 	if !omodules.CONFIG_JSON.DEBUG {
 
 		omodels.DbEstablish(
-			omodules.CONFIG_JSON.DB_HOST,
 			omodules.CONFIG_JSON.DB_ID,
 			omodules.CONFIG_JSON.DB_PW,
+			omodules.CONFIG_JSON.DB_HOST,
 			omodules.CONFIG_JSON.DB_NAME,
 		)
 
 	} else {
 		omodels.DbEstablish(
-			omodules.CONFIG_JSON.DB_HOST_DEV,
 			omodules.CONFIG_JSON.DB_ID,
 			omodules.CONFIG_JSON.DB_PW,
+			omodules.CONFIG_JSON.DB_HOST_DEV,
 			omodules.CONFIG_JSON.DB_NAME,
 		)
 	}

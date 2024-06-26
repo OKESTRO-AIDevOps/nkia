@@ -24,7 +24,7 @@ type OrchestratorRecord_RequestKey struct {
 	request_key string
 }
 
-func DbEstablish(db_host string, db_id string, db_pw string, db_name string) {
+func DbEstablish(db_id string, db_pw string, db_host string, db_name string) {
 
 	db_info := fmt.Sprintf("%s:%s@tcp(%s)/%s", db_id, db_pw, db_host, db_name)
 

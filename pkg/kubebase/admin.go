@@ -14,13 +14,15 @@ func AdminInitNPIA() {
 
 	outfile, err := os.Create("npia_init_log")
 
+	lib_exists := 0
+
 	if err != nil {
 		return
 	}
 
 	if _, err := os.Stat("lib"); err == nil {
 
-		outfile.Write([]byte("failed to init: lib exists\n"))
+		lib_exists = 1
 
 		return
 
@@ -41,51 +43,55 @@ func AdminInitNPIA() {
 		return
 	}
 
-	cmd := exec.Command("curl", "-L", "https://github.com/OKESTRO-AIDevOps/nkia/releases/download/latest/lib.tgz", "-o", "lib.tgz")
+	if lib_exists != 1 {
 
-	cmd.Stdout = outfile
+		cmd := exec.Command("curl", "-L", "https://github.com/OKESTRO-AIDevOps/nkia/releases/download/latest/lib.tgz", "-o", "lib.tgz")
 
-	cmd.Stderr = outfile
+		cmd.Stdout = outfile
 
-	err = cmd.Run()
+		cmd.Stderr = outfile
 
-	if err != nil {
-		AdminBlindResetNPIA()
+		err = cmd.Run()
 
-		outfile.Write([]byte(err.Error()))
+		if err != nil {
+			AdminBlindResetNPIA()
 
-		return
+			outfile.Write([]byte(err.Error()))
+
+			return
+		}
+
+		cmd = exec.Command("tar", "-xzvf", "lib.tgz")
+
+		cmd.Stdout = outfile
+
+		cmd.Stderr = outfile
+
+		err = cmd.Run()
+
+		if err != nil {
+			AdminBlindResetNPIA()
+			outfile.Write([]byte(err.Error()))
+			return
+		}
+
+		cmd = exec.Command("rm", "-r", "lib.tgz")
+
+		cmd.Stdout = outfile
+
+		cmd.Stderr = outfile
+
+		err = cmd.Run()
+
+		if err != nil {
+			AdminBlindResetNPIA()
+			outfile.Write([]byte(err.Error()))
+			return
+		}
+
 	}
 
-	cmd = exec.Command("tar", "-xzvf", "lib.tgz")
-
-	cmd.Stdout = outfile
-
-	cmd.Stderr = outfile
-
-	err = cmd.Run()
-
-	if err != nil {
-		AdminBlindResetNPIA()
-		outfile.Write([]byte(err.Error()))
-		return
-	}
-
-	cmd = exec.Command("rm", "-r", "lib.tgz")
-
-	cmd.Stdout = outfile
-
-	cmd.Stderr = outfile
-
-	err = cmd.Run()
-
-	if err != nil {
-		AdminBlindResetNPIA()
-		outfile.Write([]byte(err.Error()))
-		return
-	}
-
-	cmd = exec.Command("mkdir", "-p", ".usr")
+	cmd := exec.Command("mkdir", "-p", ".usr")
 
 	cmd.Stdout = outfile
 

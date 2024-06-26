@@ -2,14 +2,10 @@ package omodules
 
 import (
 	"context"
-	"crypto/rand"
-	"encoding/base64"
 	"fmt"
 	"io"
 	"net/http"
 
-	"github.com/gin-gonic/contrib/sessions"
-	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 )
@@ -61,21 +57,6 @@ func GenerateGoogleOauthConfig() *oauth2.Config {
 
 	return google_oauth_config
 
-}
-
-func GenerateStateAuthCookie(c *gin.Context) string {
-
-	b := make([]byte, 16)
-	rand.Read(b)
-
-	state := base64.URLEncoding.EncodeToString(b)
-
-	session := sessions.Default(c)
-
-	session.Set("OSID", state)
-	session.Save()
-
-	return state
 }
 
 func GetUserDataFromGoogle(code string) ([]byte, error) {
