@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -14,6 +15,43 @@ import (
 )
 
 var DB *sql.DB
+
+var CONFIG_JSON ConfigJSON
+
+type ConfigJSON struct {
+	DEBUG       bool   `json:"DEBUG"`
+	DB_HOST     string `json:"DB_HOST"`
+	DB_ID       string `json:"DB_ID"`
+	DB_PW       string `json:"DB_PW"`
+	DB_NAME     string `json:"DB_NAME"`
+	DB_HOST_DEV string `json:"DB_HOST_DEV"`
+}
+
+func LoadConfig() {
+
+	CONFIG_JSON = GetConfigJSON()
+
+}
+
+func GetConfigJSON() ConfigJSON {
+
+	var cj ConfigJSON
+
+	file_byte, err := os.ReadFile("config.json")
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = json.Unmarshal(file_byte, &cj)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return cj
+
+}
 
 func DbQuery(query string, args []any) (*sql.Rows, error) {
 

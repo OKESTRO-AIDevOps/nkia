@@ -24,9 +24,11 @@ type OrchestratorRecord_RequestKey struct {
 	request_key string
 }
 
-func DbEstablish() {
+func DbEstablish(db_host string, db_id string, db_pw string, db_name string) {
 
-	DB, _ = sql.Open("mysql", "npiaorchestrator:youdonthavetoknow@tcp(npiaorchestratordb:3306)/orchestrator")
+	db_info := fmt.Sprintf("%s:%s@tcp(%s)/%s", db_id, db_pw, db_host, db_name)
+
+	DB, _ = sql.Open("mysql", db_info)
 
 	DB.SetConnMaxLifetime(time.Second * 10)
 	DB.SetConnMaxIdleTime(time.Second * 5)

@@ -16,9 +16,9 @@ import (
 
 const OauthGoogleUrlAPI = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
 
-var CONFIG_JSON = GetConfigJSON()
+var CONFIG_JSON ConfigJSON
 
-var OAUTH_JSON = GetOauthJSON()
+var OAUTH_JSON OauthJSON
 
 type OAuthStruct struct {
 	ID             string `json:"id"`

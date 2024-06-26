@@ -119,7 +119,31 @@ func main() {
 		panic(err.Error())
 	}
 
-	DB, _ = sql.Open("mysql", "npiaorchestrator:youdonthavetoknow@tcp(npiaorchestratordb:3306)/orchestrator")
+	LoadConfig()
+
+	var db_info string
+
+	if !CONFIG_JSON.DEBUG {
+
+		db_info = fmt.Sprintf("%s:%s@tcp(%s)/%s",
+			CONFIG_JSON.DB_HOST,
+			CONFIG_JSON.DB_ID,
+			CONFIG_JSON.DB_PW,
+			CONFIG_JSON.DB_NAME,
+		)
+
+	} else {
+
+		db_info = fmt.Sprintf("%s:%s@tcp(%s)/%s",
+			CONFIG_JSON.DB_HOST_DEV,
+			CONFIG_JSON.DB_ID,
+			CONFIG_JSON.DB_PW,
+			CONFIG_JSON.DB_NAME,
+		)
+
+	}
+
+	DB, _ = sql.Open("mysql", db_info)
 
 	DB.SetConnMaxLifetime(time.Second * 10)
 	DB.SetConnMaxIdleTime(time.Second * 5)
