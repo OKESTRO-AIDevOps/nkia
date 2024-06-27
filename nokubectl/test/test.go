@@ -2,18 +2,14 @@ package main
 
 import (
 	"fmt"
+	"os"
 
-	apix "github.com/OKESTRO-AIDevOps/nkia/nokubectl/apix"
+	apix "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
 )
 
 func cmdBuildTest() error {
 
-	flag, args, err := apix.GetNKCTLFlagAndReduceArgs()
-
-	if flag != "" {
-		fmt.Println("nkctl: " + flag)
-		return nil
-	}
+	args := os.Args[1:]
 
 	oreq, err := apix.AXgi.BuildOrchRequestFromCommandLine(args)
 

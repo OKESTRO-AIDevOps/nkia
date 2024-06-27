@@ -1,7 +1,7 @@
-package controller
+package apix
 
 import (
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
+	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 )
 
 type APIMessageRequest struct {

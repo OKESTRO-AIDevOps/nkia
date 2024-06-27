@@ -1,8 +1,7 @@
 package apix
 
 var APIX_FLAGS = "" +
-	"to                : target cluster registered on orch.io server " + "\n" +
-	"as                : request option to apply when making request to orch.io, currently available [ 'admin' ]" + "\n" +
+	"path              : path for the given whatever task" + "\n" +
 	"clusterid         : target cluster name to be registered" + "\n" +
 	"updatetoken       : update token for connection" + "\n" +
 	"localip           : local ip adress" + "\n" +

@@ -8,15 +8,16 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
+	ctrl "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
+	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	kalfs "github.com/OKESTRO-AIDevOps/nkia/pkg/kaleidofs"
 	"github.com/gin-gonic/gin"
 )
 
 func Multimode_LinearInstruction(c *gin.Context) {
 
-	var req APIMessageRequest
-	var resp APIMessageResponse
+	var req ctrl.APIMessageRequest
+	var resp ctrl.APIMessageResponse
 
 	var server_message string
 

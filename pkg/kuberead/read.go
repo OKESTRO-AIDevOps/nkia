@@ -6,7 +6,7 @@ import (
 
 	"os/exec"
 
-	pq "github.com/OKESTRO-AIDevOps/nkia/pkg/promquery"
+	metq "github.com/OKESTRO-AIDevOps/nkia/pkg/metricquery"
 )
 
 func ReadPod(main_ns string) ([]byte, error) {
@@ -216,7 +216,7 @@ func ReadPodScheduled(main_ns string) ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_PodScheduled(main_ns)
+	metq_out, err := metq.PQ_PodScheduled(main_ns)
 
 	if err != nil {
 
@@ -224,7 +224,7 @@ func ReadPodScheduled(main_ns string) ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -240,7 +240,7 @@ func ReadPodUnscheduled(main_ns string) ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_PodUnscheduled(main_ns)
+	metq_out, err := metq.PQ_PodUnscheduled(main_ns)
 
 	if err != nil {
 
@@ -248,7 +248,7 @@ func ReadPodUnscheduled(main_ns string) ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -264,7 +264,7 @@ func ReadContainerCPUUsage(main_ns string) ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_ContainerCPUUsage(main_ns)
+	metq_out, err := metq.PQ_ContainerCPUUsage(main_ns)
 
 	if err != nil {
 
@@ -272,7 +272,7 @@ func ReadContainerCPUUsage(main_ns string) ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -288,7 +288,7 @@ func ReadContainerMemUsage(main_ns string) ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_ContainerMemUsage(main_ns)
+	metq_out, err := metq.PQ_ContainerMemUsage(main_ns)
 
 	if err != nil {
 
@@ -296,7 +296,7 @@ func ReadContainerMemUsage(main_ns string) ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -312,7 +312,7 @@ func ReadContainerFSRead(main_ns string) ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_ContainerFSRead(main_ns)
+	metq_out, err := metq.PQ_ContainerFSRead(main_ns)
 
 	if err != nil {
 
@@ -320,7 +320,7 @@ func ReadContainerFSRead(main_ns string) ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -336,7 +336,7 @@ func ReadContainerFSWrite(main_ns string) ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_ContainerFSWrite(main_ns)
+	metq_out, err := metq.PQ_ContainerFSWrite(main_ns)
 
 	if err != nil {
 
@@ -344,7 +344,7 @@ func ReadContainerFSWrite(main_ns string) ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -360,7 +360,7 @@ func ReadContainerNetworkReceive(main_ns string) ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_ContainerNetworkReceive(main_ns)
+	metq_out, err := metq.PQ_ContainerNetworkReceive(main_ns)
 
 	if err != nil {
 
@@ -368,7 +368,7 @@ func ReadContainerNetworkReceive(main_ns string) ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -384,7 +384,7 @@ func ReadContainerNetworkTransmit(main_ns string) ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_ContainerNetworkTransmit(main_ns)
+	metq_out, err := metq.PQ_ContainerNetworkTransmit(main_ns)
 
 	if err != nil {
 
@@ -392,7 +392,7 @@ func ReadContainerNetworkTransmit(main_ns string) ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -408,7 +408,7 @@ func ReadKubeletVolumeAvailable() ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_KubeletVolumeAvailable()
+	metq_out, err := metq.PQ_KubeletVolumeAvailable()
 
 	if err != nil {
 
@@ -416,7 +416,7 @@ func ReadKubeletVolumeAvailable() ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -432,7 +432,7 @@ func ReadKubeletVolumeCapacity() ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_KubeletVolumeCapacity()
+	metq_out, err := metq.PQ_KubeletVolumeCapacity()
 
 	if err != nil {
 
@@ -440,7 +440,7 @@ func ReadKubeletVolumeCapacity() ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -456,7 +456,7 @@ func ReadKubeletVolumeUsed() ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_KubeletVolumeUsed()
+	metq_out, err := metq.PQ_KubeletVolumeUsed()
 
 	if err != nil {
 
@@ -464,7 +464,7 @@ func ReadKubeletVolumeUsed() ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -480,7 +480,7 @@ func ReadNodeTemperatureCelsius() ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_NodeTemperatureCelsius()
+	metq_out, err := metq.PQ_NodeTemperatureCelsius()
 
 	if err != nil {
 
@@ -488,7 +488,7 @@ func ReadNodeTemperatureCelsius() ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -504,7 +504,7 @@ func ReadNodeTemperatureCelsiusChange() ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_NodeTemperatureCelsiusChange()
+	metq_out, err := metq.PQ_NodeTemperatureCelsiusChange()
 
 	if err != nil {
 
@@ -512,7 +512,7 @@ func ReadNodeTemperatureCelsiusChange() ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -528,7 +528,7 @@ func ReadNodeTemperatureCelsiusAverage() ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_NodeTemperatureCelsiusAverage()
+	metq_out, err := metq.PQ_NodeTemperatureCelsiusAverage()
 
 	if err != nil {
 
@@ -536,7 +536,7 @@ func ReadNodeTemperatureCelsiusAverage() ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -552,7 +552,7 @@ func ReadNodeProcessRunning() ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_NodeProcessRunning()
+	metq_out, err := metq.PQ_NodeProcessRunning()
 
 	if err != nil {
 
@@ -560,7 +560,7 @@ func ReadNodeProcessRunning() ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -576,7 +576,7 @@ func ReadNodeCPUCores() ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_NodeCPUCores()
+	metq_out, err := metq.PQ_NodeCPUCores()
 
 	if err != nil {
 
@@ -584,7 +584,7 @@ func ReadNodeCPUCores() ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -600,7 +600,7 @@ func ReadNodeMemActive() ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_NodeMemActive()
+	metq_out, err := metq.PQ_NodeMemActive()
 
 	if err != nil {
 
@@ -608,7 +608,7 @@ func ReadNodeMemActive() ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -624,7 +624,7 @@ func ReadNodeMemTotal() ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_NodeMemTotal()
+	metq_out, err := metq.PQ_NodeMemTotal()
 
 	if err != nil {
 
@@ -632,7 +632,7 @@ func ReadNodeMemTotal() ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -648,7 +648,7 @@ func ReadNodeDiskRead() ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_NodeDiskRead()
+	metq_out, err := metq.PQ_NodeDiskRead()
 
 	if err != nil {
 
@@ -656,7 +656,7 @@ func ReadNodeDiskRead() ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -672,7 +672,7 @@ func ReadNodeDiskWrite() ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_NodeDiskWrite()
+	metq_out, err := metq.PQ_NodeDiskWrite()
 
 	if err != nil {
 
@@ -680,7 +680,7 @@ func ReadNodeDiskWrite() ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -696,7 +696,7 @@ func ReadNodeNetworkReceive() ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_NodeNetworkReceive()
+	metq_out, err := metq.PQ_NodeNetworkReceive()
 
 	if err != nil {
 
@@ -704,7 +704,7 @@ func ReadNodeNetworkReceive() ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -720,7 +720,7 @@ func ReadNodeNetworkTransmit() ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_NodeNetworkTransmit()
+	metq_out, err := metq.PQ_NodeNetworkTransmit()
 
 	if err != nil {
 
@@ -728,7 +728,7 @@ func ReadNodeNetworkTransmit() ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 
@@ -744,7 +744,7 @@ func ReadNodeDiskWrittenTotal() ([]byte, error) {
 
 	var ret_byte []byte
 
-	pq_out, err := pq.PQ_NodeDiskWrittenTotal()
+	metq_out, err := metq.PQ_NodeDiskWrittenTotal()
 
 	if err != nil {
 
@@ -752,7 +752,7 @@ func ReadNodeDiskWrittenTotal() ([]byte, error) {
 
 	}
 
-	ret_byte, err = json.Marshal(pq_out)
+	ret_byte, err = json.Marshal(metq_out)
 
 	if err != nil {
 

@@ -12,17 +12,18 @@ import (
 
 	"time"
 
-	ctrl "github.com/OKESTRO-AIDevOps/nkia/nokubelet/controller"
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
+	orchcmd "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/cmd"
+	sctrl "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/controller"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
+	ctrl "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
+	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 
 	"github.com/gorilla/websocket"
-	_ "github.com/gorilla/websocket"
 )
 
 func FrontDestructor(c *websocket.Conn) {
 
-	EventLogger("Front destructor called")
+	sctrl.EventLogger("Front destructor called")
 
 	fc, _ := FRONT_CONNECTION_FRONT[c]
 
@@ -30,18 +31,18 @@ func FrontDestructor(c *websocket.Conn) {
 
 	delete(FRONT_CONNECTION, fc)
 
-	EventLogger("Front destructor exit")
+	sctrl.EventLogger("Front destructor exit")
 }
 
 func FrontHandler(w http.ResponseWriter, r *http.Request) {
 
-	EventLogger("Front access")
+	sctrl.EventLogger("Front access")
 
 	UPGRADER.CheckOrigin = func(r *http.Request) bool { return true }
 
 	c, err := UPGRADER.Upgrade(w, r, nil)
 	if err != nil {
-		EventLogger("upgrade:" + err.Error())
+		sctrl.EventLogger("upgrade:" + err.Error())
 		return
 	}
 
@@ -58,7 +59,7 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 
 		err := c.ReadJSON(&req_orchestrator)
 		if err != nil {
-			EventLogger("auth:" + err.Error())
+			sctrl.EventLogger("auth:" + err.Error())
 			return
 		}
 
@@ -67,18 +68,18 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 		request_key_b, err := b64.StdEncoding.DecodeString(request_key_b64)
 
 		if err != nil {
-			EventLogger("auth:" + err.Error())
+			sctrl.EventLogger("auth:" + err.Error())
 			return
 		}
 
 		request_key := string(request_key_b)
 
-		EventLogger("sess key: " + request_key)
+		sctrl.EventLogger("sess key: " + request_key)
 
-		email, err := CheckSessionAndGetEmailByRequestKey(request_key)
+		email, err := sctrl.CheckSessionAndGetEmailByRequestKey(request_key)
 
 		if err != nil {
-			EventLogger("auth:" + err.Error())
+			sctrl.EventLogger("auth:" + err.Error())
 			return
 		}
 
@@ -89,7 +90,7 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 		break
 	}
 
-	EventLogger("front accepted")
+	sctrl.EventLogger("front accepted")
 
 	for {
 
@@ -105,7 +106,7 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 
 			FrontDestructor(c)
 			c.Close()
-			EventLogger("read front:" + err.Error())
+			sctrl.EventLogger("read front:" + err.Error())
 			return
 		}
 
@@ -117,7 +118,7 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 			FrontDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-			EventLogger("read front: no connected front name")
+			sctrl.EventLogger("read front: no connected front name")
 
 			return
 		}
@@ -134,7 +135,7 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 
 			if err != nil {
 
-				EventLogger("read front: " + err.Error())
+				sctrl.EventLogger("read front: " + err.Error())
 
 				FrontDestructor(c)
 
@@ -162,7 +163,7 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 		if !okay {
 			FrontDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-			EventLogger("read front: no connected server context")
+			sctrl.EventLogger("read front: no connected server context")
 
 			return
 		}
@@ -173,7 +174,7 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 
 			FrontDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-			EventLogger("read front: no server context key")
+			sctrl.EventLogger("read front: no server context key")
 
 			return
 		}
@@ -184,7 +185,7 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 
 			FrontDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-			EventLogger("read front: " + err.Error())
+			sctrl.EventLogger("read front: " + err.Error())
 			return
 
 		}
@@ -196,7 +197,7 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			FrontDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-			EventLogger("read front: " + err.Error())
+			sctrl.EventLogger("read front: " + err.Error())
 
 			return
 		}
@@ -210,7 +211,167 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			FrontDestructor(c)
 			c.Close()
-			EventLogger("write to server: " + err.Error())
+			sctrl.EventLogger("write to server: " + err.Error())
+
+			return
+		}
+
+	}
+
+}
+
+func FrontHandler2(w http.ResponseWriter, r *http.Request) {
+
+	sctrl.EventLogger("Front access")
+
+	UPGRADER.CheckOrigin = func(r *http.Request) bool { return true }
+
+	c, err := UPGRADER.Upgrade(w, r, nil)
+	if err != nil {
+		sctrl.EventLogger("upgrade:" + err.Error())
+		return
+	}
+
+	c.SetReadDeadline(time.Time{})
+
+	var req_server ctrl.APIMessageRequest
+	var req_orchestrator ctrl.OrchestratorRequest
+
+	defer c.Close()
+
+	user_id, err := sctrl.KeyAuthChallenge(c)
+
+	if err != nil {
+
+		sctrl.EventLogger(fmt.Sprintf("auth: %s", err.Error()))
+		return
+	}
+
+	FRONT_CONNECTION[user_id] = c
+
+	FRONT_CONNECTION_FRONT[c] = user_id
+
+	sctrl.EventLogger("front accepted")
+
+	for {
+
+		req_orchestrator = ctrl.OrchestratorRequest{}
+
+		req_server = ctrl.APIMessageRequest{}
+
+		res_orchestrator := ctrl.OrchestratorResponse{}
+
+		err := c.ReadJSON(&req_orchestrator)
+
+		if err != nil {
+
+			FrontDestructor(c)
+			c.Close()
+			sctrl.EventLogger("read front:" + err.Error())
+			return
+		}
+
+		target := req_orchestrator.RequestTarget
+
+		email, okay := FRONT_CONNECTION_FRONT[c]
+
+		if !okay {
+			FrontDestructor(c)
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+			sctrl.EventLogger("read front: no connected front name")
+
+			return
+		}
+
+		email_context := email + ":" + target
+
+		query_str := req_orchestrator.Query
+
+		forward, result, err := orchcmd.RequestForwardHandler(email, query_str)
+
+		if err != nil {
+
+			sctrl.EventLogger("read front: " + err.Error())
+
+			FrontDestructor(c)
+
+			res_orchestrator.ServerMessage = err.Error()
+
+			c.WriteJSON(&res_orchestrator)
+
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+			return
+
+		}
+
+		if !forward {
+
+			res_orchestrator.ServerMessage = "SUCCESS"
+
+			res_orchestrator.QueryResult = []byte(result)
+
+			c.WriteJSON(&res_orchestrator)
+
+			continue
+
+		}
+
+		server_c, okay := SERVER_CONNECTION[email_context]
+
+		if !okay {
+			FrontDestructor(c)
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+			sctrl.EventLogger("read front: no connected server context")
+
+			return
+		}
+
+		key_id, okay := SERVER_CONNECTION_KEY[server_c]
+
+		if !okay {
+
+			FrontDestructor(c)
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+			sctrl.EventLogger("read front: no server context key")
+
+			return
+		}
+
+		session_sym_key, err := modules.AccessAuth_Detached(key_id)
+
+		if err != nil {
+
+			FrontDestructor(c)
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+			sctrl.EventLogger("read front: " + err.Error())
+			return
+
+		}
+
+		query_b := []byte(query_str)
+
+		query_enc, err := modules.EncryptWithSymmetricKey([]byte(session_sym_key), query_b)
+
+		if err != nil {
+			FrontDestructor(c)
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+			sctrl.EventLogger("read front: " + err.Error())
+
+			return
+		}
+
+		query_hex := hex.EncodeToString(query_enc)
+
+		req_server.Query = query_hex
+
+		err = server_c.WriteJSON(&req_server)
+
+		if err != nil {
+			FrontDestructor(c)
+			c.Close()
+			sctrl.EventLogger("write to server: " + err.Error())
 
 			return
 		}
@@ -285,7 +446,7 @@ func AdminRequest(email string, query string) ([]byte, error) {
 
 		pub_pem_str := string(pub_pem)
 
-		err = UpdatePubkeyByEmail(email, pub_pem_str)
+		err = sctrl.UpdatePubkeyByEmail(email, pub_pem_str)
 
 		if err != nil {
 			return ret, fmt.Errorf("admin req: %s", err.Error())
@@ -303,7 +464,7 @@ func AdminRequest(email string, query string) ([]byte, error) {
 
 		cluster_id := args[0]
 
-		token, err := CreateClusterByEmail(email, cluster_id)
+		token, err := sctrl.CreateClusterByEmail(email, cluster_id)
 
 		if err != nil {
 			return ret, fmt.Errorf("admin req: %s", err.Error())
@@ -319,7 +480,7 @@ func AdminRequest(email string, query string) ([]byte, error) {
 
 	case "ORCH-INSTCL":
 
-		if len(FI_SESSIONS.INST_SESSION) > 100 {
+		if len(sctrl.FI_SESSIONS.INST_SESSION) > 100 {
 			return ret, fmt.Errorf("admin req: too many remote install sessions")
 		}
 
@@ -334,17 +495,17 @@ func AdminRequest(email string, query string) ([]byte, error) {
 
 		session_key := email + ":" + cluster_id
 
-		_, okay := FI_SESSIONS.INST_SESSION[session_key]
+		_, okay := sctrl.FI_SESSIONS.INST_SESSION[session_key]
 
 		if okay {
 			return ret, fmt.Errorf("admin req: already an ongoing installation")
 		}
 
-		FI_SESSIONS.INST_SESSION[session_key] = &[]byte{}
+		sctrl.FI_SESSIONS.INST_SESSION[session_key] = &[]byte{}
 
-		FI_SESSIONS.INST_RESULT[session_key] = "-"
+		sctrl.FI_SESSIONS.INST_RESULT[session_key] = "-"
 
-		go InstallCluster(session_key, cluster_id, targetip, targetid, targetpw, localip, osnm, cv, update_token)
+		go sctrl.InstallCluster(session_key, cluster_id, targetip, targetid, targetpw, localip, osnm, cv, update_token)
 
 		ret_apiout.BODY = "remote cluster installation started\n"
 
@@ -363,7 +524,7 @@ func AdminRequest(email string, query string) ([]byte, error) {
 
 		session_key := email + ":" + cluster_id
 
-		log_b, err := InstallClusterLog(session_key, cluster_id, targetip, targetid, targetpw)
+		log_b, err := sctrl.InstallClusterLog(session_key, cluster_id, targetip, targetid, targetpw)
 
 		if err != nil {
 			return ret, fmt.Errorf("admin req: %s", err.Error())

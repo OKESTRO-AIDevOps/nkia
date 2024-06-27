@@ -2,22 +2,18 @@ package main
 
 import (
 	"fmt"
-	"net/http"
-	"net/http/cookiejar"
 	"os"
 	"os/exec"
 
-	"github.com/OKESTRO-AIDevOps/nkia/nokubectl/apix"
 	nkctlclient "github.com/OKESTRO-AIDevOps/nkia/nokubectl/client"
+	ccmd "github.com/OKESTRO-AIDevOps/nkia/nokubectl/cmd"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubectl/config"
+	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
 	goya "github.com/goccy/go-yaml"
+	"github.com/gorilla/websocket"
 )
 
 func InitCtl() error {
-
-	var priv_loc string
-
-	var file_b []byte
 
 	cmd := exec.Command("mkdir", "-p", ".npia")
 
@@ -32,30 +28,7 @@ func InitCtl() error {
 		return fmt.Errorf("failed to init: %s", "too few arguments")
 	}
 
-	priv_loc = os.Args[2]
-
-	file_b, err = os.ReadFile(priv_loc)
-
-	if err != nil {
-		return fmt.Errorf("failed to init: %s", err.Error())
-	}
-
-	err = os.WriteFile(".npia/.priv", file_b, 0644)
-
-	if err != nil {
-		return fmt.Errorf("failed to init: %s", err.Error())
-	}
-
 	cmd = exec.Command("mkdir", "-p", ".npia")
-
-	err = cmd.Run()
-
-	if err != nil {
-
-		return fmt.Errorf("failed to init: %s", err.Error())
-	}
-
-	cmd = exec.Command("mkdir", "-p", ".npia/_output")
 
 	err = cmd.Run()
 
@@ -66,7 +39,7 @@ func InitCtl() error {
 
 	CONFIG_YAML := make(map[string]string)
 
-	if _, err := os.Stat("./.npia/config.yaml"); err == nil {
+	if _, err := os.Stat(".npia/config.yaml"); err == nil {
 
 		fmt.Println("existing configyaml has been detected")
 
@@ -88,163 +61,78 @@ func InitCtl() error {
 
 				}
 
-				return nil
-
 			} else {
-				fmt.Println(err.Error())
+
+				return fmt.Errorf("failed to init: %s", err.Error())
+
 			}
 
 		}
 
 	}
 
-	var MODE string
-	var BASE_URL string
-	var BASE_URL_SOCK string
-	var EMAIL string
-
-	fmt.Println("MODE: ")
-
-	fmt.Scanln(&MODE)
-
-	fmt.Println("BASE_URL: ")
-
-	fmt.Scanln(&BASE_URL)
-
-	fmt.Println("BASE_URL_SOCK: ")
-
-	fmt.Scanln(&BASE_URL_SOCK)
-
-	fmt.Println("EMAIL: ")
-
-	fmt.Scanln(&EMAIL)
-
-	CONFIG_YAML["MODE"] = MODE
-
-	CONFIG_YAML["BASE_URL"] = BASE_URL
-
-	CONFIG_YAML["BASE_URL_SOCK"] = BASE_URL_SOCK
-
-	CONFIG_YAML["EMAIL"] = EMAIL
-
-	outconf, err := goya.Marshal(CONFIG_YAML)
+	priv_b, err := os.ReadFile(CONFIG_YAML["PRIV_PATH"])
 
 	if err != nil {
+
 		return fmt.Errorf("failed to init: %s", err.Error())
 	}
 
-	err = os.WriteFile(".npia/config.yaml", outconf, 0644)
-
-	if err != nil {
-		return fmt.Errorf("failed to init: %s", err.Error())
-	}
+	_ = os.WriteFile(".npia/.priv", priv_b, 0644)
 
 	return nil
-}
-
-func RunClientInteractive() {
-
-	var email string
-
-	var in_raw_query string
-
-	var err error
-
-	jar, err := cookiejar.New(nil)
-
-	if err != nil {
-
-		fmt.Println(err.Error())
-
-		return
-
-	}
-
-	email = config.EMAIL
-
-	client := &http.Client{
-		Jar: jar,
-	}
-
-	c, err := nkctlclient.KeyAuthConn(client, email)
-
-	if err != nil {
-
-		fmt.Println(err.Error())
-
-		return
-	}
-
-	for {
-
-		fmt.Println("query: ")
-
-		fmt.Scanln(&in_raw_query)
-
-		switch in_raw_query {
-
-		case "exit":
-
-			return
-
-		default:
-
-			var target string
-
-			var option string
-
-			fmt.Println("target: ")
-
-			fmt.Scanln(&target)
-
-			fmt.Println("option: ")
-
-			fmt.Scanln(&option)
-
-			nkctlclient.RequestHandler_LinearInstruction_Persist_PrintOnly(c, target, option, in_raw_query)
-
-		}
-
-	}
 
 }
 
 func RunClientCmd(args []string) {
 
-	var email string
-
-	var err error
-
-	jar, err := cookiejar.New(nil)
-
-	if err != nil {
-
-		fmt.Println(err.Error())
-
-		return
-
-	}
-
-	email = config.EMAIL
-
-	client := &http.Client{
-		Jar: jar,
-	}
-
-	c, err := nkctlclient.KeyAuthConn(client, email)
-
-	if err != nil {
-
-		fmt.Println(err.Error())
-
-		return
-	}
-
-	oreq, err := apix.AXgi.BuildOrchRequestFromCommandLine(args)
+	api_input, err := apix.AXgi.BuildAPIInputFromCommandLine(args)
 
 	if err != nil {
 
 		fmt.Printf("failed: %s\n", err.Error())
+
+		return
+	}
+
+	forward, result, err := ccmd.RequestForwardHandler(api_input)
+
+	if err != nil {
+
+		fmt.Printf("failed: %s\n", err.Error())
+
+		return
+	}
+
+	if !forward {
+
+		fmt.Println(result)
+
+		return
+
+	}
+
+	// TODO: check --to
+
+	oreq, err := apix.AXgi.BuildOrchRequestFromCommandLine(args)
+
+	var email string
+
+	email = config.EMAIL
+
+	c, _, err := websocket.DefaultDialer.Dial(config.COMM_URL, nil)
+
+	if err != nil {
+
+		fmt.Println(err.Error())
+
+		return
+	}
+	err = nkctlclient.KeyAuthConn(c, email)
+
+	if err != nil {
+
+		fmt.Println(err.Error())
 
 		return
 	}
@@ -264,57 +152,8 @@ func ReadClientCmdResult() {
 
 func main() {
 
-	flag, args, err := apix.GetNKCTLFlagAndReduceArgs()
+	args := os.Args[1:]
 
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
+	RunClientCmd(args)
 
-	if flag == "help" {
-
-	} else if flag == "apix-md" {
-
-		apix.ExportMD()
-		return
-
-	} else if flag == "apix-js" {
-
-	} else if flag == "apix-py" {
-
-	} else if flag == "init" {
-
-		err := InitCtl()
-
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
-
-		fmt.Println("successfully initiated")
-		return
-
-	} else if flag == "interactive" {
-
-		RunClientInteractive()
-		return
-
-	} else if flag == "read" {
-
-		ReadClientCmdResult()
-		return
-
-	} else {
-
-		RunClientCmd(args)
-		return
-
-	}
-
-	//if (MODE_INTERACTIVE) > 1 {
-	//	fmt.Println("error: more than one option used together")
-	//	return
-	//}
-
-	return
 }

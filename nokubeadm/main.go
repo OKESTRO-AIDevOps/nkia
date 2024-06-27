@@ -9,7 +9,7 @@ import (
 	"os/user"
 	"time"
 
-	"github.com/OKESTRO-AIDevOps/nkia/nokubectl/apix"
+	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
 
 	nkadmcmd "github.com/OKESTRO-AIDevOps/nkia/nokubeadm/cmd"
 	"github.com/OKESTRO-AIDevOps/nkia/nokubeadm/config"
@@ -254,77 +254,9 @@ func main() {
 
 	}
 
-	flag, args, err := apix.GetNKADMFlagAndReduceArgs()
+	args := os.Args[1:]
 
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-
-	if flag == "help" {
-
-	} else if flag == "init" {
-
-		err := InitAdm()
-
-		if err != nil {
-
-			fmt.Println(err.Error())
-
-		}
-		fmt.Println("successfully initiated")
-		return
-
-	} else if flag == "init-npia" {
-
-		err_init := InitAdm()
-
-		if err_init != nil {
-			fmt.Println(err_init.Error())
-		}
-
-		go kubebase.AdminInitNPIA()
-
-		t_start := time.Now()
-
-		done := 0
-
-		for time.Now().Sub(t_start).Seconds() < 30 {
-
-			if _, err := os.Stat("npia_init_done"); err == nil {
-
-				done = 1
-				break
-
-			}
-
-		}
-
-		if done == 1 {
-			b, _ := kubebase.AdminGetInitLog()
-
-			fmt.Println("-----INITLOG-----")
-
-			fmt.Println(string(b))
-
-			fmt.Println("-----------------")
-
-			fmt.Println("successfully initiated")
-		} else {
-
-			b, _ := kubebase.AdminGetInitLog()
-
-			fmt.Println("-----FAILLOG-----")
-
-			fmt.Println(string(b))
-
-			fmt.Println("-----------------")
-
-			fmt.Println("initiation timeout")
-		}
-		return
-
-	} else if flag == "init-npia-default" {
+	if _, err := os.Stat(".npia/.init"); err != nil {
 
 		err_init := InitAdmDefault()
 
@@ -340,7 +272,7 @@ func main() {
 
 		for time.Now().Sub(t_start).Seconds() < 30 {
 
-			if _, err := os.Stat("npia_init_done"); err == nil {
+			if _, err := os.Stat(".npia/.init"); err == nil {
 
 				done = 1
 				break
@@ -370,21 +302,13 @@ func main() {
 			fmt.Println("-----------------")
 
 			fmt.Println("initiation timeout")
+
+			return
 		}
-		return
 
-	} else if flag == "interactive" {
-
-		RunAdminInteractive()
-
-	} else if flag == "debug" {
-
-		RunDebugInteractive()
-
-	} else {
-		RunAdminCmd(args)
 	}
 
+	RunAdminCmd(args)
 	// nkadmdebug.BaseFlow_APIThenMultiMode_Test()
 
 }

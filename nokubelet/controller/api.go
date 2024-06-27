@@ -7,16 +7,17 @@ import (
 	"net/http"
 
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
+	ctrl "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
 	"github.com/gin-gonic/gin"
 
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
+	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 )
 
 func QueryAPI_LinearInstruction(c *gin.Context) {
 
 	ASgi := apistandard.ASgi
-	var req APIMessageRequest
-	var resp APIMessageResponse
+	var req ctrl.APIMessageRequest
+	var resp ctrl.APIMessageResponse
 
 	session_sym_key, err := modules.AccessAuth(c)
 

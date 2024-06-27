@@ -28,7 +28,7 @@ import (
 
 	goya "github.com/goccy/go-yaml"
 
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
+	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	kalfs "github.com/OKESTRO-AIDevOps/nkia/pkg/kaleidofs"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/kubetoolkit"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/runtimefs"

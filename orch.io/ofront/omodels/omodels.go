@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	"github.com/OKESTRO-AIDevOps/nkia/orch.io/ofront/omodules"
+	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	_ "github.com/go-sql-driver/mysql"
 )
 

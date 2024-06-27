@@ -2,14 +2,18 @@ package apix
 
 var APIX_COMMAND = "" +
 	// front admin option
-	"conncheck                                         : checking orch.io connection                " + "\n" +
-	"keygen                                            : generate and receive private key                " + "\n" +
-	"addcl                                             : generate and receive token for connecting a working cluster            " + "\n" +
-	"instcl                                            : install main control plane through orch.io       " + "\n" +
-	"instcllog                                         : get installation log for the main control plane through orch.io     " + "\n" +
-	"io-connect-update                                 : start nokubelt with update token         " + "\n" +
+	"init                                              : initiate nokubectl                " + "\n" +
+	"orch-conncheck                                    : checking orch.io connection                " + "\n" +
+	"orch-keygen                                       : generate and receive private key                " + "\n" +
+	"orch-get-cl                                       : receive cluster names that are available for communication" + "\n" +
+	"orch-add-cl                                       : generate and receive token for connecting a working cluster  " + "\n" +
+	"orch-install-cl                                   : install main control plane through orch.io       " + "\n" +
+	"orch-install-cl-log                               : get installation log for the main control plane through orch.io     " + "\n" +
 	// query
 	//"admin-install-env                                 : set up installation environment         " + "\n" +
+	"_orch-exchange                                    : exchange request and response        " + "\n" +
+	"io-connect-update                                 : start nokubelt with update token         " + "\n" +
+	"io-connect                                        : start nokubelt with token         " + "\n" +
 	"install-mainctrl                                  : install control plane using nokubeadm        " + "\n" +
 	"install-subctrl-prep                              : prepare for another control plane installation   " + "\n" +
 	"install-subctrl                                   : install another control plane using nokubeadm   " + "\n" +

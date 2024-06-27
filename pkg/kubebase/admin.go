@@ -12,7 +12,7 @@ import (
 
 func AdminInitNPIA() {
 
-	outfile, err := os.Create("npia_init_log")
+	outfile, err := os.Create(".npia/.init_log")
 
 	lib_exists := 0
 
@@ -198,14 +198,14 @@ func AdminInitNPIA() {
 
 	}
 
-	file_byte, err := os.ReadFile("npia_init_log")
+	file_byte, err := os.ReadFile(".npia/.init_log")
 
 	if err != nil {
 		AdminBlindResetNPIA()
 		return
 	}
 
-	err = os.Remove("npia_init_log")
+	err = os.Remove(".npia/.init_log")
 
 	if err != nil {
 
@@ -213,7 +213,7 @@ func AdminInitNPIA() {
 		return
 	}
 
-	err = os.WriteFile("npia_init_done", file_byte, 0644)
+	err = os.WriteFile(".npia/.init", file_byte, 0644)
 
 	if err != nil {
 		AdminBlindResetNPIA()
@@ -230,13 +230,13 @@ func AdminGetInitLog() ([]byte, error) {
 
 	var err error
 
-	if _, err := os.Stat("npia_init_log"); err == nil {
+	if _, err := os.Stat(".npia/.init_log"); err == nil {
 
-		ret_byte, err = os.ReadFile("npia_init_log")
+		ret_byte, err = os.ReadFile(".npia/.init_log")
 
-	} else if _, err := os.Stat("npia_init_done"); err == nil {
+	} else if _, err := os.Stat(".npia/.init"); err == nil {
 
-		ret_byte, err = os.ReadFile("npia_init_done")
+		ret_byte, err = os.ReadFile(".npia/.init")
 
 	} else {
 

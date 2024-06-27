@@ -10,8 +10,10 @@ type API_X_OPTIONS map[string]string
 
 var APIX_QUERY_MAP = "" +
 	// front admin option
+	"init                                              : NKCTL-INIT            " + "\n" +
 	"orch-conncheck                                    : ORCH-CONNCHK          " + "\n" +
 	"orch-keygen                                       : ORCH-KEYGEN           " + "\n" +
+	"orch-get-cl                                       : ORCH-GETCL            " + "\n" +
 	"orch-add-cl                                       : ORCH-ADDCL            " + "\n" +
 	"orch-install-cl                                   : ORCH-INSTCL           " + "\n" +
 	"orch-install-cl-log                               : ORCH-INSTCLLOG        " + "\n" +
@@ -181,95 +183,8 @@ func _CONSTRUCT_API_X_FLAG() API_X {
 	return api_x
 }
 
-func _CONSTRUCT_NKCTL_FLAG() API_X {
-
-	api_x := make(API_X)
-
-	def_list := strings.Split(NKCTL_FLAGS, "\n")
-
-	for i := 0; i < len(def_list); i++ {
-
-		if def_list[i] == "" || def_list[i] == " " || def_list[i] == "\n" {
-			continue
-		}
-
-		raw_record := def_list[i]
-
-		record_list := strings.SplitN(raw_record, ":", 2)
-
-		key := record_list[0]
-
-		key = strings.ReplaceAll(key, " ", "")
-
-		api_x[key] = record_list[1]
-
-	}
-
-	return api_x
-}
-
-func _CONSTRUCT_NKADM_FLAG() API_X {
-
-	api_x := make(API_X)
-
-	def_list := strings.Split(NKADM_FLAGS, "\n")
-
-	for i := 0; i < len(def_list); i++ {
-
-		if def_list[i] == "" || def_list[i] == " " || def_list[i] == "\n" {
-			continue
-		}
-
-		raw_record := def_list[i]
-
-		record_list := strings.SplitN(raw_record, ":", 2)
-
-		key := record_list[0]
-
-		key = strings.ReplaceAll(key, " ", "")
-
-		api_x[key] = record_list[1]
-
-	}
-
-	return api_x
-}
-
-func _CONSTRUCT_NKLET_FLAG() API_X {
-
-	api_x := make(API_X)
-
-	def_list := strings.Split(NKLET_FLAGS, "\n")
-
-	for i := 0; i < len(def_list); i++ {
-
-		if def_list[i] == "" || def_list[i] == " " || def_list[i] == "\n" {
-			continue
-		}
-
-		raw_record := def_list[i]
-
-		record_list := strings.SplitN(raw_record, ":", 2)
-
-		key := record_list[0]
-
-		key = strings.ReplaceAll(key, " ", "")
-
-		api_x[key] = record_list[1]
-
-	}
-
-	return api_x
-}
-
 var AXgi, AXid = _CONSTRUCT_API_X()
 
 var AXcmd = _CONSTRUCT_API_X_COMMAND()
 
 var AXflag = _CONSTRUCT_API_X_FLAG()
-
-var NKCTLflag = _CONSTRUCT_NKCTL_FLAG()
-
-var NKADMflag = _CONSTRUCT_NKADM_FLAG()
-
-var NKLETflag = _CONSTRUCT_NKLET_FLAG()
