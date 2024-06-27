@@ -7,9 +7,9 @@ import (
 	"os"
 	"time"
 
-	ctrl "github.com/OKESTRO-AIDevOps/nkia/nokubelet/controller"
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
+	ctrl "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
+	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	"github.com/gorilla/websocket"
 
 	goya "github.com/goccy/go-yaml"

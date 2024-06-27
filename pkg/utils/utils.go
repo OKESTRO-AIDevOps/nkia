@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/OKESTRO-AIDevOps/nkia/pkg/promquery"
+	metq "github.com/OKESTRO-AIDevOps/nkia/pkg/metricquery"
 	"golang.org/x/crypto/ssh"
 
 	agph "github.com/guptarohit/asciigraph"
@@ -40,7 +40,7 @@ func CheckIfSliceContains[T comparable](slice []T, ele T) bool {
 
 func RenderASCIIGraph(render_target string) {
 
-	var render_data promquery.PQOutputFormat
+	var render_data metq.PQOutputFormat
 
 	file_byte, _ := os.ReadFile(render_target)
 

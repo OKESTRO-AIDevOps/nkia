@@ -18,8 +18,10 @@ type API_STD map[string][]string
 
 var API_DEFINITION string = "" +
 	//            id          :       keys
+	"NKCTL-INIT               :id, path                                                                                   " + "\n" +
 	"ORCH-CONNCHK             :id                                                                                         " + "\n" +
 	"ORCH-KEYGEN              :id                                                                                         " + "\n" +
+	"ORCH-GETCL               :id                                                                                         " + "\n" +
 	"ORCH-ADDCL               :id, clusterid                                                                              " + "\n" +
 	"ORCH-INSTCL              :id, clusterid, targetip, targetid, targetpw, localip, osnm, cv, updatetoken                " + "\n" +
 	"ORCH-INSTCLLOG           :id, clusterid, targetip, targetid, targetpw                                                " + "\n" +

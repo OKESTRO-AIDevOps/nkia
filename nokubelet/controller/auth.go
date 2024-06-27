@@ -5,7 +5,8 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
+	ctrl "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
+	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -13,9 +14,9 @@ import (
 
 func AuthChallengeHandler(c *gin.Context) {
 
-	var req AuthChallenge
+	var req ctrl.AuthChallenge
 
-	var resp AuthChallenge
+	var resp ctrl.AuthChallenge
 
 	body_byte, err := io.ReadAll(c.Request.Body)
 

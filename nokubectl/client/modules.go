@@ -1,29 +1,23 @@
 package client
 
 import (
-	"bytes"
 	"crypto/rsa"
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
 	"os"
 	"time"
 
-	"github.com/OKESTRO-AIDevOps/nkia/nokubectl/config"
-	ctrl "github.com/OKESTRO-AIDevOps/nkia/nokubelet/controller"
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
+	ctrl "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
+	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	"github.com/gorilla/websocket"
 )
 
 var PRINT_ONLY_BODY map[string]string
 
-func KeyAuthConn(client *http.Client, email string) (*websocket.Conn, error) {
-
-	var c *websocket.Conn
+func KeyAuthConn(client *websocket.Conn, email string) error {
 
 	var req_orchestrator ctrl.OrchestratorRequest
 
@@ -31,29 +25,20 @@ func KeyAuthConn(client *http.Client, email string) (*websocket.Conn, error) {
 
 	req_orchestrator.Query = email
 
-	req_b, err := json.Marshal(req_orchestrator)
+	err := client.WriteJSON(req_orchestrator)
 
 	if err != nil {
-		return c, fmt.Errorf("auth: %s", err.Error())
+		return fmt.Errorf("auth: %s", err.Error())
 	}
 
-	resp, err := client.Post(config.COMM_URL_AUTH, "application/json", bytes.NewBuffer(req_b))
+	err = client.ReadJSON(&resp_orchestrator)
 
 	if err != nil {
-		return c, fmt.Errorf("auth: %s", err.Error())
+		return fmt.Errorf("auth: %s", err.Error())
 	}
 
-	body_bytes, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return c, fmt.Errorf("auth: %s", err.Error())
-	}
-
-	resp.Body.Close()
-
-	err = json.Unmarshal(body_bytes, &resp_orchestrator)
-
-	if err != nil {
-		return c, fmt.Errorf("auth: %s", err.Error())
+	if resp_orchestrator.ServerMessage != "SUCCESS" {
+		return fmt.Errorf("auth: %s", err.Error())
 	}
 
 	chal_rec := modules.ChallengRecord{}
@@ -63,7 +48,7 @@ func KeyAuthConn(client *http.Client, email string) (*websocket.Conn, error) {
 	err = json.Unmarshal(chal_rec_b, &chal_rec)
 
 	if err != nil {
-		return c, fmt.Errorf("auth: %s", err.Error())
+		return fmt.Errorf("auth: %s", err.Error())
 	}
 
 	// get privkey from srv/.priv
@@ -71,7 +56,7 @@ func KeyAuthConn(client *http.Client, email string) (*websocket.Conn, error) {
 	priv_key, err := LoadKeyAuthCredential()
 
 	if err != nil {
-		return c, fmt.Errorf("auth: %s", err.Error())
+		return fmt.Errorf("auth: %s", err.Error())
 	}
 
 	// decrypt the challenge
@@ -89,13 +74,13 @@ func KeyAuthConn(client *http.Client, email string) (*websocket.Conn, error) {
 	cipher_b, err := hex.DecodeString(cipher_txt)
 
 	if err != nil {
-		return c, fmt.Errorf("auth: %s", err.Error())
+		return fmt.Errorf("auth: %s", err.Error())
 	}
 
 	ans, err := modules.DecryptWithPrivateKey(cipher_b, priv_key)
 
 	if err != nil {
-		return c, fmt.Errorf("auth: %s", err.Error())
+		return fmt.Errorf("auth: %s", err.Error())
 	}
 
 	ans_str := string(ans)
@@ -110,56 +95,25 @@ func KeyAuthConn(client *http.Client, email string) (*websocket.Conn, error) {
 		Query: query_base64,
 	}
 
-	req_b, err = json.Marshal(req_orchestrator)
-
-	resp, err = client.Post(config.COMM_URL_AUTH_CALLBACK, "application/json", bytes.NewBuffer(req_b))
+	err = client.WriteJSON(req_orchestrator)
 
 	if err != nil {
-		return c, fmt.Errorf("auth: %s", err.Error())
+		return fmt.Errorf("auth: %s", err.Error())
 	}
 
 	resp_orchestrator = ctrl.OrchestratorResponse{}
 
-	body_bytes, err = io.ReadAll(resp.Body)
-	if err != nil {
-		return c, fmt.Errorf("auth: %s", err.Error())
-	}
-
-	resp.Body.Close()
-
-	err = json.Unmarshal(body_bytes, &resp_orchestrator)
+	err = client.ReadJSON(&resp_orchestrator)
 
 	if err != nil {
-		return c, fmt.Errorf("auth: %s", err.Error())
+		return fmt.Errorf("auth: %s", err.Error())
 	}
 
 	if resp_orchestrator.ServerMessage != "SUCCESS" {
-		return c, fmt.Errorf("auth: %s", resp_orchestrator.ServerMessage)
+		return fmt.Errorf("auth: %s", resp_orchestrator.ServerMessage)
 	}
 
-	req_key := resp_orchestrator.QueryResult
-
-	req_key_b64 := base64.StdEncoding.EncodeToString(req_key)
-
-	req_orchestrator = ctrl.OrchestratorRequest{
-		RequestOption: req_key_b64,
-	}
-
-	fmt.Println("connecting to the command channel...")
-
-	c, _, err = websocket.DefaultDialer.Dial(config.COMM_URL, nil)
-
-	if err != nil {
-		return c, fmt.Errorf("auth conn: %s", err.Error())
-	}
-
-	err = c.WriteJSON(req_orchestrator)
-
-	if err != nil {
-		return c, fmt.Errorf("auth conn: %s", err.Error())
-	}
-
-	return c, nil
+	return nil
 }
 
 func RequestHandler_LinearInstruction_Persist_PrintOnly(c *websocket.Conn, target string, option string, linear_instruction string) {

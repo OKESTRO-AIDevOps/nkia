@@ -1,4 +1,4 @@
-package main
+package controller
 
 import (
 	"database/sql"
@@ -8,9 +8,10 @@ import (
 	"log"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
+	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/utils"
 )
 
@@ -25,6 +26,19 @@ type ConfigJSON struct {
 	DB_PW       string `json:"DB_PW"`
 	DB_NAME     string `json:"DB_NAME"`
 	DB_HOST_DEV string `json:"DB_HOST_DEV"`
+}
+
+type InstallSession struct {
+	mu sync.Mutex
+
+	INST_SESSION map[string]*[]byte
+
+	INST_RESULT map[string]string
+}
+
+var FI_SESSIONS = InstallSession{
+	INST_SESSION: make(map[string]*[]byte),
+	INST_RESULT:  make(map[string]string),
 }
 
 func LoadConfig() {
@@ -83,6 +97,57 @@ type OrchestratorRecord_EmailConfig struct {
 
 type OrchestratorRecord_Email struct {
 	email string
+}
+
+type OrchestratorRecord_Pubkey struct {
+	pubkey string
+}
+
+type OrchestratorRecord_RequestKey struct {
+	request_key string
+}
+
+func GetPubkeyByEmail(email string) (string, error) {
+
+	var ret string
+
+	var result_container_pubkey []OrchestratorRecord_Pubkey
+
+	q := "SELECT pubkey FROM orchestrator_record WHERE email = ?"
+
+	a := []any{email}
+
+	res, err := DbQuery(q, a)
+
+	if err != nil {
+		return "", fmt.Errorf("failed to get pubkey: %s", err.Error())
+	}
+
+	for res.Next() {
+
+		var or OrchestratorRecord_Pubkey
+
+		err = res.Scan(&or.pubkey)
+
+		if err != nil {
+
+			return "", fmt.Errorf("failed to get pubkey: %s", err.Error())
+
+		}
+
+		result_container_pubkey = append(result_container_pubkey, or)
+
+	}
+
+	res.Close()
+
+	if len(result_container_pubkey) != 1 {
+		return "", fmt.Errorf("failed to get pubkey: %s", "length")
+	}
+
+	ret = result_container_pubkey[0].pubkey
+
+	return ret, nil
 }
 
 func GetKubeconfigByEmailAndClusterID(email string, cluster_id string) ([]byte, error) {
@@ -570,22 +635,6 @@ func InstallCluster(sess_key string, cluster_id string, targetip string, targeti
 	}
 
 	output = append(output, []byte("\n----------CONTROL PLANE INSTALLED----------\n")...)
-
-	WriteToInstallSessionWithLock(sess_key, string(output))
-
-	output, err = conn.SendCommands("cd /npia/bin/nokubelet && sudo ./nokubelet init-npia-default" + options)
-	if err != nil {
-
-		err_msg := fmt.Sprintf("failed to install cluster: %s", err.Error())
-
-		WriteToInstallSessionWithLock(sess_key, fmt.Sprintf("failed to install cluster: %s", err.Error()))
-
-		WriteToInstallResultWithLock(sess_key, err_msg)
-
-		return
-	}
-
-	output = append(output, []byte("\n----------NOKUBELET INITIATED----------\n")...)
 
 	WriteToInstallSessionWithLock(sess_key, string(output))
 

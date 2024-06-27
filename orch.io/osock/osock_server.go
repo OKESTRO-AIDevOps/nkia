@@ -6,14 +6,15 @@ import (
 	"strings"
 	"time"
 
-	ctrl "github.com/OKESTRO-AIDevOps/nkia/nokubelet/controller"
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
+	sctrl "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/controller"
+	ctrl "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
+	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	"github.com/gorilla/websocket"
 )
 
 func ServerDestructor(c *websocket.Conn) {
 
-	EventLogger("Front destructor called")
+	sctrl.EventLogger("Front destructor called")
 
 	sc, _ := SERVER_CONNECTION_FRONT[c]
 
@@ -23,18 +24,18 @@ func ServerDestructor(c *websocket.Conn) {
 
 	delete(SERVER_CONNECTION_KEY, c)
 
-	EventLogger("Front destructor exit")
+	sctrl.EventLogger("Front destructor exit")
 }
 
 func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
-	EventLogger("Server access")
+	sctrl.EventLogger("Server access")
 
 	UPGRADER.CheckOrigin = func(r *http.Request) bool { return true }
 
 	c, err := UPGRADER.Upgrade(w, r, nil)
 	if err != nil {
-		EventLogger("upgrade:" + err.Error())
+		sctrl.EventLogger("upgrade:" + err.Error())
 		return
 	}
 
@@ -56,16 +57,16 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 		if iter_count > 10 {
 			err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 			if err != nil {
-				EventLogger("auth iter write close:" + err.Error())
+				sctrl.EventLogger("auth iter write close:" + err.Error())
 				return
 			}
-			EventLogger("auth iter: limit")
+			sctrl.EventLogger("auth iter: limit")
 			return
 		}
 
 		err := c.ReadJSON(&req)
 		if err != nil {
-			EventLogger("auth:" + err.Error())
+			sctrl.EventLogger("auth:" + err.Error())
 			return
 		}
 
@@ -83,7 +84,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 			if len(email_context_list) != 2 {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-				EventLogger("auth update: wrong format")
+				sctrl.EventLogger("auth update: wrong format")
 				return
 			}
 
@@ -91,11 +92,11 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 			cluster_id := email_context_list[1]
 
-			token, err := GetConfigChallengeByEmailAndClusterID(email, cluster_id)
+			token, err := sctrl.GetConfigChallengeByEmailAndClusterID(email, cluster_id)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-				EventLogger("auth update: get config: " + err.Error())
+				sctrl.EventLogger("auth update: get config: " + err.Error())
 				return
 			}
 
@@ -105,7 +106,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-				EventLogger("auth update: encrypt: " + err.Error())
+				sctrl.EventLogger("auth update: encrypt: " + err.Error())
 				return
 			}
 
@@ -119,7 +120,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-				EventLogger("auth update: write: " + err.Error())
+				sctrl.EventLogger("auth update: write: " + err.Error())
 				return
 			}
 
@@ -131,7 +132,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 			if len(email_context_list) != 4 {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-				EventLogger("auth rotate: wrong format")
+				sctrl.EventLogger("auth rotate: wrong format")
 				return
 			}
 
@@ -143,11 +144,11 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 			config := email_context_list[3]
 
-			token, err := GetConfigChallengeByEmailAndClusterID(email, cluster_id)
+			token, err := sctrl.GetConfigChallengeByEmailAndClusterID(email, cluster_id)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-				EventLogger("auth rotate: get config: " + err.Error())
+				sctrl.EventLogger("auth rotate: get config: " + err.Error())
 				return
 			}
 
@@ -157,7 +158,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-				EventLogger("auth rotate: answer: " + err.Error())
+				sctrl.EventLogger("auth rotate: answer: " + err.Error())
 				return
 			}
 
@@ -166,7 +167,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-				EventLogger("auth rotate: decode config: " + err.Error())
+				sctrl.EventLogger("auth rotate: decode config: " + err.Error())
 				return
 			}
 
@@ -175,17 +176,17 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-				EventLogger("auth rotate: decrypt config: " + err.Error())
+				sctrl.EventLogger("auth rotate: decrypt config: " + err.Error())
 				return
 			}
 
 			config_dec_string := string(config_dec)
 
-			err = AddClusterByEmailAndClusterID(email, cluster_id, config_dec_string)
+			err = sctrl.AddClusterByEmailAndClusterID(email, cluster_id, config_dec_string)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
-				EventLogger("auth rotate: add cluster: " + err.Error())
+				sctrl.EventLogger("auth rotate: add cluster: " + err.Error())
 				return
 			}
 
@@ -198,7 +199,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-				EventLogger("auth rotate: write: " + err.Error())
+				sctrl.EventLogger("auth rotate: write: " + err.Error())
 				return
 			}
 
@@ -211,7 +212,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 			if len(email_context_list) != 2 {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-				EventLogger("auth ask: wrong format")
+				sctrl.EventLogger("auth ask: wrong format")
 				return
 			}
 
@@ -219,12 +220,12 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 			cluster_id := email_context_list[1]
 
-			config_b, err := GetKubeconfigByEmailAndClusterID(email, cluster_id)
+			config_b, err := sctrl.GetKubeconfigByEmailAndClusterID(email, cluster_id)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-				EventLogger("auth ask: get config: " + err.Error())
+				sctrl.EventLogger("auth ask: get config: " + err.Error())
 				return
 			}
 
@@ -235,7 +236,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-				EventLogger("auth ask: gen chal: " + err.Error())
+				sctrl.EventLogger("auth ask: gen chal: " + err.Error())
 				return
 			}
 
@@ -247,7 +248,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-				EventLogger("auth ask: write: " + err.Error())
+				sctrl.EventLogger("auth ask: write: " + err.Error())
 				return
 			}
 
@@ -260,7 +261,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 			if len(email_context_list) != 2 {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-				EventLogger("auth ask: wrong format")
+				sctrl.EventLogger("auth ask: wrong format")
 				return
 			}
 
@@ -268,12 +269,12 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 			cluster_id := email_context_list[1]
 
-			config_b, err := GetKubeconfigByEmailAndClusterID(email, cluster_id)
+			config_b, err := sctrl.GetKubeconfigByEmailAndClusterID(email, cluster_id)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-				EventLogger("auth ans: get config: " + err.Error())
+				sctrl.EventLogger("auth ans: get config: " + err.Error())
 				return
 			}
 
@@ -284,7 +285,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-				EventLogger("auth ans: verify: " + err.Error())
+				sctrl.EventLogger("auth ans: verify: " + err.Error())
 				return
 			}
 
@@ -312,7 +313,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-				EventLogger("auth ans: write: " + err.Error())
+				sctrl.EventLogger("auth ans: write: " + err.Error())
 				return
 			}
 
@@ -321,7 +322,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 		default:
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-			EventLogger("auth blank: default")
+			sctrl.EventLogger("auth blank: default")
 			return
 
 		}
@@ -330,7 +331,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	EventLogger("server accepted")
+	sctrl.EventLogger("server accepted")
 
 	var res_server ctrl.APIMessageResponse
 	var res_orchestrator ctrl.OrchestratorResponse
@@ -341,7 +342,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			ServerDestructor(c)
 			c.Close()
-			EventLogger("response:" + err.Error())
+			sctrl.EventLogger("response:" + err.Error())
 
 			return
 		}
@@ -353,7 +354,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-			EventLogger("response key:" + err.Error())
+			sctrl.EventLogger("response key:" + err.Error())
 
 			return
 
@@ -365,7 +366,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-			EventLogger("response front:" + err.Error())
+			sctrl.EventLogger("response front:" + err.Error())
 
 			return
 
@@ -377,7 +378,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-			EventLogger("response front conn:" + err.Error())
+			sctrl.EventLogger("response front conn:" + err.Error())
 
 			return
 
@@ -389,7 +390,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-			EventLogger("response access:" + err.Error())
+			sctrl.EventLogger("response access:" + err.Error())
 
 			return
 
@@ -405,7 +406,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-			EventLogger("response dec:" + err.Error())
+			sctrl.EventLogger("response dec:" + err.Error())
 
 			return
 		}
@@ -416,7 +417,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 			ServerDestructor(c)
 			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-			EventLogger("response dec 2:" + err.Error())
+			sctrl.EventLogger("response dec 2:" + err.Error())
 
 			return
 		}
@@ -428,7 +429,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			ServerDestructor(c)
 			c.Close()
-			EventLogger("response send:" + err.Error())
+			sctrl.EventLogger("response send:" + err.Error())
 
 			return
 		}

@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	ctrl "github.com/OKESTRO-AIDevOps/nkia/nokubelet/controller"
 	apistd "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
 )
 
-func (axgi API_X) BuildOrchRequest(apix_id string, apix_options API_X_OPTIONS) (ctrl.OrchestratorRequest, error) {
+func (axgi API_X) BuildOrchRequest(apix_id string, apix_options API_X_OPTIONS) (OrchestratorRequest, error) {
 
-	oreq := ctrl.OrchestratorRequest{}
+	oreq := OrchestratorRequest{}
 
 	apistd_in := make(apistd.API_INPUT)
 
@@ -98,9 +97,9 @@ func (axgi API_X) BuildAPIInput(apix_id string, apix_options API_X_OPTIONS) (api
 	return apistd_in, nil
 }
 
-func (axgi API_X) BuildOrchRequestFromCommandLine(args []string) (ctrl.OrchestratorRequest, error) {
+func (axgi API_X) BuildOrchRequestFromCommandLine(args []string) (OrchestratorRequest, error) {
 
-	oreq := ctrl.OrchestratorRequest{}
+	oreq := OrchestratorRequest{}
 
 	apix_id, apix_options, err := BuildCmdIdAndOptions(args)
 

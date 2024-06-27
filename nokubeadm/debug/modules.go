@@ -10,9 +10,9 @@ import (
 	"os"
 
 	"github.com/OKESTRO-AIDevOps/nkia/nokubeadm/config"
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/controller"
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
+	controller "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
+	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	goya "github.com/goccy/go-yaml"
 )
 

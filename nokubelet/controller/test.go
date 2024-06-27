@@ -7,18 +7,19 @@ import (
 	"net/http"
 	"strings"
 
+	ctrl "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
+	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	kalfs "github.com/OKESTRO-AIDevOps/nkia/pkg/kaleidofs"
 )
 
 func QueryAPI_LinearInstruction_Test(c *gin.Context) {
 
-	var req APIMessageRequest
-	var resp APIMessageResponse
+	var req ctrl.APIMessageRequest
+	var resp ctrl.APIMessageResponse
 
 	session_sym_key, err := modules.AccessAuth(c)
 
@@ -90,9 +91,9 @@ func QueryAPI_LinearInstruction_Test(c *gin.Context) {
 
 func AuthChallenge_Test(c *gin.Context) {
 
-	var req AuthChallenge
+	var req ctrl.AuthChallenge
 
-	var resp AuthChallenge
+	var resp ctrl.AuthChallenge
 
 	body_byte, err := io.ReadAll(c.Request.Body)
 
@@ -169,8 +170,8 @@ func AuthChallenge_Test(c *gin.Context) {
 
 func Multimode_LinearInstruction_Test(c *gin.Context) {
 
-	var req APIMessageRequest
-	var resp APIMessageResponse
+	var req ctrl.APIMessageRequest
+	var resp ctrl.APIMessageResponse
 
 	var server_message string
 

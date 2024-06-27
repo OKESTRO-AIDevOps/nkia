@@ -26,49 +26,6 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 
 	// case "NKADM-INSTENVRES":
 
-	case "NKADM-INSTCTRL":
-
-		localip := std_cmd["localip"]
-		osnm := std_cmd["osnm"]
-		cv := std_cmd["cv"]
-
-		cmd_err := kubebase.InstallControlPlane(localip, osnm, cv)
-
-		b_out := []byte("npia install control plane success\n")
-
-		if cmd_err != nil {
-
-			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
-
-		}
-
-		ret_api_out.BODY = string(b_out)
-
-	//	case "NKADM-INSTANCTRLCRT":
-
-	//	case "NKADM-INSTANCTRLOL":
-
-	//	case "NKADM-INSTANCTRLOR":
-
-	case "NKADM-INSTWKOL":
-
-		localip := std_cmd["localip"]
-		osnm := std_cmd["osnm"]
-		cv := std_cmd["cv"]
-		token := std_cmd["token"]
-
-		cmd_err := kubebase.InstallWorkerOnLocal(localip, osnm, cv, token)
-
-		b_out := []byte("npia install worker successful\n")
-
-		if cmd_err != nil {
-
-			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
-
-		}
-
-		ret_api_out.BODY = string(b_out)
-
 	case "ADMIN-INSTWKOR":
 
 		targetip := std_cmd["targetip"]
@@ -95,22 +52,6 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 
 		ret_api_out.BODY = string([]byte("remote worker installation started\n"))
 
-	case "NKADM-INSTVOLOL":
-
-		localip := std_cmd["localip"]
-
-		cmd_err := kubebase.InstallVolumeOnLocal(localip)
-
-		b_out := []byte("npia install volume successful\n")
-
-		if cmd_err != nil {
-
-			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
-
-		}
-
-		ret_api_out.BODY = string(b_out)
-
 	case "ADMIN-INSTVOLOR":
 
 		targetip := std_cmd["targetip"]
@@ -122,20 +63,6 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 
 		ret_api_out.BODY = string([]byte("remote volume installation started\n"))
 
-	case "NKADM-INSTTKOL":
-
-		cmd_err := kubebase.InstallToolKitOnLocal()
-
-		b_out := []byte("npia install toolkit successful\n")
-
-		if cmd_err != nil {
-
-			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
-
-		}
-
-		ret_api_out.BODY = string(b_out)
-
 	case "ADMIN-INSTTKOR":
 
 		targetip := std_cmd["targetip"]
@@ -145,18 +72,6 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 		go kubebase.InstallToolKitOnRemote(targetip, targetid, targetpw)
 
 		ret_api_out.BODY = string([]byte("remote toolkit installation started\n"))
-
-	case "NKADM-INSTLOGOL":
-
-		b_out, cmd_err := kubebase.InstallLogOnLocal()
-
-		if cmd_err != nil {
-
-			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
-
-		}
-
-		ret_api_out.BODY = string(b_out)
 
 	case "ADMIN-INSTLOGOR":
 
