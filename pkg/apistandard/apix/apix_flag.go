@@ -2,6 +2,8 @@ package apix
 
 var APIX_FLAGS = "" +
 	"path              : path for the given whatever task" + "\n" +
+	"to                : cluster id for orch id" + "\n" +
+	"as                : options for orch, it goes like --as a1=a,a2=b,a2=c " + "\n" +
 	"clusterid         : target cluster name to be registered" + "\n" +
 	"updatetoken       : update token for connection" + "\n" +
 	"localip           : local ip adress" + "\n" +

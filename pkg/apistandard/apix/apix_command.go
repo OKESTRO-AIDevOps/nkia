@@ -3,6 +3,8 @@ package apix
 var APIX_COMMAND = "" +
 	// front admin option
 	"init                                              : initiate nokubectl                " + "\n" +
+	"set                                               : set nokubectl cluster id                " + "\n" +
+	"set-opts                                          : set nokubectl options for orch io                " + "\n" +
 	"orch-conncheck                                    : checking orch.io connection                " + "\n" +
 	"orch-keygen                                       : generate and receive private key                " + "\n" +
 	"orch-get-cl                                       : receive cluster names that are available for communication" + "\n" +

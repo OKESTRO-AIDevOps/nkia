@@ -21,5 +21,15 @@ gen-okey:
 
 	go run ./_okeygen/keygen.go
 
-	cp okey osock/okey
+	tar czf certs_client.tar.gz certs_client
+
+	gpg -o certs_client.tar.gz.gpg --symmetric certs_client.tar.gz
+
+	rm certs_client.tar.gz
+
+	rm -r certs_client/*.crt certs_client/*.priv certs_client/*.pub
+
+	/bin/cp -Rf certs_server/* osock/.npia/certs/
+
+	rm -r certs_server/*.crt certs_server/*.priv certs_server/*.pub
 

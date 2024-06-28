@@ -19,6 +19,8 @@ type API_STD map[string][]string
 var API_DEFINITION string = "" +
 	//            id          :       keys
 	"NKCTL-INIT               :id, path                                                                                   " + "\n" +
+	"NKCTL-SETTO              :id, to                                                                                     " + "\n" +
+	"NKCTL-SETAS              :id, as                                                                                     " + "\n" +
 	"ORCH-CONNCHK             :id                                                                                         " + "\n" +
 	"ORCH-KEYGEN              :id                                                                                         " + "\n" +
 	"ORCH-GETCL               :id                                                                                         " + "\n" +

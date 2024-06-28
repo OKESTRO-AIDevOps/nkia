@@ -5,3 +5,7 @@ ofront/ofront
 osock/osock
 osock/okey
 okey
+*.crt
+*.priv
+*.pub
+*.gpg

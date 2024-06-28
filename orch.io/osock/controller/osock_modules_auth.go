@@ -1,6 +1,10 @@
 package controller
 
 import (
+	"crypto"
+	"crypto/rsa"
+	"crypto/sha256"
+	"crypto/x509"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -9,6 +13,66 @@ import (
 	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	"github.com/gorilla/websocket"
 )
+
+var CA_CERT *x509.Certificate
+
+func CertAuthChallenge(c *websocket.Conn) (string, error) {
+
+	var v_email string
+
+	var req_orchestrator = ctrl.OrchestratorRequest{}
+	var res_orchestrator = ctrl.OrchestratorResponse{}
+
+	err := c.ReadJSON(&req_orchestrator)
+
+	if err != nil {
+
+		return "", fmt.Errorf("key auth: json: %s", err.Error())
+
+	}
+
+	certString := req_orchestrator.Query
+
+	cert_b := []byte(certString)
+
+	clientcrt, err := modules.BytesToCert(cert_b)
+
+	if err != nil {
+
+		return "", fmt.Errorf("key auth: cert: %s", err.Error())
+	}
+
+	hash_sha := sha256.New()
+
+	hash_sha.Write(clientcrt.RawTBSCertificate)
+
+	hash_data := hash_sha.Sum(nil)
+
+	pub_key := CA_CERT.PublicKey.(*rsa.PublicKey)
+
+	err = rsa.VerifyPKCS1v15(pub_key, crypto.SHA256, hash_data, clientcrt.Signature)
+
+	if err != nil {
+
+		return "", fmt.Errorf("key auth: verify: %s", err.Error())
+	}
+
+	v_email = clientcrt.Subject.CommonName
+
+	res_orchestrator.ServerMessage = "SUCCESS"
+
+	res_orchestrator.QueryResult = []byte(v_email)
+
+	err = c.WriteJSON(res_orchestrator)
+
+	if err != nil {
+
+		return "", fmt.Errorf("key auth: send: %s", err.Error())
+
+	}
+
+	return v_email, nil
+}
 
 func KeyAuthChallenge(c *websocket.Conn) (string, error) {
 

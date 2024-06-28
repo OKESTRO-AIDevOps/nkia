@@ -22,6 +22,12 @@ build:
 
 	/bin/cp -Rf lib nokubelet/
 
+	echo ""  > nokubeadm/.npia/.init
+
+	echo ""  > nokubectl/.npia/.init
+
+	echo ""  > nokubelet/.npia/.init
+
 	rm -r lib
 
 release:
@@ -40,9 +46,17 @@ release:
 
 	/bin/cp -Rf nokubeadm/.npia nkia/nokubeadm/
 
+	rm nkia/nokubeadm/.npia/.init
+
 	/bin/cp -Rf nokubectl/.npia nkia/nokubectl/
 
+	rm nkia/nokubectl/.npia/.init
+
+	rm nkia/nokubectl/.npia/.priv
+
 	/bin/cp -Rf nokubelet/.npia nkia/nokubelet/
+
+	rm nkia/nokubelet/.npia/.init
 
 	/bin/cp -Rf nokubelet/nkletd nkia/nokubelet/nkletd
 
@@ -76,6 +90,8 @@ hack/release:
 .PHONY: orch.io
 orch.io:
 
+	make -C orch.io gen-okey
+
 	make -C orch.io build
 
 
@@ -85,6 +101,8 @@ orch.io-db:
 
 
 orch.io-up:
+
+	make -C orch.io gen-okey
 
 	make -C orch.io up 
 

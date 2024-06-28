@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/x509"
 	"fmt"
 	"os"
 	"os/exec"
@@ -112,13 +113,29 @@ func RunClientCmd(args []string) {
 
 	}
 
-	// TODO: check --to
-
 	oreq, err := apix.AXgi.BuildOrchRequestFromCommandLine(args)
 
-	var email string
+	if err != nil {
 
-	email = config.EMAIL
+		fmt.Printf("failed: %s\n", err.Error())
+
+		return
+	}
+
+	certpool := x509.NewCertPool()
+
+	file_b, err := os.ReadFile(".npia/certs/ca.crt")
+
+	if err != nil {
+
+		fmt.Printf("failed: %s\n", err.Error())
+
+		return
+	}
+
+	certpool.AppendCertsFromPEM(file_b)
+
+	websocket.DefaultDialer.TLSClientConfig.RootCAs = certpool
 
 	c, _, err := websocket.DefaultDialer.Dial(config.COMM_URL, nil)
 
@@ -128,7 +145,7 @@ func RunClientCmd(args []string) {
 
 		return
 	}
-	err = nkctlclient.KeyAuthConn(c, email)
+	err = nkctlclient.CertAuthConn(c)
 
 	if err != nil {
 
@@ -139,7 +156,7 @@ func RunClientCmd(args []string) {
 
 	// nkctlclient.RequestHandler_APIX_Once_PrintOnly(c, oreq)
 
-	nkctlclient.RequestHandler_APIX_Store_Override(c, oreq)
+	nkctlclient.Do(c, oreq)
 
 }
 

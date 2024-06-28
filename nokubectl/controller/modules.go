@@ -83,3 +83,30 @@ func InitCtl(priv_path string) error {
 	return nil
 
 }
+
+func ToCtl(to string) error {
+
+	err := os.WriteFile(".npia/.to", []byte(to), 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to write .to: %s", err.Error())
+
+	}
+
+	return nil
+}
+
+func AsCtl(as string) error {
+
+	err := os.WriteFile(".npia/.as", []byte(as), 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to write .as: %s", err.Error())
+
+	}
+
+	return nil
+
+}
