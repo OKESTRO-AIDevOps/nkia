@@ -239,7 +239,7 @@ func FrontHandler2(w http.ResponseWriter, r *http.Request) {
 
 	defer c.Close()
 
-	user_id, err := sctrl.KeyAuthChallenge(c)
+	user_id, err := sctrl.CertAuthChallenge(c)
 
 	if err != nil {
 

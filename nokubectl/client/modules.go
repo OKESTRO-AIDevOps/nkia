@@ -17,6 +17,41 @@ import (
 
 var PRINT_ONLY_BODY map[string]string
 
+func CertAuthConn(client *websocket.Conn) error {
+
+	var req_orchestrator ctrl.OrchestratorRequest
+
+	var resp_orchestrator ctrl.OrchestratorResponse
+
+	file_b, err := os.ReadFile(".npia/certs/client.crt")
+
+	if err != nil {
+
+		return fmt.Errorf("cert auth: %s", err.Error())
+
+	}
+
+	req_orchestrator.Query = string(file_b)
+
+	err = client.WriteJSON(req_orchestrator)
+
+	if err != nil {
+		return fmt.Errorf("auth: %s", err.Error())
+	}
+
+	err = client.ReadJSON(&resp_orchestrator)
+
+	if err != nil {
+		return fmt.Errorf("auth: %s", err.Error())
+	}
+
+	if resp_orchestrator.ServerMessage != "SUCCESS" {
+		return fmt.Errorf("auth: %s", err.Error())
+	}
+
+	return nil
+}
+
 func KeyAuthConn(client *websocket.Conn, email string) error {
 
 	var req_orchestrator ctrl.OrchestratorRequest

@@ -67,6 +67,15 @@ func O_Init() error {
 		return fmt.Errorf("failed init npia orchestrator: %s", err.Error())
 	}
 
+	cmd = exec.Command("mkdir", "-p", ".npia/certs")
+
+	err = cmd.Run()
+
+	if err != nil {
+
+		return fmt.Errorf("failed init npia orchestrator: %s", err.Error())
+	}
+
 	challenge_records_b, err := json.Marshal(challenge_records)
 
 	if err != nil {
@@ -139,12 +148,27 @@ func main() {
 
 	sctrl.EventLogger("DB Connected")
 
+	file_b, err := os.ReadFile(".npia/certs/ca.crt")
+
+	if err != nil {
+
+		panic(err)
+	}
+
+	crt, err := modules.BytesToCert(file_b)
+
+	if err != nil {
+		panic(err)
+	}
+
+	sctrl.CA_CERT = crt
+
 	flag.Parse()
 	log.SetFlags(0)
 	http.HandleFunc("/osock/server/test", ServerHandler_Test)
 	http.HandleFunc("/osock/server", ServerHandler)
 	http.HandleFunc("/osock/front/test", FrontHandler2_Test)
 	http.HandleFunc("/osock/front", FrontHandler2)
-	log.Fatal(http.ListenAndServe(*ADDR, nil))
+	log.Fatal(http.ListenAndServeTLS(*ADDR, ".npia/certs/server.crt", ".npia/certs/server.priv", nil))
 
 }

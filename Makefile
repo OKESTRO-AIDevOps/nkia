@@ -90,6 +90,8 @@ hack/release:
 .PHONY: orch.io
 orch.io:
 
+	make -C orch.io gen-okey
+
 	make -C orch.io build
 
 
@@ -99,6 +101,8 @@ orch.io-db:
 
 
 orch.io-up:
+
+	make -C orch.io gen-okey
 
 	make -C orch.io up 
 

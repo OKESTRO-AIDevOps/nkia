@@ -1,23 +1,118 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
+	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 )
+
+func ToFile(cs *modules.CertSet) error {
+
+	err := os.WriteFile("certs_server/ca.crt", cs.RootCertPEM, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to write file: %s", err.Error())
+
+	}
+
+	err = os.WriteFile("certs_server/ca.priv", cs.RootKeyPEM, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to write file: %s", err.Error())
+	}
+
+	err = os.WriteFile("certs_server/ca.pub", cs.RootPubPEM, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to write file: %s", err.Error())
+	}
+
+	err = os.WriteFile("certs_client/ca.crt", cs.RootCertPEM, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to write file: %s", err.Error())
+
+	}
+
+	err = os.WriteFile("certs_client/ca.priv", cs.RootKeyPEM, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to write file: %s", err.Error())
+	}
+
+	err = os.WriteFile("certs_client/ca.pub", cs.RootPubPEM, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to write file: %s", err.Error())
+	}
+
+	err = os.WriteFile("certs_server/server.crt", cs.ServCertPEM, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to write file: %s", err.Error())
+	}
+
+	err = os.WriteFile("certs_server/server.priv", cs.ServKeyPEM, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to write file: %s", err.Error())
+	}
+
+	err = os.WriteFile("certs_server/server.pub", cs.ServPubPEM, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to write file: %s", err.Error())
+	}
+
+	err = os.WriteFile("certs_client/client.crt", cs.ClientCertPEM, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to write file: %s", err.Error())
+	}
+
+	err = os.WriteFile("certs_client/client.priv", cs.ClientKeyPEM, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to write file: %s", err.Error())
+	}
+
+	err = os.WriteFile("certs_client/client.pub", cs.ClientPubPEM, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to write file: %s", err.Error())
+	}
+
+	return nil
+}
+
+func EncryptExport() {
+
+}
 
 func main() {
 
-	server_sym_key, err := modules.RandomHex(16)
+	var cs *modules.CertSet
+
+	cs = modules.NewCertsPipeline()
+
+	err := ToFile(cs)
 
 	if err != nil {
-		panic(err.Error())
-	}
 
-	err = os.WriteFile("okey", []byte(server_sym_key), 0644)
-
-	if err != nil {
-		panic(err.Error())
+		fmt.Fprintf(os.Stderr, "%s", err.Error())
 	}
 
 }

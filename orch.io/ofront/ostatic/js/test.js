@@ -77,7 +77,7 @@ function Test_OrchestratorInit(){
 
         oreq = JSON.parse(JSON.stringify(OrchestratorRequest))
 
-        oreq["request_option"] = REQ_KEY
+        oreq["query"] = "seantywork@gmail.com"
 
         ws.send(JSON.stringify(oreq))
 

@@ -5,9 +5,9 @@
 # keygen from the website
 
 
-`- admin ORCH-CONNCHK:`
+`- - ORCH-CONNCHK:`
 
-`- admin ORCH-KEYGEN:`
+`- - ORCH-KEYGEN:`
 
 ```shell
 
