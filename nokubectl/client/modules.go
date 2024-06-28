@@ -222,7 +222,7 @@ func RequestHandler_APIX_Once_PrintOnly(c *websocket.Conn, req_orchestrator ctrl
 
 }
 
-func RequestHandler_APIX_Store_Override(c *websocket.Conn, req_orchestrator ctrl.OrchestratorRequest) {
+func Do(c *websocket.Conn, req_orchestrator ctrl.OrchestratorRequest) {
 
 	recv := make(chan ctrl.OrchestratorResponse)
 
@@ -230,18 +230,9 @@ func RequestHandler_APIX_Store_Override(c *websocket.Conn, req_orchestrator ctrl
 
 	var OUT apistandard.API_OUTPUT
 
-	var HEAD apistandard.API_METADATA
+	//var HEAD apistandard.API_METADATA
 
 	var BODY string
-
-	req_b, err := json.Marshal(req_orchestrator)
-
-	if err != nil {
-		panic(err.Error())
-
-	}
-
-	_ = os.WriteFile(".npia/_output/REQ", req_b, 0644)
 
 	go RequestHandler_ReadChannel(c, recv)
 
@@ -262,30 +253,34 @@ func RequestHandler_APIX_Store_Override(c *websocket.Conn, req_orchestrator ctrl
 			err := json.Unmarshal(result.QueryResult, &OUT)
 
 			if err != nil {
-				panic(err.Error())
+				fmt.Fprintf(os.Stderr, "err: %s", err.Error())
+
+				return
 			}
 
 			if MSG != "SUCCESS" {
-				panic(err.Error())
+
+				fmt.Fprintf(os.Stderr, "failed: %s", MSG)
+
+				return
 			}
 
-			_ = os.WriteFile(".npia/_output/MSG", []byte(MSG), 0644)
-
-			HEAD = OUT.HEAD
+			//HEAD = OUT.HEAD
 
 			BODY = OUT.BODY
 
-			head_b, err := json.Marshal(HEAD)
+			//head_b, err := json.Marshal(HEAD)
 
 			if err != nil {
-				panic(err.Error())
+
+				fmt.Fprintf(os.Stderr, "err: %s", err.Error())
 			}
 
-			_ = os.WriteFile(".npia/_output/HEAD", head_b, 0644)
+			//_ = os.WriteFile(".npia/_output/HEAD", head_b, 0644)
 
-			_ = os.WriteFile(".npia/_output/BODY", []byte(BODY), 0644)
+			//_ = os.WriteFile(".npia/_output/BODY", []byte(BODY), 0644)
 
-			fmt.Println("SUCCESS")
+			fmt.Fprintf(os.Stdout, "%s", BODY)
 
 			return
 

@@ -39,6 +39,36 @@ func RequestForwardHandler(api_input apistandard.API_INPUT) (bool, string, error
 
 		return false, result, nil
 
+	case "NKCTL-SETTO":
+
+		to := api_input["to"]
+
+		err := cctrl.ToCtl(to)
+
+		if err != nil {
+
+			return false, result, fmt.Errorf("run failed: %s", err.Error())
+		}
+
+		result = fmt.Sprintf("successfully set target to: %s\n", to)
+
+		return false, result, nil
+
+	case "NKCTL-SETAS":
+
+		as := api_input["as"]
+
+		err := cctrl.AsCtl(as)
+
+		if err != nil {
+
+			return false, result, fmt.Errorf("run failed: %s", err.Error())
+		}
+
+		result = fmt.Sprintf("successfully set options to: %s", as)
+
+		return false, result, nil
+
 	default:
 
 		fmt.Println("forward")

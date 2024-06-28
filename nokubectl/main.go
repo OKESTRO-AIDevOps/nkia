@@ -112,8 +112,6 @@ func RunClientCmd(args []string) {
 
 	}
 
-	// TODO: check --to
-
 	oreq, err := apix.AXgi.BuildOrchRequestFromCommandLine(args)
 
 	var email string
@@ -139,7 +137,7 @@ func RunClientCmd(args []string) {
 
 	// nkctlclient.RequestHandler_APIX_Once_PrintOnly(c, oreq)
 
-	nkctlclient.RequestHandler_APIX_Store_Override(c, oreq)
+	nkctlclient.Do(c, oreq)
 
 }
 

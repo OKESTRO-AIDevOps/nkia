@@ -11,6 +11,8 @@ type API_X_OPTIONS map[string]string
 var APIX_QUERY_MAP = "" +
 	// front admin option
 	"init                                              : NKCTL-INIT            " + "\n" +
+	"set                                               : NKCTL-SETTO           " + "\n" +
+	"set-opts                                          : NKCTL-SETAS           " + "\n" +
 	"orch-conncheck                                    : ORCH-CONNCHK          " + "\n" +
 	"orch-keygen                                       : ORCH-KEYGEN           " + "\n" +
 	"orch-get-cl                                       : ORCH-GETCL            " + "\n" +

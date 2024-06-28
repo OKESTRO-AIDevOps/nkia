@@ -2,12 +2,15 @@ package apix
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	apistd "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
 )
 
 func (axgi API_X) BuildOrchRequest(apix_id string, apix_options API_X_OPTIONS) (OrchestratorRequest, error) {
+
+	var to string = ""
 
 	oreq := OrchestratorRequest{}
 
@@ -17,6 +20,40 @@ func (axgi API_X) BuildOrchRequest(apix_id string, apix_options API_X_OPTIONS) (
 
 	if !okay {
 		return oreq, fmt.Errorf("builder: %s", "no matching api std for: "+apix_id)
+	}
+
+	if !strings.Contains(apistd_id, "ORCH") {
+
+		to_b, err := os.ReadFile(".npia/.to")
+
+		if err != nil {
+
+			return oreq, fmt.Errorf("builder: needs .npia/.to, but %s", err.Error())
+
+		}
+
+		to_str := string(to_b)
+
+		to_str = strings.ReplaceAll(to_str, " ", "")
+
+		to = strings.ReplaceAll(to_str, "\n", "")
+
+		if to == "" {
+
+			return oreq, fmt.Errorf("builder: needs .npia/.to, but is empty")
+
+		}
+
+	}
+
+	as_b, err := os.ReadFile(".npia/.as")
+
+	as := string(as_b)
+
+	if err != nil {
+
+		as = ""
+
 	}
 
 	apistd_in_template, okay := apistd.ASgi[apistd_id]
@@ -46,17 +83,9 @@ func (axgi API_X) BuildOrchRequest(apix_id string, apix_options API_X_OPTIONS) (
 
 	oreq.Query = linear_inst
 
-	to, to_okay := apix_options["to"]
+	oreq.RequestTarget = to
 
-	as, as_okay := apix_options["as"]
-
-	if to_okay {
-		oreq.RequestTarget = to
-	}
-
-	if as_okay {
-		oreq.RequestOption = as
-	}
+	oreq.RequestOption = as
 
 	return oreq, nil
 }
