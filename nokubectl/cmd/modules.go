@@ -25,9 +25,7 @@ func RequestForwardHandler(api_input apistandard.API_INPUT) (bool, string, error
 
 	case "NKCTL-INIT":
 
-		priv_path := api_input["path"]
-
-		err := cctrl.InitCtl(priv_path)
+		err := cctrl.InitCtl()
 
 		if err != nil {
 

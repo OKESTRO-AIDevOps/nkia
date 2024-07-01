@@ -1,7 +1,6 @@
 package main
 
 import (
-	"crypto/x509"
 	"fmt"
 	"os"
 	"os/exec"
@@ -122,9 +121,7 @@ func RunClientCmd(args []string) {
 		return
 	}
 
-	certpool := x509.NewCertPool()
-
-	file_b, err := os.ReadFile(".npia/certs/ca.crt")
+	certpool, err := config.LoadCertAuthCredential()
 
 	if err != nil {
 
@@ -132,8 +129,6 @@ func RunClientCmd(args []string) {
 
 		return
 	}
-
-	certpool.AppendCertsFromPEM(file_b)
 
 	websocket.DefaultDialer.TLSClientConfig.RootCAs = certpool
 

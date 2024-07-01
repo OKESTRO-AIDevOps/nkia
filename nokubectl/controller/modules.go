@@ -8,7 +8,7 @@ import (
 	goya "github.com/goccy/go-yaml"
 )
 
-func InitCtl(priv_path string) error {
+func InitCtl() error {
 
 	if _, err := os.Stat(".npia/.init"); err == nil {
 
@@ -70,15 +70,6 @@ func InitCtl(priv_path string) error {
 		}
 
 	}
-
-	priv_b, err := os.ReadFile(priv_path)
-
-	if err != nil {
-
-		return fmt.Errorf("failed to init: %s", err.Error())
-	}
-
-	_ = os.WriteFile(".npia/.priv", priv_b, 0644)
 
 	return nil
 
