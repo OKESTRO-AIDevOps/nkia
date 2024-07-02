@@ -9,95 +9,88 @@ type API_X_ID []string
 type API_X_OPTIONS map[string]string
 
 var APIX_QUERY_MAP = "" +
-	// front admin option
-	"init                                              : NKCTL-INIT            " + "\n" +
-	"set                                               : NKCTL-SETTO           " + "\n" +
-	"set-opts                                          : NKCTL-SETAS           " + "\n" +
-	"orch-conncheck                                    : ORCH-CONNCHK          " + "\n" +
-	"orch-keygen                                       : ORCH-KEYGEN           " + "\n" +
-	"orch-get-cl                                       : ORCH-GETCL            " + "\n" +
-	"orch-add-cl                                       : ORCH-ADDCL            " + "\n" +
-	"orch-install-cl                                   : ORCH-INSTCL           " + "\n" +
-	"orch-install-cl-log                               : ORCH-INSTCLLOG        " + "\n" +
-	// query
-	// "install-env                                      : NKADM-INSTENV         " + "\n" +
-	// "install-env-restart                              : NKADM-INSTENVRES      " + "\n" +
-	"io-connect-update                                 : NKLET-CONNUP          " + "\n" +
-	"io-connect                                        : NKLET-CONN            " + "\n" +
-	"install-mainctrl                                  : NKADM-INSTCTRL        " + "\n" +
-	"install-subctrl-prep                              : NKADM-INSTANCTRLCRT   " + "\n" +
-	"install-subctrl                                   : NKADM-INSTANCTRLOL    " + "\n" +
-	"admin-install-subctrl                             : ADMIN-INSTANCTRLOR    " + "\n" +
-	"install-worker                                    : NKADM-INSTWKOL        " + "\n" +
-	"admin-install-worker                              : ADMIN-INSTWKOR        " + "\n" +
-	"install-volume                                    : NKADM-INSTVOLOL       " + "\n" +
-	"admin-install-volume                              : ADMIN-INSTVOLOR       " + "\n" +
-	"install-toolkit                                   : NKADM-INSTTKOL        " + "\n" +
-	"admin-install-toolkit                             : ADMIN-INSTTKOR        " + "\n" +
-	"install-log                                       : NKADM-INSTLOGOL       " + "\n" +
-	"admin-install-log                                 : ADMIN-INSTLOGOR       " + "\n" +
-	"admin-init                                        : ADMIN-INIT            " + "\n" +
-	"admin-init-log                                    : ADMIN-INITLOG         " + "\n" +
-	"setting-create-namespace                          : SETTING-CRTNS         " + "\n" +
-	"setting-set-repo                                  : SETTING-SETREPO       " + "\n" +
-	"setting-set-reg                                   : SETTING-SETREG        " + "\n" +
-	"setting-create-volume                             : SETTING-CRTVOL        " + "\n" +
-	"setting-create-monitoring                         : SETTING-CRTMON        " + "\n" +
-	"setting-create-monitoring-persist                 : SETTING-CRTMONPERS    " + "\n" +
-	"toolkit-build                                     : TOOLKIT-BUILD         " + "\n" +
-	"toolkit-build-log                                 : TOOLKIT-BUILDLOG      " + "\n" +
-	"toolkit-pipe                                      : TOOLKIT-PIPE          " + "\n" +
-	"toolkit-pipe-log                                  : TOOLKIT-PIPELOG       " + "\n" +
-	"toolkit-pipe-set-var                              : TOOLKIT-PIPESETVAR    " + "\n" +
-	"toolkit-pipe-get-var                              : TOOLKIT-PIPEGETVAR    " + "\n" +
-	"resource-nodes                                    : RESOURCE-NDS          " + "\n" +
-	"resource-pods                                     : RESOURCE-PDS          " + "\n" +
-	"resource-pods-log                                 : RESOURCE-PLOG         " + "\n" +
-	"resource-service                                  : RESOURCE-SVC          " + "\n" +
-	"resource-deployment                               : RESOURCE-DPL          " + "\n" +
-	"resource-event                                    : RESOURCE-EVNT         " + "\n" +
-	"resource-resource                                 : RESOURCE-RSRC         " + "\n" +
-	"resource-namespace                                : RESOURCE-NSPC         " + "\n" +
-	"resource-ingress                                  : RESOURCE-INGR         " + "\n" +
-	"resource-nodeport                                 : RESOURCE-NDPORT       " + "\n" +
-	"resource-pod-scheduled                            : RESOURCE-PSCH         " + "\n" +
-	"resource-pod-unscheduled                          : RESOURCE-PUNSCH       " + "\n" +
-	"resource-container-cpu                            : RESOURCE-CCPU         " + "\n" +
-	"resource-container-mem                            : RESOURCE-CMEM         " + "\n" +
-	"resource-container-fs-read                        : RESOURCE-CFSR         " + "\n" +
-	"resource-container-fs-write                       : RESOURCE-CFSW         " + "\n" +
-	"resource-container-net-receive                    : RESOURCE-CNETR        " + "\n" +
-	"resource-container-net-transmit                   : RESOURCE-CNETT        " + "\n" +
-	"resource-volume-available                         : RESOURCE-VOLAVAIL     " + "\n" +
-	"resource-volume-capacity                          : RESOURCE-VOLCAP       " + "\n" +
-	"resource-volume-used                              : RESOURCE-VOLUSD       " + "\n" +
-	"resource-node-temperature                         : RESOURCE-NTEMP        " + "\n" +
-	"resource-node-temperature-change                  : RESOURCE-NTEMPCH      " + "\n" +
-	"resource-node-temperature-average                 : RESOURCE-NTEMPAV      " + "\n" +
-	"resource-node-process                             : RESOURCE-NPROCS       " + "\n" +
-	"resource-node-cores                               : RESOURCE-NCORES       " + "\n" +
-	"resource-node-mem                                 : RESOURCE-NMEM         " + "\n" +
-	"resource-node-mem-total                           : RESOURCE-NMEMTOT      " + "\n" +
-	"resource-node-disk-read                           : RESOURCE-NDISKR       " + "\n" +
-	"resource-node-disk-write                          : RESOURCE-NDISKW       " + "\n" +
-	"resource-node-net-receive                         : RESOURCE-NNETR        " + "\n" +
-	"resource-node-net-transmit                        : RESOURCE-NNETT        " + "\n" +
-	"resource-node-disk-written                        : RESOURCE-NDISKWT      " + "\n" +
-	"apply-reg-secret                                  : APPLY-REGSEC          " + "\n" +
-	"apply-distro                                      : APPLY-DIST            " + "\n" +
-	"apply-create-operation-source                     : APPLY-CRTOPSSRC       " + "\n" +
-	"apply-restart                                     : APPLY-RESTART         " + "\n" +
-	"apply-rollback                                    : APPLY-ROLLBACK        " + "\n" +
-	"apply-kill                                        : APPLY-KILL            " + "\n" +
-	"apply-net-refresh                                 : APPLY-NETRESH         " + "\n" +
-	"apply-hpa                                         : APPLY-HPA             " + "\n" +
-	"apply-hpa-undo                                    : APPLY-HPAUN           " + "\n" +
-	"apply-qos                                         : APPLY-QOS             " + "\n" +
-	"apply-qos-undo                                    : APPLY-QOSUN           " + "\n" +
-	"apply-ingress                                     : APPLY-INGR            " + "\n" +
-	"apply-ingress-undo                                : APPLY-INGRUN          " + "\n" +
-	"apply-nodeport                                    : APPLY-NDPORT          " + "\n" +
-	"apply-nodeport-undo                               : APPLY-NDPORTUN        " + "\n" +
+	/*a00*/ "init                                              : NKCTL-INIT            " + "\n" +
+	/*a01*/ "set                                               : NKCTL-SETTO           " + "\n" +
+	/*a02*/ "set-opts                                          : NKCTL-SETAS           " + "\n" +
+	/*b00*/ "orch-conncheck                                    : ORCH-CONNCHK          " + "\n" +
+	/*b01*/ "orch-keygen                                       : ORCH-KEYGEN           " + "\n" +
+	/*b02*/ "orch-get-cl                                       : ORCH-GETCL            " + "\n" +
+	/*b03*/ "orch-add-cl                                       : ORCH-ADDCL            " + "\n" +
+	/*b04*/ "orch-install-cl                                   : ORCH-INSTCL           " + "\n" +
+	/*b05*/ "orch-install-cl-log                               : ORCH-INSTCLLOG        " + "\n" +
+	/*c00*/ "io-connect-update                                 : NKLET-CONNUP          " + "\n" +
+	/*c01*/ "io-connect                                        : NKLET-CONN            " + "\n" +
+	/*d00*/ "install-mainctrl                                  : NKADM-INSTCTRL        " + "\n" +
+	/*d01*/ "install-worker                                    : NKADM-INSTWKOL        " + "\n" +
+	/*f00*/ "admin-install-worker                              : ADMIN-INSTWKOR        " + "\n" +
+	/*d02*/ "install-volume                                    : NKADM-INSTVOLOL       " + "\n" +
+	/*f01*/ "admin-install-volume                              : ADMIN-INSTVOLOR       " + "\n" +
+	/*d03*/ "install-toolkit                                   : NKADM-INSTTKOL        " + "\n" +
+	/*f02*/ "admin-install-toolkit                             : ADMIN-INSTTKOR        " + "\n" +
+	/*d04*/ "install-log                                       : NKADM-INSTLOGOL       " + "\n" +
+	/*f03*/ "admin-install-log                                 : ADMIN-INSTLOGOR       " + "\n" +
+	/*f04*/ "admin-init                                        : ADMIN-INIT            " + "\n" +
+	/*f05*/ "admin-init-log                                    : ADMIN-INITLOG         " + "\n" +
+	/*g00*/ "setting-create-namespace                          : SETTING-CRTNS         " + "\n" +
+	/*g01*/ "setting-set-repo                                  : SETTING-SETREPO       " + "\n" +
+	/*g02*/ "setting-set-reg                                   : SETTING-SETREG        " + "\n" +
+	/*g03*/ "setting-create-volume                             : SETTING-CRTVOL        " + "\n" +
+	/*g04*/ "setting-create-monitoring                         : SETTING-CRTMON        " + "\n" +
+	/*g05*/ "setting-create-monitoring-persist                 : SETTING-CRTMONPERS    " + "\n" +
+	/*h00*/ "toolkit-build                                     : TOOLKIT-BUILD         " + "\n" +
+	/*h01*/ "toolkit-build-log                                 : TOOLKIT-BUILDLOG      " + "\n" +
+	/*h02*/ "toolkit-pipe                                      : TOOLKIT-PIPE          " + "\n" +
+	/*h03*/ "toolkit-pipe-log                                  : TOOLKIT-PIPELOG       " + "\n" +
+	/*h04*/ "toolkit-pipe-set-var                              : TOOLKIT-PIPESETVAR    " + "\n" +
+	/*h05*/ "toolkit-pipe-get-var                              : TOOLKIT-PIPEGETVAR    " + "\n" +
+	/*i00*/ "resource-nodes                                    : RESOURCE-NDS          " + "\n" +
+	/*i01*/ "resource-pods                                     : RESOURCE-PDS          " + "\n" +
+	/*i02*/ "resource-pods-log                                 : RESOURCE-PLOG         " + "\n" +
+	/*i03*/ "resource-service                                  : RESOURCE-SVC          " + "\n" +
+	/*i04*/ "resource-deployment                               : RESOURCE-DPL          " + "\n" +
+	/*i05*/ "resource-event                                    : RESOURCE-EVNT         " + "\n" +
+	/*i06*/ "resource-resource                                 : RESOURCE-RSRC         " + "\n" +
+	/*i07*/ "resource-namespace                                : RESOURCE-NSPC         " + "\n" +
+	/*i08*/ "resource-ingress                                  : RESOURCE-INGR         " + "\n" +
+	/*i09*/ "resource-nodeport                                 : RESOURCE-NDPORT       " + "\n" +
+	/*i10*/ "resource-pod-scheduled                            : RESOURCE-PSCH         " + "\n" +
+	/*i11*/ "resource-pod-unscheduled                          : RESOURCE-PUNSCH       " + "\n" +
+	/*i12*/ "resource-container-cpu                            : RESOURCE-CCPU         " + "\n" +
+	/*i13*/ "resource-container-mem                            : RESOURCE-CMEM         " + "\n" +
+	/*i14*/ "resource-container-fs-read                        : RESOURCE-CFSR         " + "\n" +
+	/*i15*/ "resource-container-fs-write                       : RESOURCE-CFSW         " + "\n" +
+	/*i16*/ "resource-container-net-receive                    : RESOURCE-CNETR        " + "\n" +
+	/*i17*/ "resource-container-net-transmit                   : RESOURCE-CNETT        " + "\n" +
+	/*i18*/ "resource-volume-available                         : RESOURCE-VOLAVAIL     " + "\n" +
+	/*i19*/ "resource-volume-capacity                          : RESOURCE-VOLCAP       " + "\n" +
+	/*i20*/ "resource-volume-used                              : RESOURCE-VOLUSD       " + "\n" +
+	/*i21*/ "resource-node-temperature                         : RESOURCE-NTEMP        " + "\n" +
+	/*i22*/ "resource-node-temperature-change                  : RESOURCE-NTEMPCH      " + "\n" +
+	/*i23*/ "resource-node-temperature-average                 : RESOURCE-NTEMPAV      " + "\n" +
+	/*i24*/ "resource-node-process                             : RESOURCE-NPROCS       " + "\n" +
+	/*i25*/ "resource-node-cores                               : RESOURCE-NCORES       " + "\n" +
+	/*i26*/ "resource-node-mem                                 : RESOURCE-NMEM         " + "\n" +
+	/*i27*/ "resource-node-mem-total                           : RESOURCE-NMEMTOT      " + "\n" +
+	/*i28*/ "resource-node-disk-read                           : RESOURCE-NDISKR       " + "\n" +
+	/*i29*/ "resource-node-disk-write                          : RESOURCE-NDISKW       " + "\n" +
+	/*i30*/ "resource-node-net-receive                         : RESOURCE-NNETR        " + "\n" +
+	/*i31*/ "resource-node-net-transmit                        : RESOURCE-NNETT        " + "\n" +
+	/*i32*/ "resource-node-disk-written                        : RESOURCE-NDISKWT      " + "\n" +
+	/*j00*/ "apply-reg-secret                                  : APPLY-REGSEC          " + "\n" +
+	/*j01*/ "apply-distro                                      : APPLY-DIST            " + "\n" +
+	/*j02*/ "apply-create-operation-source                     : APPLY-CRTOPSSRC       " + "\n" +
+	/*j03*/ "apply-restart                                     : APPLY-RESTART         " + "\n" +
+	/*j04*/ "apply-rollback                                    : APPLY-ROLLBACK        " + "\n" +
+	/*j05*/ "apply-kill                                        : APPLY-KILL            " + "\n" +
+	/*j06*/ "apply-net-refresh                                 : APPLY-NETRESH         " + "\n" +
+	/*j07*/ "apply-hpa                                         : APPLY-HPA             " + "\n" +
+	/*j08*/ "apply-hpa-undo                                    : APPLY-HPAUN           " + "\n" +
+	/*j09*/ "apply-qos                                         : APPLY-QOS             " + "\n" +
+	/*j10*/ "apply-qos-undo                                    : APPLY-QOSUN           " + "\n" +
+	/*j11*/ "apply-ingress                                     : APPLY-INGR            " + "\n" +
+	/*j12*/ "apply-ingress-undo                                : APPLY-INGRUN          " + "\n" +
+	/*j13*/ "apply-nodeport                                    : APPLY-NDPORT          " + "\n" +
+	/*j14*/ "apply-nodeport-undo                               : APPLY-NDPORTUN        " + "\n" +
 	""
 
 func _CONSTRUCT_API_X() (API_X, API_X_ID) {
