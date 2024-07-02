@@ -67,7 +67,12 @@ func LoadCertAuthCredential() (*x509.CertPool, error) {
 		return nil, fmt.Errorf("failed: %s\n", err.Error())
 	}
 
-	certpool.AppendCertsFromPEM(file_b)
+	okay := certpool.AppendCertsFromPEM(file_b)
+
+	if !okay {
+
+		return nil, fmt.Errorf("failed to parse cert: ca.crt")
+	}
 
 	return certpool, nil
 

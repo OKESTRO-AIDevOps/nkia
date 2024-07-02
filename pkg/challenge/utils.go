@@ -823,6 +823,11 @@ func CertTemplate(cn string, validYear int) (*x509.Certificate, error) {
 		return nil, errors.New("failed to generate serial number: " + err.Error())
 	}
 
+	if err != nil {
+
+		return nil, fmt.Errorf("failed to gen cert tmpl: %s", err.Error())
+	}
+
 	tmpl := x509.Certificate{
 		SerialNumber:          serialNumber,
 		Subject:               pkix.Name{CommonName: cn},
@@ -830,6 +835,9 @@ func CertTemplate(cn string, validYear int) (*x509.Certificate, error) {
 		NotBefore:             time.Now(),
 		NotAfter:              time.Now().Add(time.Hour * 24 * 30 * 12 * time.Duration(validYear)),
 		BasicConstraintsValid: true,
+		DNSNames: []string{
+			cn,
+		},
 	}
 	return &tmpl, nil
 }
@@ -856,7 +864,7 @@ func NewCertsPipeline() *CertSet {
 	// generate a new key-pair
 	rootKey, rootPub := GenKeyPair(4096)
 
-	rootCertTmpl, err := CertTemplate("nkia", 10)
+	rootCertTmpl, err := CertTemplate("ca", 10)
 	if err != nil {
 		log.Fatalf("creating cert template: %v", err)
 	}
@@ -866,6 +874,8 @@ func NewCertsPipeline() *CertSet {
 	// describe what the certificate will be used for
 	rootCertTmpl.KeyUsage = x509.KeyUsageCertSign | x509.KeyUsageDigitalSignature
 	rootCertTmpl.ExtKeyUsage = []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth, x509.ExtKeyUsageClientAuth}
+
+	log.Println("----------root cert")
 
 	rootCert, rootCertPEM, err := CreateCert(rootCertTmpl, rootCertTmpl, rootPub, rootKey)
 	if err != nil {
@@ -888,6 +898,7 @@ func NewCertsPipeline() *CertSet {
 	// create a key-pair for the server
 	servKey, servPub := GenKeyPair(4096)
 
+	log.Println("----------server cert")
 	// create a template for the server
 	servCertTmpl, err := CertTemplate("localhost", 1)
 	if err != nil {
@@ -918,8 +929,10 @@ func NewCertsPipeline() *CertSet {
 	// create a key-pair for the client
 	clientKey, clientPub := GenKeyPair(4096)
 
+	log.Println("----------client cert")
+
 	// create a template for the client
-	clientCertTmpl, err := CertTemplate("nkia-client", 1)
+	clientCertTmpl, err := CertTemplate("client", 1)
 	if err != nil {
 		log.Fatalf("creating cert template: %v", err)
 	}

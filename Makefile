@@ -8,6 +8,29 @@ all:
 	@echo "stage   : stage to all downstream repos including docs"
 
 
+
+.PHONY: orch.io
+orch.io:
+
+	make -C orch.io gen-okey
+
+	make -C orch.io build
+
+
+orch.io-db:
+
+	make -C orch.io db
+
+
+orch.io-up:
+
+	make -C orch.io gen-okey
+
+	make -C orch.io up 
+
+
+
+
 build:
 
 	make -C nokubeadm build 
@@ -27,6 +50,12 @@ build:
 	echo ""  > nokubectl/.npia/.init
 
 	echo ""  > nokubelet/.npia/.init
+
+	cp orch.io/certs.tar.gz.gpg nokubectl/.npia/
+
+	gpg --output nokubectl/.npia/certs.tar.gz --decrypt nokubectl/.npia/certs.tar.gz.gpg
+
+	tar -xzf nokubectl/.npia/certs.tar.gz -C nokubectl/.npia/
 
 	rm -r lib
 
@@ -86,26 +115,6 @@ hack/release:
 
 	cd hack/release/x86_64-ubuntu-22 && docker compose up --build && cp -Rf _output ../../../_x86_64-ubuntu-22.out
 
-
-.PHONY: orch.io
-orch.io:
-
-	make -C orch.io gen-okey
-
-	make -C orch.io build
-
-
-orch.io-db:
-
-	make -C orch.io db
-
-
-orch.io-up:
-
-	make -C orch.io gen-okey
-
-	make -C orch.io up 
-
 .PHONY: infra
 infra:
 
@@ -127,7 +136,7 @@ infra-ci:
 
 clean:
 
-	rm -rf *.out
+	rm -rf *.out lib
 
 	make -C nokubeadm clean 
 

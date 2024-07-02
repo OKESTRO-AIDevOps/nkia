@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"fmt"
 	"os"
 	"os/exec"
@@ -130,7 +131,9 @@ func RunClientCmd(args []string) {
 		return
 	}
 
-	websocket.DefaultDialer.TLSClientConfig.RootCAs = certpool
+	websocket.DefaultDialer.TLSClientConfig = &tls.Config{
+		RootCAs: certpool,
+	}
 
 	c, _, err := websocket.DefaultDialer.Dial(config.COMM_URL, nil)
 

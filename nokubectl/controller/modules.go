@@ -12,7 +12,7 @@ func InitCtl() error {
 
 	if _, err := os.Stat(".npia/.init"); err == nil {
 
-		return fmt.Errorf("failed to init: %s", err.Error())
+		return fmt.Errorf("failed to init: %s", "already initiated")
 	}
 
 	cmd := exec.Command("mkdir", "-p", ".npia")
