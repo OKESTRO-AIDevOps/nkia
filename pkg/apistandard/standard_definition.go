@@ -17,107 +17,88 @@ type API_INPUT map[string]string
 type API_STD map[string][]string
 
 var API_DEFINITION string = "" +
-	//            id          :       keys
-	"NKCTL-INIT               :id                                                                                         " + "\n" +
-	"NKCTL-SETTO              :id, to                                                                                     " + "\n" +
-	"NKCTL-SETAS              :id, as                                                                                     " + "\n" +
-	"ORCH-CONNCHK             :id                                                                                         " + "\n" +
-	"ORCH-KEYGEN              :id                                                                                         " + "\n" +
-	"ORCH-GETCL               :id                                                                                         " + "\n" +
-	"ORCH-ADDCL               :id, clusterid                                                                              " + "\n" +
-	"ORCH-INSTCL              :id, clusterid, targetip, targetid, targetpw, localip, osnm, cv, updatetoken                " + "\n" +
-	"ORCH-INSTCLLOG           :id, clusterid, targetip, targetid, targetpw                                                " + "\n" +
-	"NKLET-CONNUP             :id, clusterid, updatetoken                                                                 " + "\n" +
-	"NKLET-CONN               :id, clusterid                                                                              " + "\n" +
-	// "NKADM-INSTENV            :id, localip                                                                                " + "\n" +
-	// "NKADM-INSTENVRES         :id, localip                                                                                " + "\n" +
-	"NKADM-INSTCTRL           :id, localip, osnm, cv                                                                      " + "\n" +
-	// "NKADM-INSTANCTRLCRT      :id, targetip, targetid, targetpw                                                          " + "\n" +
-	// "NKADM-INSTANCTRLOL       :id, localip, osnm, cv, token                                                              " + "\n" +
-	// "ADMIN-INSTANCTRLOR       :id, targetip, targetid, targetpw, localip, osnm, cv, token                                " + "\n" +
-	"NKADM-INSTWKOL           :id, localip, osnm, cv, token                                                               " + "\n" +
-	"ADMIN-INSTWKOR           :id, targetip, targetid, targetpw, localip, osnm, cv, token                                 " + "\n" +
-	"NKADM-INSTVOLOL          :id, localip                                                                                " + "\n" +
-	"ADMIN-INSTVOLOR          :id, targetip, targetid, targetpw, localip                                                  " + "\n" +
-	"NKADM-INSTTKOL           :id                                                                                         " + "\n" +
-	"ADMIN-INSTTKOR           :id, targetip, targetid, targetpw                                                           " + "\n" +
-	"NKADM-INSTLOGOL          :id                                                                                         " + "\n" +
-	"ADMIN-INSTLOGOR          :id, targetip, targetid, targetpw                                                           " + "\n" +
-	//	"DELND                    :id                                                                                       " + "\n" +
-	"ADMIN-INIT               :id                                                                                         " + "\n" +
-	"ADMIN-INITLOG            :id                                                                                         " + "\n" +
-	"SETTING-CRTNS            :id, ns, repoaddr, regaddr                                                                  " + "\n" +
-	"SETTING-SETREPO          :id, ns, repoaddr, repoid, repopw                                                           " + "\n" +
-	"SETTING-SETREG           :id, ns, regaddr, regid, regpw                                                              " + "\n" +
-	// "SETTING-CRTNSVOL          :id, ns, volserver                                                                        " + "\n" +
-	"SETTING-CRTVOL           :id, ns, targetip                                                                           " + "\n" +
-	"SETTING-CRTMON           :id                                                                                         " + "\n" +
-	"SETTING-CRTMONPERS       :id                                                                                         " + "\n" +
-	//  "SETTING-DELNS            :id, ns                                                                                   " + "\n" +
-	//  "TOOLKIT-SUBMIT           :id                                                                                       " + "\n" +
-	//	"TOOLKIT-CALLME           :id                                                                                       " + "\n" +
-	//  "TOOLKIT-GITLOG           :id, ns, repoaddr                                                                         " + "\n" +
-	//	"TOOLKIT-PIPEHIST         :id, ns                                                                                   " + "\n" +
-	//	"TOOLKIT-PIPE             :id, ns, repoaddr, regaddr                                                                " + "\n" +
-	//	"TOOLKIT-PIPELOG          :id                                                                                       " + "\n" +
-	"TOOLKIT-BUILD            :id, ns, repoaddr, regaddr                                                                  " + "\n" +
-	"TOOLKIT-BUILDLOG         :id                                                                                         " + "\n" +
-	"TOOLKIT-PIPE             :id, ns, repoaddr, regaddr                                                                  " + "\n" +
-	"TOOLKIT-PIPELOG          :id                                                                                         " + "\n" +
-	"TOOLKIT-PIPESETVAR       :id, varnm, varval                                                                             " + "\n" +
-	"TOOLKIT-PIPEGETVAR       :id                                                                                         " + "\n" +
-	// "TOOLKIT-BUILDAGT         :id, ns, repoaddr, regaddr                                                                  " + "\n" +
-	// "TOOLKIT-BUILDLOGAGT      :id                                                                                         " + "\n" +
-	"RESOURCE-NDS             :id, ns                                                                                     " + "\n" +
-	"RESOURCE-PDS             :id, ns                                                                                     " + "\n" +
-	"RESOURCE-PLOG            :id, ns, podnm                                                                              " + "\n" +
-	"RESOURCE-SVC             :id, ns                                                                                     " + "\n" +
-	"RESOURCE-DPL             :id, ns                                                                                     " + "\n" +
-	//	"RESOURCE-IMGLI           :id, ns                                                                                   " + "\n" +
-	"RESOURCE-EVNT            :id, ns                                                                                     " + "\n" +
-	"RESOURCE-RSRC            :id, ns                                                                                     " + "\n" +
-	"RESOURCE-NSPC            :id, ns                                                                                     " + "\n" +
-	"RESOURCE-INGR            :id, ns                                                                                     " + "\n" +
-	"RESOURCE-NDPORT          :id, ns                                                                                     " + "\n" +
-	//	"RESOURCE-PRJPRB          :id, ns                                                                                   " + "\n" +
-	"RESOURCE-PSCH            :id, ns                                                                                     " + "\n" +
-	"RESOURCE-PUNSCH          :id, ns                                                                                     " + "\n" +
-	"RESOURCE-CCPU            :id, ns                                                                                     " + "\n" +
-	"RESOURCE-CMEM            :id, ns                                                                                     " + "\n" +
-	"RESOURCE-CFSR            :id, ns                                                                                     " + "\n" +
-	"RESOURCE-CFSW            :id, ns                                                                                     " + "\n" +
-	"RESOURCE-CNETR           :id, ns                                                                                     " + "\n" +
-	"RESOURCE-CNETT           :id, ns                                                                                     " + "\n" +
-	"RESOURCE-VOLAVAIL        :id                                                                                         " + "\n" +
-	"RESOURCE-VOLCAP          :id                                                                                         " + "\n" +
-	"RESOURCE-VOLUSD          :id                                                                                         " + "\n" +
-	"RESOURCE-NTEMP           :id                                                                                         " + "\n" +
-	"RESOURCE-NTEMPCH         :id                                                                                         " + "\n" +
-	"RESOURCE-NTEMPAV         :id                                                                                         " + "\n" +
-	"RESOURCE-NPROCS          :id                                                                                         " + "\n" +
-	"RESOURCE-NCORES          :id                                                                                         " + "\n" +
-	"RESOURCE-NMEM            :id                                                                                         " + "\n" +
-	"RESOURCE-NMEMTOT         :id                                                                                         " + "\n" +
-	"RESOURCE-NDISKR          :id                                                                                         " + "\n" +
-	"RESOURCE-NDISKW          :id                                                                                         " + "\n" +
-	"RESOURCE-NNETR           :id                                                                                         " + "\n" +
-	"RESOURCE-NNETT           :id                                                                                         " + "\n" +
-	"RESOURCE-NDISKWT         :id                                                                                         " + "\n" +
-	"APPLY-REGSEC             :id, ns                                                                                     " + "\n" +
-	"APPLY-DIST               :id, ns, repoaddr, regaddr                                                                  " + "\n" +
-	"APPLY-CRTOPSSRC          :id, ns, repoaddr, regaddr                                                                  " + "\n" +
-	"APPLY-RESTART            :id, ns, resource, resourcenm                                                               " + "\n" +
-	"APPLY-ROLLBACK           :id, ns, resource, resourcenm                                                               " + "\n" +
-	"APPLY-KILL               :id, ns, resource, resourcenm                                                               " + "\n" +
-	"APPLY-NETRESH            :id                                                                                         " + "\n" +
-	"APPLY-HPA                :id, ns, resource, resourcenm                                                               " + "\n" +
-	"APPLY-HPAUN              :id, ns, resource, resourcenm                                                               " + "\n" +
-	"APPLY-QOS                :id, ns, resource, resourcenm                                                               " + "\n" +
-	"APPLY-QOSUN              :id, ns, resource, resourcenm                                                               " + "\n" +
-	"APPLY-INGR               :id, ns, hostnm, svcnm                                                                      " + "\n" +
-	"APPLY-INGRUN             :id, ns, hostnm, svcnm                                                                      " + "\n" +
-	"APPLY-NDPORT             :id, ns, svcnm                                                                              " + "\n" +
-	"APPLY-NDPORTUN           :id, ns, svcnm                                                                              " + "\n" +
+	/*a00*/ "NKCTL-INIT               :id                                                                                         " + "\n" +
+	/*a01*/ "NKCTL-SETTO              :id, to                                                                                     " + "\n" +
+	/*a02*/ "NKCTL-SETAS              :id, as                                                                                     " + "\n" +
+	/*b00*/ "ORCH-CONNCHK             :id                                                                                         " + "\n" +
+	/*b01*/ "ORCH-KEYGEN              :id                                                                                         " + "\n" +
+	/*b02*/ "ORCH-GETCL               :id                                                                                         " + "\n" +
+	/*b03*/ "ORCH-ADDCL               :id, clusterid                                                                              " + "\n" +
+	/*b04*/ "ORCH-INSTCL              :id, clusterid, targetip, targetid, targetpw, localip, osnm, cv, updatetoken                " + "\n" +
+	/*b05*/ "ORCH-INSTCLLOG           :id, clusterid, targetip, targetid, targetpw                                                " + "\n" +
+	/*c00*/ "NKLET-CONNUP             :id, clusterid, updatetoken                                                                 " + "\n" +
+	/*c01*/ "NKLET-CONN               :id, clusterid                                                                              " + "\n" +
+	/*d00*/ "NKADM-INSTCTRL           :id, localip, osnm, cv                                                                      " + "\n" +
+	/*d01*/ "NKADM-INSTWKOL           :id, localip, osnm, cv, token                                                               " + "\n" +
+	/*f00*/ "ADMIN-INSTWKOR           :id, targetip, targetid, targetpw, localip, osnm, cv, token                                 " + "\n" +
+	/*d02*/ "NKADM-INSTVOLOL          :id, localip                                                                                " + "\n" +
+	/*f01*/ "ADMIN-INSTVOLOR          :id, targetip, targetid, targetpw, localip                                                  " + "\n" +
+	/*d03*/ "NKADM-INSTTKOL           :id                                                                                         " + "\n" +
+	/*f02*/ "ADMIN-INSTTKOR           :id, targetip, targetid, targetpw                                                           " + "\n" +
+	/*d04*/ "NKADM-INSTLOGOL          :id                                                                                         " + "\n" +
+	/*f03*/ "ADMIN-INSTLOGOR          :id, targetip, targetid, targetpw                                                           " + "\n" +
+	/*f04*/ "ADMIN-INIT               :id                                                                                         " + "\n" +
+	/*f05*/ "ADMIN-INITLOG            :id                                                                                         " + "\n" +
+	/*g00*/ "SETTING-CRTNS            :id, ns, repoaddr, regaddr                                                                  " + "\n" +
+	/*g01*/ "SETTING-SETREPO          :id, ns, repoaddr, repoid, repopw                                                           " + "\n" +
+	/*g02*/ "SETTING-SETREG           :id, ns, regaddr, regid, regpw                                                              " + "\n" +
+	/*g03*/ "SETTING-CRTVOL           :id, ns, targetip                                                                           " + "\n" +
+	/*g04*/ "SETTING-CRTMON           :id                                                                                         " + "\n" +
+	/*g05*/ "SETTING-CRTMONPERS       :id                                                                                         " + "\n" +
+	/*h00*/ "TOOLKIT-BUILD            :id, ns, repoaddr, regaddr                                                                  " + "\n" +
+	/*h01*/ "TOOLKIT-BUILDLOG         :id                                                                                         " + "\n" +
+	/*h02*/ "TOOLKIT-PIPE             :id, ns, repoaddr, regaddr                                                                  " + "\n" +
+	/*h03*/ "TOOLKIT-PIPELOG          :id                                                                                         " + "\n" +
+	/*h04*/ "TOOLKIT-PIPESETVAR       :id, varnm, varval                                                                             " + "\n" +
+	/*h05*/ "TOOLKIT-PIPEGETVAR       :id                                                                                         " + "\n" +
+	/*i00*/ "RESOURCE-NDS             :id, ns                                                                                     " + "\n" +
+	/*i01*/ "RESOURCE-PDS             :id, ns                                                                                     " + "\n" +
+	/*i02*/ "RESOURCE-PLOG            :id, ns, podnm                                                                              " + "\n" +
+	/*i03*/ "RESOURCE-SVC             :id, ns                                                                                     " + "\n" +
+	/*i04*/ "RESOURCE-DPL             :id, ns                                                                                     " + "\n" +
+	/*i05*/ "RESOURCE-EVNT            :id, ns                                                                                     " + "\n" +
+	/*i06*/ "RESOURCE-RSRC            :id, ns                                                                                     " + "\n" +
+	/*i07*/ "RESOURCE-NSPC            :id, ns                                                                                     " + "\n" +
+	/*i08*/ "RESOURCE-INGR            :id, ns                                                                                     " + "\n" +
+	/*i09*/ "RESOURCE-NDPORT          :id, ns                                                                                     " + "\n" +
+	/*i10*/ "RESOURCE-PSCH            :id, ns                                                                                     " + "\n" +
+	/*i11*/ "RESOURCE-PUNSCH          :id, ns                                                                                     " + "\n" +
+	/*i12*/ "RESOURCE-CCPU            :id, ns                                                                                     " + "\n" +
+	/*i13*/ "RESOURCE-CMEM            :id, ns                                                                                     " + "\n" +
+	/*i14*/ "RESOURCE-CFSR            :id, ns                                                                                     " + "\n" +
+	/*i15*/ "RESOURCE-CFSW            :id, ns                                                                                     " + "\n" +
+	/*i16*/ "RESOURCE-CNETR           :id, ns                                                                                     " + "\n" +
+	/*i17*/ "RESOURCE-CNETT           :id, ns                                                                                     " + "\n" +
+	/*i18*/ "RESOURCE-VOLAVAIL        :id                                                                                         " + "\n" +
+	/*i19*/ "RESOURCE-VOLCAP          :id                                                                                         " + "\n" +
+	/*i20*/ "RESOURCE-VOLUSD          :id                                                                                         " + "\n" +
+	/*i21*/ "RESOURCE-NTEMP           :id                                                                                         " + "\n" +
+	/*i22*/ "RESOURCE-NTEMPCH         :id                                                                                         " + "\n" +
+	/*i23*/ "RESOURCE-NTEMPAV         :id                                                                                         " + "\n" +
+	/*i24*/ "RESOURCE-NPROCS          :id                                                                                         " + "\n" +
+	/*i25*/ "RESOURCE-NCORES          :id                                                                                         " + "\n" +
+	/*i26*/ "RESOURCE-NMEM            :id                                                                                         " + "\n" +
+	/*i27*/ "RESOURCE-NMEMTOT         :id                                                                                         " + "\n" +
+	/*i28*/ "RESOURCE-NDISKR          :id                                                                                         " + "\n" +
+	/*i29*/ "RESOURCE-NDISKW          :id                                                                                         " + "\n" +
+	/*i30*/ "RESOURCE-NNETR           :id                                                                                         " + "\n" +
+	/*i31*/ "RESOURCE-NNETT           :id                                                                                         " + "\n" +
+	/*i32*/ "RESOURCE-NDISKWT         :id                                                                                         " + "\n" +
+	/*j00*/ "APPLY-REGSEC             :id, ns                                                                                     " + "\n" +
+	/*j01*/ "APPLY-DIST               :id, ns, repoaddr, regaddr                                                                  " + "\n" +
+	/*j02*/ "APPLY-CRTOPSSRC          :id, ns, repoaddr, regaddr                                                                  " + "\n" +
+	/*j03*/ "APPLY-RESTART            :id, ns, resource, resourcenm                                                               " + "\n" +
+	/*j04*/ "APPLY-ROLLBACK           :id, ns, resource, resourcenm                                                               " + "\n" +
+	/*j05*/ "APPLY-KILL               :id, ns, resource, resourcenm                                                               " + "\n" +
+	/*j06*/ "APPLY-NETRESH            :id                                                                                         " + "\n" +
+	/*j07*/ "APPLY-HPA                :id, ns, resource, resourcenm                                                               " + "\n" +
+	/*j08*/ "APPLY-HPAUN              :id, ns, resource, resourcenm                                                               " + "\n" +
+	/*j09*/ "APPLY-QOS                :id, ns, resource, resourcenm                                                               " + "\n" +
+	/*j10*/ "APPLY-QOSUN              :id, ns, resource, resourcenm                                                               " + "\n" +
+	/*j11*/ "APPLY-INGR               :id, ns, hostnm, svcnm                                                                      " + "\n" +
+	/*j12*/ "APPLY-INGRUN             :id, ns, hostnm, svcnm                                                                      " + "\n" +
+	/*j13*/ "APPLY-NDPORT             :id, ns, svcnm                                                                              " + "\n" +
+	/*j14*/ "APPLY-NDPORTUN           :id, ns, svcnm                                                                              " + "\n" +
 	//"EXIT                     :id                                                           "
 	""
 
