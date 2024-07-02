@@ -2,17 +2,19 @@ package cmd
 
 import (
 	"crypto/x509"
+	"encoding/json"
 	"encoding/pem"
 	"fmt"
 
 	sctrl "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/controller"
+	models "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/models"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
 	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 )
 
-func RequestForwardHandler(email string, query string) (bool, string, error) {
+func RequestForwardHandler(email string, query string) (bool, []byte, error) {
 
-	var result string = ""
+	var result []byte
 
 	ASgi := apistandard.ASgi
 
@@ -20,13 +22,13 @@ func RequestForwardHandler(email string, query string) (bool, string, error) {
 
 	if err != nil {
 
-		return false, "", fmt.Errorf("run failed: %s", err.Error())
+		return false, nil, fmt.Errorf("run failed: %s", err.Error())
 
 	}
 
 	if v_failed := ASgi.Verify(api_input); v_failed != nil {
 
-		return false, "", fmt.Errorf("run failed: %s", v_failed.Error())
+		return false, nil, fmt.Errorf("run failed: %s", v_failed.Error())
 
 	}
 
@@ -46,7 +48,17 @@ func RequestForwardHandler(email string, query string) (bool, string, error) {
 
 		talkback += "\n"
 
-		result = talkback
+		out := apistandard.API_OUTPUT{
+			BODY: talkback,
+		}
+
+		result, err := json.Marshal(out)
+
+		if err != nil {
+
+			return false, nil, fmt.Errorf("admin req: %s", err.Error())
+
+		}
 
 		return false, result, nil
 
@@ -80,13 +92,23 @@ func RequestForwardHandler(email string, query string) (bool, string, error) {
 
 		pub_pem_str := string(pub_pem)
 
-		err = sctrl.UpdatePubkeyByEmail(email, pub_pem_str)
+		err = models.UpdatePubkeyByEmail2(email, pub_pem_str)
 
 		if err != nil {
 			return false, result, fmt.Errorf("admin req: %s", err.Error())
 		}
 
-		result = string(priv_pem)
+		out := apistandard.API_OUTPUT{
+			BODY: string(priv_pem),
+		}
+
+		result, err := json.Marshal(out)
+
+		if err != nil {
+
+			return false, nil, fmt.Errorf("admin req: %s", err.Error())
+
+		}
 
 		return false, result, nil
 
@@ -98,13 +120,23 @@ func RequestForwardHandler(email string, query string) (bool, string, error) {
 
 		clusterid := api_input["clusterid"]
 
-		token, err := sctrl.CreateClusterByEmail(email, clusterid)
+		token, err := models.CreateClusterByEmail2(email, clusterid)
 
 		if err != nil {
 			return false, result, fmt.Errorf("admin req: %s", err.Error())
 		}
 
-		result = token
+		out := apistandard.API_OUTPUT{
+			BODY: token,
+		}
+
+		result, err := json.Marshal(out)
+
+		if err != nil {
+
+			return false, nil, fmt.Errorf("admin req: %s", err.Error())
+
+		}
 
 		return false, result, nil
 
@@ -137,7 +169,17 @@ func RequestForwardHandler(email string, query string) (bool, string, error) {
 
 		go sctrl.InstallCluster(session_key, clusterid, targetip, targetid, targetpw, localip, osnm, cv, updatetoken)
 
-		result = "remote cluster installation started\n"
+		out := apistandard.API_OUTPUT{
+			BODY: "remote cluster installation started\n",
+		}
+
+		result, err := json.Marshal(out)
+
+		if err != nil {
+
+			return false, nil, fmt.Errorf("admin req: %s", err.Error())
+
+		}
 
 		return false, result, nil
 
@@ -156,7 +198,17 @@ func RequestForwardHandler(email string, query string) (bool, string, error) {
 			return false, result, fmt.Errorf("admin req: %s", err.Error())
 		}
 
-		result = string(log_b)
+		out := apistandard.API_OUTPUT{
+			BODY: string(log_b),
+		}
+
+		result, err := json.Marshal(out)
+
+		if err != nil {
+
+			return false, nil, fmt.Errorf("admin req: %s", err.Error())
+
+		}
 
 		return false, result, nil
 
@@ -166,6 +218,6 @@ func RequestForwardHandler(email string, query string) (bool, string, error) {
 
 	}
 
-	return true, "", nil
+	return true, nil, nil
 
 }

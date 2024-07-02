@@ -8,5 +8,9 @@ orch.io/osock/okey
 *.tar.gz
 *.tgz
 *.out
+*.gpg
+*.crt
+*.pub
+*.priv
 lib
 nkia

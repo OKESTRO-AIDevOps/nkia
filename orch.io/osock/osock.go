@@ -7,7 +7,6 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"time"
 
 	_ "log"
 	"net/http"
@@ -16,10 +15,9 @@ import (
 	_ "time"
 
 	sctrl "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/controller"
+	models "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/models"
 	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	"github.com/gorilla/websocket"
-
-	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -42,6 +40,10 @@ func O_Init() error {
 	challenge_records := make(modules.ChallengRecord)
 
 	key_records := make(modules.KeyRecord)
+
+	data_records := make([]models.OrchRecord, 0)
+
+	cluster_data_records := make([]models.OrchClusterRecord, 0)
 
 	challenge_records["_INIT"] = map[string]string{
 		"_INIT": "_INIT",
@@ -76,6 +78,15 @@ func O_Init() error {
 		return fmt.Errorf("failed init npia orchestrator: %s", err.Error())
 	}
 
+	cmd = exec.Command("mkdir", "-p", ".npia/data")
+
+	err = cmd.Run()
+
+	if err != nil {
+
+		return fmt.Errorf("failed init npia orchestrator: %s", err.Error())
+	}
+
 	challenge_records_b, err := json.Marshal(challenge_records)
 
 	if err != nil {
@@ -90,7 +101,14 @@ func O_Init() error {
 		return fmt.Errorf("failed init npia orchestrator: %s", err.Error())
 	}
 
-	err = os.WriteFile(".npia/challenge.json", challenge_records_b, 0644)
+	data_records_b, err := json.Marshal(data_records)
+
+	if err != nil {
+
+		return fmt.Errorf("failed init npia orchestrator: %s", err.Error())
+	}
+
+	cluster_data_records_b, err := json.Marshal(cluster_data_records)
 
 	if err != nil {
 
@@ -98,6 +116,27 @@ func O_Init() error {
 	}
 
 	err = os.WriteFile(".npia/key.json", key_records_b, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed init npia orchestrator: %s", err.Error())
+	}
+
+	err = os.WriteFile(".npia/challenge.json", challenge_records_b, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed init npia orchestrator: %s", err.Error())
+	}
+
+	err = os.WriteFile(".npia/data/record.json", data_records_b, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed init npia orchestrator: %s", err.Error())
+	}
+
+	err = os.WriteFile(".npia/data/cluster_record.json", cluster_data_records_b, 0644)
 
 	if err != nil {
 
@@ -117,36 +156,39 @@ func main() {
 
 	sctrl.LoadConfig()
 
-	var db_info string
+	/*
 
-	if !sctrl.CONFIG_JSON.DEBUG {
+		var db_info string
 
-		db_info = fmt.Sprintf("%s:%s@tcp(%s)/%s",
-			sctrl.CONFIG_JSON.DB_ID,
-			sctrl.CONFIG_JSON.DB_PW,
-			sctrl.CONFIG_JSON.DB_HOST,
-			sctrl.CONFIG_JSON.DB_NAME,
-		)
+		if !sctrl.CONFIG_JSON.DEBUG {
 
-	} else {
+			db_info = fmt.Sprintf("%s:%s@tcp(%s)/%s",
+				sctrl.CONFIG_JSON.DB_ID,
+				sctrl.CONFIG_JSON.DB_PW,
+				sctrl.CONFIG_JSON.DB_HOST,
+				sctrl.CONFIG_JSON.DB_NAME,
+			)
 
-		db_info = fmt.Sprintf("%s:%s@tcp(%s)/%s",
-			sctrl.CONFIG_JSON.DB_ID,
-			sctrl.CONFIG_JSON.DB_PW,
-			sctrl.CONFIG_JSON.DB_HOST_DEV,
-			sctrl.CONFIG_JSON.DB_NAME,
-		)
+		} else {
 
-	}
+			db_info = fmt.Sprintf("%s:%s@tcp(%s)/%s",
+				sctrl.CONFIG_JSON.DB_ID,
+				sctrl.CONFIG_JSON.DB_PW,
+				sctrl.CONFIG_JSON.DB_HOST_DEV,
+				sctrl.CONFIG_JSON.DB_NAME,
+			)
 
-	sctrl.DB, _ = sql.Open("mysql", db_info)
+		}
 
-	sctrl.DB.SetConnMaxLifetime(time.Second * 10)
-	sctrl.DB.SetConnMaxIdleTime(time.Second * 5)
-	sctrl.DB.SetMaxOpenConns(10)
-	sctrl.DB.SetMaxIdleConns(10)
+		sctrl.DB, _ = sql.Open("mysql", db_info)
 
-	sctrl.EventLogger("DB Connected")
+		sctrl.DB.SetConnMaxLifetime(time.Second * 10)
+		sctrl.DB.SetConnMaxIdleTime(time.Second * 5)
+		sctrl.DB.SetMaxOpenConns(10)
+		sctrl.DB.SetMaxIdleConns(10)
+
+
+	*/
 
 	file_b, err := os.ReadFile(".npia/certs/ca.crt")
 
@@ -162,6 +204,8 @@ func main() {
 	}
 
 	sctrl.CA_CERT = crt
+
+	sctrl.EventLogger(fmt.Sprintf("started at: %s", *ADDR))
 
 	flag.Parse()
 	log.SetFlags(0)

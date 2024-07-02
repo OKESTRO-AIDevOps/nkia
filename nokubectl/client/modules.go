@@ -1,7 +1,6 @@
 package client
 
 import (
-	"crypto/rsa"
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
@@ -9,6 +8,7 @@ import (
 	"os"
 	"time"
 
+	cconf "github.com/OKESTRO-AIDevOps/nkia/nokubectl/config"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
 	ctrl "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
 	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
@@ -88,7 +88,7 @@ func KeyAuthConn(client *websocket.Conn, email string) error {
 
 	// get privkey from srv/.priv
 
-	priv_key, err := LoadKeyAuthCredential()
+	priv_key, err := cconf.LoadKeyAuthCredential()
 
 	if err != nil {
 		return fmt.Errorf("auth: %s", err.Error())
@@ -348,23 +348,4 @@ func RequestHandler_ReadChannel(c *websocket.Conn, recv chan ctrl.OrchestratorRe
 
 	recv <- resp_body
 
-}
-
-func LoadKeyAuthCredential() (*rsa.PrivateKey, error) {
-
-	var ret_key *rsa.PrivateKey
-
-	key_b, err := os.ReadFile(".npia/.priv")
-
-	if err != nil {
-		return ret_key, fmt.Errorf("failed to load cred: %s", err.Error())
-	}
-
-	ret_key, err = modules.BytesToPrivateKey(key_b)
-
-	if err != nil {
-		return ret_key, fmt.Errorf("failed to load cred: %s", err.Error())
-	}
-
-	return ret_key, nil
 }

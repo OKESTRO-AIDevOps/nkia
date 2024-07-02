@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	models "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/models"
 	ctrl "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
 	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	"github.com/gorilla/websocket"
@@ -89,7 +90,7 @@ func KeyAuthChallenge(c *websocket.Conn) (string, error) {
 
 	email := req_orchestrator.Query
 
-	pubkey, err := GetPubkeyByEmail(email)
+	pubkey, err := models.GetPubkeyByEmail(email)
 
 	if err != nil {
 

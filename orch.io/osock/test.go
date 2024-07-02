@@ -8,7 +8,9 @@ import (
 	"strings"
 	"time"
 
+	orchcmd "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/cmd"
 	sctrl "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/controller"
+	"github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/models"
 	ctrl "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
 	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	"github.com/gorilla/websocket"
@@ -79,7 +81,7 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 			cluster_id := email_context_list[1]
 
-			token, err := sctrl.GetConfigChallengeByEmailAndClusterID(email, cluster_id)
+			token, err := models.GetConfigChallengeByEmailAndClusterID(email, cluster_id)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
@@ -131,7 +133,7 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 			config := email_context_list[3]
 
-			token, err := sctrl.GetConfigChallengeByEmailAndClusterID(email, cluster_id)
+			token, err := models.GetConfigChallengeByEmailAndClusterID(email, cluster_id)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
@@ -169,7 +171,7 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 			config_dec_string := string(config_dec)
 
-			err = sctrl.AddClusterByEmailAndClusterID(email, cluster_id, config_dec_string)
+			err = models.AddClusterByEmailAndClusterID2(email, cluster_id, config_dec_string)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
@@ -207,7 +209,7 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 			cluster_id := email_context_list[1]
 
-			config_b, err := sctrl.GetKubeconfigByEmailAndClusterID(email, cluster_id)
+			config_b, err := models.GetKubeconfigByEmailAndClusterID(email, cluster_id)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
@@ -256,7 +258,7 @@ func ServerHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 			cluster_id := email_context_list[1]
 
-			config_b, err := sctrl.GetKubeconfigByEmailAndClusterID(email, cluster_id)
+			config_b, err := models.GetKubeconfigByEmailAndClusterID(email, cluster_id)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
@@ -479,7 +481,7 @@ func FrontHandler_Test(w http.ResponseWriter, r *http.Request) {
 
 		sctrl.EventLogger("sess key: " + request_key)
 
-		email, err := sctrl.CheckSessionAndGetEmailByRequestKey(request_key)
+		email, err := models.CheckSessionAndGetEmailByRequestKey(request_key)
 
 		if err != nil {
 			sctrl.EventLogger("auth:" + err.Error())
@@ -653,7 +655,7 @@ func FrontHandler2_Test(w http.ResponseWriter, r *http.Request) {
 
 	defer c.Close()
 
-	user_id, err := sctrl.KeyAuthChallenge(c)
+	user_id, err := sctrl.CertAuthChallenge(c)
 
 	if err != nil {
 
@@ -710,40 +712,36 @@ func FrontHandler2_Test(w http.ResponseWriter, r *http.Request) {
 
 			sctrl.EventLogger("read front: no connected front name")
 
-			fmt.Println("front conntction front ------ ")
-			fmt.Println(FRONT_CONNECTION_FRONT)
-
 			return
 		}
 
 		email_context := email + ":" + target
 
-		req_option := req_orchestrator.RequestOption
-
 		query_str := req_orchestrator.Query
 
-		if req_option == "admin" {
+		forward, result, err := orchcmd.RequestForwardHandler(email, query_str)
 
-			ret, err := AdminRequest(email, query_str)
+		if err != nil {
 
-			if err != nil {
+			sctrl.EventLogger("read front: " + err.Error())
 
-				sctrl.EventLogger("read front: " + err.Error())
+			FrontDestructor(c)
 
-				FrontDestructor(c)
+			res_orchestrator.ServerMessage = err.Error()
 
-				res_orchestrator.ServerMessage = err.Error()
+			c.WriteJSON(&res_orchestrator)
 
-				c.WriteJSON(&res_orchestrator)
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
 
-				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+			return
 
-				return
-			}
+		}
+
+		if !forward {
 
 			res_orchestrator.ServerMessage = "SUCCESS"
 
-			res_orchestrator.QueryResult = ret
+			res_orchestrator.QueryResult = []byte(result)
 
 			c.WriteJSON(&res_orchestrator)
 

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	sctrl "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/controller"
+	"github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/models"
 	ctrl "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
 	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	"github.com/gorilla/websocket"
@@ -92,7 +93,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 			cluster_id := email_context_list[1]
 
-			token, err := sctrl.GetConfigChallengeByEmailAndClusterID(email, cluster_id)
+			token, err := models.GetConfigChallengeByEmailAndClusterID2(email, cluster_id)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
@@ -144,7 +145,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 			config := email_context_list[3]
 
-			token, err := sctrl.GetConfigChallengeByEmailAndClusterID(email, cluster_id)
+			token, err := models.GetConfigChallengeByEmailAndClusterID2(email, cluster_id)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
@@ -182,7 +183,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 			config_dec_string := string(config_dec)
 
-			err = sctrl.AddClusterByEmailAndClusterID(email, cluster_id, config_dec_string)
+			err = models.AddClusterByEmailAndClusterID2(email, cluster_id, config_dec_string)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
@@ -220,7 +221,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 			cluster_id := email_context_list[1]
 
-			config_b, err := sctrl.GetKubeconfigByEmailAndClusterID(email, cluster_id)
+			config_b, err := models.GetKubeconfigByEmailAndClusterID(email, cluster_id)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
@@ -269,7 +270,7 @@ func ServerHandler(w http.ResponseWriter, r *http.Request) {
 
 			cluster_id := email_context_list[1]
 
-			config_b, err := sctrl.GetKubeconfigByEmailAndClusterID(email, cluster_id)
+			config_b, err := models.GetKubeconfigByEmailAndClusterID(email, cluster_id)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))

@@ -21,13 +21,13 @@ gen-okey:
 
 	go run ./_okeygen/keygen.go
 
-	tar czf certs_client.tar.gz certs_client
+	tar czf certs.tar.gz certs
 
-	gpg -o certs_client.tar.gz.gpg --symmetric certs_client.tar.gz
+	gpg -o certs.tar.gz.gpg --symmetric certs.tar.gz
 
-	rm certs_client.tar.gz
+	rm certs.tar.gz
 
-	rm -r certs_client/*.crt certs_client/*.priv certs_client/*.pub
+	rm -r certs/*.crt certs/*.priv certs/*.pub
 
 	/bin/cp -Rf certs_server/* osock/.npia/certs/
 

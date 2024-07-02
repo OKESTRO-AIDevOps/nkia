@@ -14,6 +14,7 @@ import (
 
 	orchcmd "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/cmd"
 	sctrl "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/controller"
+	"github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/models"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
 	ctrl "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
 	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
@@ -76,7 +77,7 @@ func FrontHandler(w http.ResponseWriter, r *http.Request) {
 
 		sctrl.EventLogger("sess key: " + request_key)
 
-		email, err := sctrl.CheckSessionAndGetEmailByRequestKey(request_key)
+		email, err := models.CheckSessionAndGetEmailByRequestKey(request_key)
 
 		if err != nil {
 			sctrl.EventLogger("auth:" + err.Error())
@@ -310,7 +311,7 @@ func FrontHandler2(w http.ResponseWriter, r *http.Request) {
 
 			res_orchestrator.ServerMessage = "SUCCESS"
 
-			res_orchestrator.QueryResult = []byte(result)
+			res_orchestrator.QueryResult = result
 
 			c.WriteJSON(&res_orchestrator)
 
@@ -446,7 +447,7 @@ func AdminRequest(email string, query string) ([]byte, error) {
 
 		pub_pem_str := string(pub_pem)
 
-		err = sctrl.UpdatePubkeyByEmail(email, pub_pem_str)
+		err = models.UpdatePubkeyByEmail(email, pub_pem_str)
 
 		if err != nil {
 			return ret, fmt.Errorf("admin req: %s", err.Error())
@@ -464,7 +465,7 @@ func AdminRequest(email string, query string) ([]byte, error) {
 
 		cluster_id := args[0]
 
-		token, err := sctrl.CreateClusterByEmail(email, cluster_id)
+		token, err := models.CreateClusterByEmail(email, cluster_id)
 
 		if err != nil {
 			return ret, fmt.Errorf("admin req: %s", err.Error())

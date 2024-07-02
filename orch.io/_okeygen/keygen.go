@@ -31,7 +31,7 @@ func ToFile(cs *modules.CertSet) error {
 		return fmt.Errorf("failed to write file: %s", err.Error())
 	}
 
-	err = os.WriteFile("certs_client/ca.crt", cs.RootCertPEM, 0644)
+	err = os.WriteFile("certs/ca.crt", cs.RootCertPEM, 0644)
 
 	if err != nil {
 
@@ -39,14 +39,14 @@ func ToFile(cs *modules.CertSet) error {
 
 	}
 
-	err = os.WriteFile("certs_client/ca.priv", cs.RootKeyPEM, 0644)
+	err = os.WriteFile("certs/ca.priv", cs.RootKeyPEM, 0644)
 
 	if err != nil {
 
 		return fmt.Errorf("failed to write file: %s", err.Error())
 	}
 
-	err = os.WriteFile("certs_client/ca.pub", cs.RootPubPEM, 0644)
+	err = os.WriteFile("certs/ca.pub", cs.RootPubPEM, 0644)
 
 	if err != nil {
 
@@ -74,21 +74,21 @@ func ToFile(cs *modules.CertSet) error {
 		return fmt.Errorf("failed to write file: %s", err.Error())
 	}
 
-	err = os.WriteFile("certs_client/client.crt", cs.ClientCertPEM, 0644)
+	err = os.WriteFile("certs/client.crt", cs.ClientCertPEM, 0644)
 
 	if err != nil {
 
 		return fmt.Errorf("failed to write file: %s", err.Error())
 	}
 
-	err = os.WriteFile("certs_client/client.priv", cs.ClientKeyPEM, 0644)
+	err = os.WriteFile("certs/client.priv", cs.ClientKeyPEM, 0644)
 
 	if err != nil {
 
 		return fmt.Errorf("failed to write file: %s", err.Error())
 	}
 
-	err = os.WriteFile("certs_client/client.pub", cs.ClientPubPEM, 0644)
+	err = os.WriteFile("certs/client.pub", cs.ClientPubPEM, 0644)
 
 	if err != nil {
 
