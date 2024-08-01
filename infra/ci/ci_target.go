@@ -368,6 +368,16 @@ func TargetsControllerStdin(target_ctl *CITargetsCtl) error {
 
 			break
 
+		} else if action == "help" {
+
+			helpComment := "" +
+
+				"read-all: read all status including verbose log\n" +
+				"status : read consise status of each target\n" +
+				"exit: finish or abort"
+
+			fmt.Println(helpComment)
+
 		} else {
 
 			fmt.Printf("invalid action: %s\n", action)
