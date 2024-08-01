@@ -4,7 +4,8 @@
 
 [Overview](#overview)\
 [Functionalities](#functionalities)\
-[How to use](#how-to-use)
+[How to use](#how-to-use)\
+[CI/CD](#cicd-feature)
 
 
 ![nkia-pkg overview](img/nkia-pkg.jpg)
@@ -114,3 +115,50 @@ Here are the basic feature of the eact of the entry in NKIA pkg.
 
 - pkg/utils\
   Has the utilities that can be imported universally to handle granular tasks across the whole project.
+
+
+## CI/CD Feature
+
+
+This feature offers user with a way to build and deploy their \
+project in a more simpler version of GitHub Action-like method.
+
+As in GitHub action, this feature requires a creation of a specific \
+dot directory at the root directory of your project source code with \
+a specific yaml file in it
+
+See below
+
+```shell
+
+# at your project root directory
+
+mkdir -p .npia
+
+nano .npia/build.yaml
+
+```
+
+```shell
+
+jobs:
+  - name: test1
+    steps: 
+      - echo $(USER)
+      - sleep 5
+      - echo $(PATH)
+      - sleep 5
+  - name: test2
+    needs: test1
+    steps:
+      - echo 1
+      - cat .gitignore
+
+```
+
+
+In the above, \
+[jobs] describes the CI/CD stages.\
+[steps] describes the actual commands being run in each job.\
+[needs] means, obviously, the job name that it needs to ne completed before executing.
+
