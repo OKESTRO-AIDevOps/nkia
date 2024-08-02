@@ -123,7 +123,7 @@ cd hack/dev
 # on target computer
 # this will build nokubectl, nokubeadm, nokubelet
 
-make build
+make build-noctl
 
 # now, run below on host computer to check if server is responsive
 
@@ -146,9 +146,18 @@ sudo ./nokubeadm install log
 
 ./nokubectl --as admin orch add cl --clusterid test-cs
 
-# finally, on target computer
+# assuming we have retrieved token e75a01726c119397fd8f98a1c3e9f8d8
+# on target computer
 
-./nkletd io connect update --clusterid test-cs --updatetoken 
+cd ./nokubelet
+
+sudo ./nkletd io connect update --clusterid test-cs --updatetoken e75a01726c119397fd8f98a1c3e9f8d8
+
+
+# now on host computer
+
+./nokubectl set --to test-cs
+
 
 
 ```
