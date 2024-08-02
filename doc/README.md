@@ -75,6 +75,7 @@ Requirements:
 
 ```shell
 
+# clone this repository
 # running below will set all the development requirements
 
 cd hack/dev
@@ -96,6 +97,11 @@ cd orch.io/osock
 ./osock
 
 # on target computer
+# also clone this repository
+
+cd hack/dev
+
+./dep.sh $(whoami)
 
 # on terminal 2
 
