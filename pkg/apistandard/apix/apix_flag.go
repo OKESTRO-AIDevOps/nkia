@@ -3,6 +3,7 @@ package apix
 var APIX_FLAGS = "" +
 	"to                : cluster id for orch id" + "\n" +
 	"as                : options for orch, it goes like --as a1=a,a2=b,a2=c " + "\n" +
+	"format            : usually for output format, default is 'json', 'pretty' is available sometimes" + "\n" +
 	"clusterid         : target cluster name to be registered" + "\n" +
 	"updatetoken       : update token for connection" + "\n" +
 	"localip           : local ip adress" + "\n" +

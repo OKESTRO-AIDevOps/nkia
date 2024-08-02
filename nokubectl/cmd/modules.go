@@ -67,6 +67,21 @@ func RequestForwardHandler(api_input apistandard.API_INPUT) (bool, string, error
 
 		return false, result, nil
 
+	case "NKCTL-HELP":
+
+		out_format := api_input["format"]
+
+		help_str, err := cctrl.HelpCtl(out_format)
+
+		if err != nil {
+
+			return false, result, fmt.Errorf("run failed: %s", err.Error())
+		}
+
+		result = help_str
+
+		return false, result, nil
+
 	default:
 
 		fmt.Println("forward")

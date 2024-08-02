@@ -17,9 +17,9 @@ orch.io:
 	make -C orch.io build
 
 
-orch.io-db:
+#orch.io-db:
 
-	make -C orch.io db
+#	make -C orch.io db
 
 
 orch.io-up:

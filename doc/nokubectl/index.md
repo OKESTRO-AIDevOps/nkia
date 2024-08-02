@@ -81,6 +81,3 @@ There are three requirements before actually using nokubectl
 
 
 To set up a running orch.io server, check out the documentation for that
-
-[Here](test) is the sample nokubectl commands that can be used to reach a remote server pool, \
-convert it into Kubernetes cluster, and start interacting with it.

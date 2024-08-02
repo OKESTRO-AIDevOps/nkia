@@ -2,6 +2,16 @@
 
 # DOCKER
 
+THIS_USER="$1"
+
+if [ -z "$THIS_USER" ]
+then
+
+  echo "feed user name"
+
+  exit 1 
+fi
+
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
@@ -19,4 +29,4 @@ sudo apt-get update
 
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-./dep-build.sh
+./dep-build.sh $THIS_USER

@@ -1,13 +1,13 @@
 
 build:
 
-	cd ofront && go build -o ofront .
+#	cd ofront && go build -o ofront .
 
 	cd osock && go build -o osock .
 
-db:
+#db:
 
-	cd odb && sudo docker compose up --build
+#	cd odb && sudo docker compose up --build
 
 
 

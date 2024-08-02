@@ -63,3 +63,66 @@ But here is the overall picture of how everything works in conjunction
 
 [doc](doc)
 
+
+## Getting Started
+
+Requirements:
+- go 1.21+
+- make
+- docker
+
+### dev
+
+```shell
+
+# running below will set all the development requirements
+
+cd hack/dev
+
+./dep.sh $(whoami)
+
+
+# on terminal 1
+
+make orch.io
+
+# use below if you want orch.io in a container 
+# make orch.io-up
+
+make build
+
+cd orch.io/osock
+
+./osock
+
+# on target computer
+
+# on terminal 2
+
+cd nokubectl
+
+./nokubectl $COMMANDS_AND_FLAGS 
+
+```
+
+## Examples
+
+```shell
+
+# check connection info
+
+./nokubectl --as admin orch conncheck
+
+# create cluster
+
+./nokubectl --as admin orch add cl --clusterid test-cs
+
+# install cluster
+
+./nokubectl --as admin orch install cl --clusterid test-cs --targetip 192.168.50.94:22 --targetid ubuntu --targetpw ubuntu --localip 192.168.50.94 --osnm ubuntu --cv 1.27 --updatetoken 13e24636f0e94334fbbaa25d24113aa9
+
+# get log for installing cluter
+
+./nokubectl --as admin orch install cl log --clusterid test-cs --targetip 192.168.50.94:22 --targetid ubuntu --targetpw ubuntu
+
+```
