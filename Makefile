@@ -17,9 +17,9 @@ orch.io:
 	make -C orch.io build
 
 
-orch.io-db:
+#orch.io-db:
 
-	make -C orch.io db
+#	make -C orch.io db
 
 
 orch.io-up:
@@ -32,10 +32,35 @@ orch.io-up:
 
 
 build:
-
 	make -C nokubeadm build 
 
+	make -C nokubelet build 
+
 	make -C nokubectl build 
+
+	cd hack && ./libgen.sh && mv lib ..
+
+	/bin/cp -Rf lib nokubeadm/
+
+	/bin/cp -Rf lib nokubelet/
+
+#	echo ""  > nokubeadm/.npia/.init
+
+#	echo ""  > nokubelet/.npia/.init
+
+#	echo ""  > nokubectl/.npia/.init
+
+	cp orch.io/certs.tar.gz.gpg nokubectl/.npia/
+
+	gpg --output nokubectl/.npia/certs.tar.gz --decrypt nokubectl/.npia/certs.tar.gz.gpg
+
+	tar -xzf nokubectl/.npia/certs.tar.gz -C nokubectl/.npia/
+
+	rm -r lib
+
+build-noctl:
+
+	make -C nokubeadm build 
 
 	make -C nokubelet build 
 
@@ -45,17 +70,9 @@ build:
 
 	/bin/cp -Rf lib nokubelet/
 
-	echo ""  > nokubeadm/.npia/.init
+#	echo ""  > nokubeadm/.npia/.init
 
-	echo ""  > nokubectl/.npia/.init
-
-	echo ""  > nokubelet/.npia/.init
-
-	cp orch.io/certs.tar.gz.gpg nokubectl/.npia/
-
-	gpg --output nokubectl/.npia/certs.tar.gz --decrypt nokubectl/.npia/certs.tar.gz.gpg
-
-	tar -xzf nokubectl/.npia/certs.tar.gz -C nokubectl/.npia/
+#	echo ""  > nokubelet/.npia/.init
 
 	rm -r lib
 
@@ -75,17 +92,17 @@ release:
 
 	/bin/cp -Rf nokubeadm/.npia nkia/nokubeadm/
 
-	rm nkia/nokubeadm/.npia/.init
+	rm -f nkia/nokubeadm/.npia/.init
 
 	/bin/cp -Rf nokubectl/.npia nkia/nokubectl/
 
-	rm nkia/nokubectl/.npia/.init
+	rm -f nkia/nokubectl/.npia/.init
 
-	rm nkia/nokubectl/.npia/.priv
+	rm -f nkia/nokubectl/.npia/.priv
 
 	/bin/cp -Rf nokubelet/.npia nkia/nokubelet/
 
-	rm nkia/nokubelet/.npia/.init
+	rm -f nkia/nokubelet/.npia/.init
 
 	/bin/cp -Rf nokubelet/nkletd nkia/nokubelet/nkletd
 

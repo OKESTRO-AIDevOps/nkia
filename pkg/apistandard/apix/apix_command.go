@@ -4,6 +4,7 @@ var APIX_COMMAND = "" +
 	/*a00*/ "init                                              : initiate nokubectl                " + "\n" +
 	/*a01*/ "set                                               : set nokubectl cluster id                " + "\n" +
 	/*a02*/ "set-opts                                          : set nokubectl options for orch io                " + "\n" +
+	/*a03*/ "help                                              : print all commands and related arguments with explanation                " + "\n" +
 	/*b00*/ "orch-conncheck                                    : checking orch.io connection                " + "\n" +
 	/*b01*/ "orch-keygen                                       : generate and receive private key                " + "\n" +
 	/*b02*/ "orch-get-cl                                       : receive cluster names that are available for communication" + "\n" +

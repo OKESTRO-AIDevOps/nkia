@@ -56,20 +56,20 @@ func DetachedServerCommunicatorWithUpdate_Test(address string, email string, clu
 
 	c, _, err := websocket.DefaultDialer.Dial(address, nil)
 	if err != nil {
-		return fmt.Errorf("commwup failed: %s", err.Error())
+		return fmt.Errorf("commwup dial failed: %s", err.Error())
 	}
 	defer c.Close()
 
 	err = ServerUpdateChallenge(c, email, cluster_id, token)
 
 	if err != nil {
-		return fmt.Errorf("commwup failed: %s", err.Error())
+		return fmt.Errorf("commwup update chal failed: %s", err.Error())
 	}
 
 	err = ServerAuthChallenge(c, email, cluster_id)
 
 	if err != nil {
-		return fmt.Errorf("commwup failed: %s", err.Error())
+		return fmt.Errorf("commwup auth chal failed: %s", err.Error())
 	}
 
 	if err := SockCommunicationHandler_LinearInstruction_PrintOnly_Test(c); err != nil {
@@ -83,20 +83,20 @@ func DetachedServerCommunicatorWithUpdate_Test_Debug(address string, email strin
 
 	c, _, err := websocket.DefaultDialer.Dial(address, nil)
 	if err != nil {
-		return fmt.Errorf("commwup failed: %s", err.Error())
+		return fmt.Errorf("commwup dial failed: %s", err.Error())
 	}
 	defer c.Close()
 
 	err = ServerUpdateChallenge(c, email, cluster_id, token)
 
 	if err != nil {
-		return fmt.Errorf("commwup failed: %s", err.Error())
+		return fmt.Errorf("commwup update chal failed: %s", err.Error())
 	}
 
 	err = ServerAuthChallenge(c, email, cluster_id)
 
 	if err != nil {
-		return fmt.Errorf("commwup failed: %s", err.Error())
+		return fmt.Errorf("commwup auth chal failed: %s", err.Error())
 	}
 
 	if err := SockCommunicationHandler_LinearInstruction_PrintOnly_Test_Debug(c); err != nil {

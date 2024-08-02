@@ -1,12 +1,25 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 
+	apistd "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
+	apix "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
 	goya "github.com/goccy/go-yaml"
 )
+
+type HelpJSON struct {
+	Command string `json:"command"`
+	Comment string `json:"comment"`
+	Flag    []struct {
+		Name    string `json:"name"`
+		Comment string `json:"comment"`
+	} `json:"flag"`
+}
 
 func InitCtl() error {
 
@@ -100,4 +113,99 @@ func AsCtl(as string) error {
 
 	return nil
 
+}
+
+func HelpCtl(out_format string) (string, error) {
+
+	var retstr string
+
+	var retarr []HelpJSON
+
+	for k, v := range apix.AXgi {
+
+		command := strings.ReplaceAll(k, "-", " ")
+
+		command_comment := apix.AXcmd[k]
+
+		hjson := HelpJSON{
+			Command: command,
+			Comment: command_comment,
+			Flag: []struct {
+				Name    string "json:\"name\""
+				Comment string "json:\"comment\""
+			}{},
+		}
+
+		flag_list := apistd.ASgi[v]
+
+		flag_len := len(flag_list)
+
+		for i := 0; i < flag_len; i++ {
+
+			flag := flag_list[i]
+
+			if flag == "id" {
+				continue
+			}
+
+			flag_dash := "--" + flag
+
+			flag_comment := apix.AXflag[flag]
+
+			hjson.Flag = append(hjson.Flag, struct {
+				Name    string "json:\"name\""
+				Comment string "json:\"comment\""
+			}{
+				Name:    flag_dash,
+				Comment: flag_comment,
+			})
+
+		}
+
+		retarr = append(retarr, hjson)
+	}
+
+	if out_format == "pretty" {
+
+		retarr_len := len(retarr)
+
+		for i := 0; i < retarr_len; i++ {
+
+			idx_str := fmt.Sprintf("%d", i+1)
+
+			retstr += idx_str + ". " + retarr[i].Command + "\n"
+			retstr += "  comment: " + retarr[i].Comment + "\n"
+			retstr += "  flags  : " + "\n"
+
+			flag_len := len(retarr[i].Flag)
+
+			if flag_len == 0 {
+
+				retstr += "    none\n"
+
+			}
+
+			for j := 0; j < flag_len; j++ {
+
+				retstr += "    " + retarr[i].Flag[j].Name + "\n"
+				retstr += "        comment: " + retarr[i].Flag[j].Comment + "\n"
+
+			}
+
+		}
+
+	} else {
+
+		jb, err := json.Marshal(retarr)
+
+		if err != nil {
+
+			return "", fmt.Errorf("failed to get help: %s", err.Error())
+
+		}
+
+		retstr = string(jb)
+	}
+
+	return retstr, nil
 }

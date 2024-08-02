@@ -1,9 +1,18 @@
 #!/bin/bash
 
+THIS_USER="$1"
+
+if [ -z "$THIS_USER" ]
+then
+
+  echo "feed user name"
+
+  exit 1 
+fi
 
 U_PATH="/home/"
 
-U_PATH="/home/$USER"
+U_PATH="/home/$THIS_USER"
 
 GO_VERSION="1.21.11"
 

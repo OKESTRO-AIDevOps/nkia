@@ -20,6 +20,7 @@ var API_DEFINITION string = "" +
 	/*a00*/ "NKCTL-INIT               :id                                                                                         " + "\n" +
 	/*a01*/ "NKCTL-SETTO              :id, to                                                                                     " + "\n" +
 	/*a02*/ "NKCTL-SETAS              :id, as                                                                                     " + "\n" +
+	/*a03*/ "NKCTL-HELP               :id, format                                                                                 " + "\n" +
 	/*b00*/ "ORCH-CONNCHK             :id                                                                                         " + "\n" +
 	/*b01*/ "ORCH-KEYGEN              :id                                                                                         " + "\n" +
 	/*b02*/ "ORCH-GETCL               :id                                                                                         " + "\n" +
