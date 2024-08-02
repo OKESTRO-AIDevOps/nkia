@@ -22,9 +22,9 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var ADDR = flag.String("addr", "0.0.0.0:7331", "service address")
+var ADDRF = flag.String("addrf", "0.0.0.0:7331", "service address")
 
-var ADDRS = flag.String("addr", "0.0.0.0:7332", "service address")
+var ADDRS = flag.String("addrs", "0.0.0.0:7332", "service address")
 
 var UPGRADER = websocket.Upgrader{} // use default options
 
@@ -207,8 +207,6 @@ func main() {
 
 	sctrl.CA_CERT = crt
 
-	sctrl.EventLogger(fmt.Sprintf("started at: %s", *ADDR))
-
 	flag.Parse()
 	log.SetFlags(0)
 
@@ -221,9 +219,9 @@ func main() {
 
 	}()
 
-	sctrl.EventLogger(fmt.Sprintf("front started at: %s", *ADDR))
+	sctrl.EventLogger(fmt.Sprintf("front started at: %s", *ADDRF))
 	http.HandleFunc("/osock/front/test", FrontHandler2_Test)
 	http.HandleFunc("/osock/front", FrontHandler2)
-	log.Fatal(http.ListenAndServeTLS(*ADDR, ".npia/certs/server.crt", ".npia/certs/server.priv", nil))
+	log.Fatal(http.ListenAndServeTLS(*ADDRF, ".npia/certs/server.crt", ".npia/certs/server.priv", nil))
 
 }
