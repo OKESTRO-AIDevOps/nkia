@@ -54,6 +54,8 @@ func DetachedServerCommunicator_Test_Debug(address string, email string, cluster
 
 func DetachedServerCommunicatorWithUpdate_Test(address string, email string, cluster_id string, token string) error {
 
+	fmt.Printf("addr: %s\n", address)
+
 	c, _, err := websocket.DefaultDialer.Dial(address, nil)
 	if err != nil {
 		return fmt.Errorf("commwup dial failed: %s", err.Error())
@@ -80,7 +82,7 @@ func DetachedServerCommunicatorWithUpdate_Test(address string, email string, clu
 }
 
 func DetachedServerCommunicatorWithUpdate_Test_Debug(address string, email string, cluster_id string, token string) error {
-
+	fmt.Printf("addr: %s\n", address)
 	c, _, err := websocket.DefaultDialer.Dial(address, nil)
 	if err != nil {
 		return fmt.Errorf("commwup dial failed: %s", err.Error())

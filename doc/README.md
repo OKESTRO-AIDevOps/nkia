@@ -127,7 +127,7 @@ make build-noctl
 
 # now, run below on host computer to check if server is responsive
 
-./nokubectl --as admin orch conncheck
+./nokubectl orch conncheck
 
 # if okay, now we have to connect target computer's nokubelet to host computer server
 # on target computer
@@ -144,14 +144,14 @@ sudo ./nokubeadm install log
 
 # now, get one-time token by adding a cluster on host computer
 
-./nokubectl --as admin orch add cl --clusterid test-cs
+./nokubectl orch add cl --clusterid test-cs
 
-# assuming we have retrieved token e75a01726c119397fd8f98a1c3e9f8d8
+# assuming we have retrieved token 9a3d990959d4201ec029c0eefd8cf814
 # on target computer
 
 cd ./nokubelet
 
-sudo ./nkletd io connect update --clusterid test-cs --updatetoken e75a01726c119397fd8f98a1c3e9f8d8
+sudo ./nkletd io connect update --clusterid test-cs --updatetoken 9a3d990959d4201ec029c0eefd8cf814
 
 
 # now on host computer
