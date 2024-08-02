@@ -75,7 +75,12 @@ Requirements:
 
 ```shell
 
-# clone this repository
+# assumption:
+# you have a host computer running linux ubuntu 20 or 22
+# you have a target computer running linux ubuntu 20 or 22
+
+
+# clone this repository on host computer
 # running below will set all the development requirements
 
 cd hack/dev
@@ -83,18 +88,30 @@ cd hack/dev
 ./dep.sh $(whoami)
 
 
-# on terminal 1
+# on host computer terminal 1
+# this will build orchestrator server
 
 make orch.io
 
-# use below if you want orch.io in a container 
-# make orch.io-up
-
-make build
+# on host computer terminal 1
+# this will start orchestrator server
 
 cd orch.io/osock
 
 ./osock
+
+# on host computer terminal 2
+# this will build nokubectl, nokubeadm, nokubelet
+
+make build
+
+# on host computer terminal 2
+# look EXAMPLES for $COMMANDS_AND_FLAGS
+
+cd nokubectl
+
+./nokubectl $COMMANDS_AND_FLAGS 
+
 
 # on target computer
 # also clone this repository
@@ -103,17 +120,30 @@ cd hack/dev
 
 ./dep.sh $(whoami)
 
-# on terminal 2
+# on target computer
+# this will build nokubectl, nokubeadm, nokubelet
 
-cd nokubectl
+make build
 
-./nokubectl $COMMANDS_AND_FLAGS 
+# now, run below on host computer to check if server is responsive
+
+./nokubectl --as admin orch conncheck
+
+# if so, now we have to connect target computer's nokubelet to host computer server
+# on target computer
+
+
+
 
 ```
 
 ## Examples
 
 ```shell
+
+# help, shows all the available commands in plain text
+
+./nokubectl help --format pretty
 
 # check connection info
 

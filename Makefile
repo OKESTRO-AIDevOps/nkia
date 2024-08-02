@@ -32,10 +32,35 @@ orch.io-up:
 
 
 build:
-
 	make -C nokubeadm build 
 
+	make -C nokubelet build 
+
 	make -C nokubectl build 
+
+	cd hack && ./libgen.sh && mv lib ..
+
+	/bin/cp -Rf lib nokubeadm/
+
+	/bin/cp -Rf lib nokubelet/
+
+	echo ""  > nokubeadm/.npia/.init
+
+	echo ""  > nokubelet/.npia/.init
+
+	echo ""  > nokubectl/.npia/.init
+
+	cp orch.io/certs.tar.gz.gpg nokubectl/.npia/
+
+	gpg --output nokubectl/.npia/certs.tar.gz --decrypt nokubectl/.npia/certs.tar.gz.gpg
+
+	tar -xzf nokubectl/.npia/certs.tar.gz -C nokubectl/.npia/
+
+	rm -r lib
+
+build-noctl:
+
+	make -C nokubeadm build 
 
 	make -C nokubelet build 
 
@@ -47,16 +72,8 @@ build:
 
 	echo ""  > nokubeadm/.npia/.init
 
-	echo ""  > nokubectl/.npia/.init
-
 	echo ""  > nokubelet/.npia/.init
-
-	cp orch.io/certs.tar.gz.gpg nokubectl/.npia/
-
-	gpg --output nokubectl/.npia/certs.tar.gz --decrypt nokubectl/.npia/certs.tar.gz.gpg
-
-	tar -xzf nokubectl/.npia/certs.tar.gz -C nokubectl/.npia/
-
+	
 	rm -r lib
 
 release:
