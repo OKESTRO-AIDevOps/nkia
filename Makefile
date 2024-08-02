@@ -73,7 +73,7 @@ build-noctl:
 	echo ""  > nokubeadm/.npia/.init
 
 	echo ""  > nokubelet/.npia/.init
-	
+
 	rm -r lib
 
 release:
@@ -92,17 +92,17 @@ release:
 
 	/bin/cp -Rf nokubeadm/.npia nkia/nokubeadm/
 
-	rm nkia/nokubeadm/.npia/.init
+	rm -f nkia/nokubeadm/.npia/.init
 
 	/bin/cp -Rf nokubectl/.npia nkia/nokubectl/
 
-	rm nkia/nokubectl/.npia/.init
+	rm -f nkia/nokubectl/.npia/.init
 
-	rm nkia/nokubectl/.npia/.priv
+	rm -f nkia/nokubectl/.npia/.priv
 
 	/bin/cp -Rf nokubelet/.npia nkia/nokubelet/
 
-	rm nkia/nokubelet/.npia/.init
+	rm -f nkia/nokubelet/.npia/.init
 
 	/bin/cp -Rf nokubelet/nkletd nkia/nokubelet/nkletd
 
