@@ -129,10 +129,26 @@ make build
 
 ./nokubectl --as admin orch conncheck
 
-# if so, now we have to connect target computer's nokubelet to host computer server
+# if okay, now we have to connect target computer's nokubelet to host computer server
 # on target computer
 
+cd ./nokubeadm
 
+sudo ./nokubeadm install mainctrl
+
+# on target computer terminal 2
+
+cd ./nokubeadm
+
+sudo ./nokubeadm install log
+
+# now, get one-time token by adding a cluster on host computer
+
+./nokubectl --as admin orch add cl --clusterid test-cs
+
+# finally, on target computer
+
+./nkletd io connect update --clusterid test-cs --updatetoken 
 
 
 ```
