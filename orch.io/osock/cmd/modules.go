@@ -34,15 +34,7 @@ func RequestForwardHandler(email string, query string) (bool, []byte, error) {
 
 	case "ORCH-CONNCHK":
 
-		var talkback string = "talking back list: "
-
-		for el := range api_input {
-
-			talkback += el + " "
-
-		}
-
-		talkback += "\n"
+		var talkback string = "alive\n"
 
 		out := apistandard.API_OUTPUT{
 			BODY: talkback,
