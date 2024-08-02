@@ -24,6 +24,8 @@ import (
 
 var ADDR = flag.String("addr", "0.0.0.0:7331", "service address")
 
+var ADDRS = flag.String("addr", "0.0.0.0:7332", "service address")
+
 var UPGRADER = websocket.Upgrader{} // use default options
 
 var FRONT_CONNECTION = make(map[string]*websocket.Conn)
@@ -209,8 +211,17 @@ func main() {
 
 	flag.Parse()
 	log.SetFlags(0)
-	http.HandleFunc("/osock/server/test", ServerHandler_Test)
-	http.HandleFunc("/osock/server", ServerHandler)
+
+	go func() {
+
+		http.HandleFunc("/osock/server/test", ServerHandler_Test)
+		http.HandleFunc("/osock/server", ServerHandler)
+		sctrl.EventLogger(fmt.Sprintf("server started at: %s", *ADDRS))
+		log.Fatal(http.ListenAndServe(*ADDRS, nil))
+
+	}()
+
+	sctrl.EventLogger(fmt.Sprintf("front started at: %s", *ADDR))
 	http.HandleFunc("/osock/front/test", FrontHandler2_Test)
 	http.HandleFunc("/osock/front", FrontHandler2)
 	log.Fatal(http.ListenAndServeTLS(*ADDR, ".npia/certs/server.crt", ".npia/certs/server.priv", nil))
