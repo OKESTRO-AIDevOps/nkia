@@ -44,11 +44,11 @@ build:
 
 	/bin/cp -Rf lib nokubelet/
 
-	echo ""  > nokubeadm/.npia/.init
+#	echo ""  > nokubeadm/.npia/.init
 
-	echo ""  > nokubelet/.npia/.init
+#	echo ""  > nokubelet/.npia/.init
 
-	echo ""  > nokubectl/.npia/.init
+#	echo ""  > nokubectl/.npia/.init
 
 	cp orch.io/certs.tar.gz.gpg nokubectl/.npia/
 
@@ -70,9 +70,9 @@ build-noctl:
 
 	/bin/cp -Rf lib nokubelet/
 
-	echo ""  > nokubeadm/.npia/.init
+#	echo ""  > nokubeadm/.npia/.init
 
-	echo ""  > nokubelet/.npia/.init
+#	echo ""  > nokubelet/.npia/.init
 
 	rm -r lib
 

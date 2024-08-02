@@ -146,12 +146,12 @@ sudo ./nokubeadm install log
 
 ./nokubectl orch add cl --clusterid test-cs
 
-# assuming we have retrieved token 9a3d990959d4201ec029c0eefd8cf814
+# assuming we have retrieved token 384996074c73704f703759cc2c7fb4f1
 # on target computer
 
 cd ./nokubelet
 
-sudo ./nkletd io connect update --clusterid test-cs --updatetoken 9a3d990959d4201ec029c0eefd8cf814
+sudo ./nkletd io connect update --clusterid test-cs --updatetoken 384996074c73704f703759cc2c7fb4f1
 
 
 # now on host computer
