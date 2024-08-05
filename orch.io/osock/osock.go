@@ -17,7 +17,6 @@ import (
 	sctrl "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/controller"
 	models "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/models"
 	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
-	"github.com/gorilla/websocket"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -25,18 +24,6 @@ import (
 var ADDRF = flag.String("addrf", "0.0.0.0:7331", "service address")
 
 var ADDRS = flag.String("addrs", "0.0.0.0:7332", "service address")
-
-var UPGRADER = websocket.Upgrader{} // use default options
-
-var FRONT_CONNECTION = make(map[string]*websocket.Conn)
-
-var FRONT_CONNECTION_FRONT = make(map[*websocket.Conn]string)
-
-var SERVER_CONNECTION = make(map[string]*websocket.Conn)
-
-var SERVER_CONNECTION_KEY = make(map[*websocket.Conn]string)
-
-var SERVER_CONNECTION_FRONT = make(map[*websocket.Conn]string)
 
 func O_Init() error {
 	challenge_records := make(modules.ChallengRecord)
@@ -212,16 +199,16 @@ func main() {
 
 	go func() {
 
-		http.HandleFunc("/osock/server/test", ServerHandler_Test)
-		http.HandleFunc("/osock/server", ServerHandler)
+		http.HandleFunc("/osock/server/test", sctrl.ServerHandler_Test)
+		http.HandleFunc("/osock/server", sctrl.ServerHandler)
 		sctrl.EventLogger(fmt.Sprintf("server started at: %s", *ADDRS))
 		log.Fatal(http.ListenAndServe(*ADDRS, nil))
 
 	}()
 
+	http.HandleFunc("/osock/front/test", sctrl.FrontHandler2_Test)
+	http.HandleFunc("/osock/front", sctrl.FrontHandler2)
 	sctrl.EventLogger(fmt.Sprintf("front started at: %s", *ADDRF))
-	http.HandleFunc("/osock/front/test", FrontHandler2_Test)
-	http.HandleFunc("/osock/front", FrontHandler2)
 	log.Fatal(http.ListenAndServeTLS(*ADDRF, ".npia/certs/server.crt", ".npia/certs/server.priv", nil))
 
 }

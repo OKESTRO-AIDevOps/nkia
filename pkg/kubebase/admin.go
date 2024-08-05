@@ -45,49 +45,9 @@ func AdminInitNPIA() {
 
 	if lib_exists != 1 {
 
-		cmd := exec.Command("curl", "-L", "https://github.com/OKESTRO-AIDevOps/nkia/releases/download/latest/lib.tgz", "-o", "lib.tgz")
-
-		cmd.Stdout = outfile
-
-		cmd.Stderr = outfile
-
-		err = cmd.Run()
-
-		if err != nil {
-			AdminBlindResetNPIA()
-
-			outfile.Write([]byte(err.Error()))
-
-			return
-		}
-
-		cmd = exec.Command("tar", "-xzvf", "lib.tgz")
-
-		cmd.Stdout = outfile
-
-		cmd.Stderr = outfile
-
-		err = cmd.Run()
-
-		if err != nil {
-			AdminBlindResetNPIA()
-			outfile.Write([]byte(err.Error()))
-			return
-		}
-
-		cmd = exec.Command("rm", "-r", "lib.tgz")
-
-		cmd.Stdout = outfile
-
-		cmd.Stderr = outfile
-
-		err = cmd.Run()
-
-		if err != nil {
-			AdminBlindResetNPIA()
-			outfile.Write([]byte(err.Error()))
-			return
-		}
+		AdminBlindResetNPIA()
+		outfile.Write([]byte("failed to init: lib doesn't exists\n"))
+		return
 
 	}
 

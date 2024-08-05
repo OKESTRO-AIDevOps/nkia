@@ -6,8 +6,10 @@ import (
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	models "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/models"
 	ctrl "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
@@ -73,6 +75,290 @@ func CertAuthChallenge(c *websocket.Conn) (string, error) {
 	}
 
 	return v_email, nil
+}
+
+func RemoteAccessAuthChallenge(c *websocket.Conn) (string, error) {
+
+	auth_flag := 0
+
+	iter_count := 0
+
+	this_cluster := ""
+
+	var ANSWER string
+
+	for auth_flag == 0 {
+
+		var req = ctrl.AuthChallenge{}
+		var resp = ctrl.AuthChallenge{}
+
+		if iter_count > 10 {
+			err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+			if err != nil {
+
+				return "", fmt.Errorf("auth iter write close:" + err.Error())
+			}
+
+			return "", fmt.Errorf("auth iter: limit")
+		}
+
+		err := c.ReadJSON(&req)
+		if err != nil {
+
+			return "", fmt.Errorf("auth:" + err.Error())
+		}
+
+		chal_id := req.ChallengeID
+
+		switch chal_id {
+
+		case "UPDATE":
+
+			ANSWER, _ = modules.RandomHex(128)
+
+			email_context := req.ChallengeMessage
+
+			email_context_list := strings.Split(email_context, ":")
+
+			if len(email_context_list) != 2 {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth update: wrong format")
+			}
+
+			email := email_context_list[0]
+
+			cluster_id := email_context_list[1]
+
+			token, err := models.GetConfigChallengeByEmailAndClusterID2(email, cluster_id)
+
+			if err != nil {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth update: get config: " + err.Error())
+			}
+
+			token_b := []byte(token)
+
+			QUEST, err := modules.EncryptWithSymmetricKey(token_b, []byte(ANSWER))
+
+			if err != nil {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth update: encrypt: " + err.Error())
+			}
+
+			quest_hex := hex.EncodeToString(QUEST)
+
+			resp.ChallengeID = "UPDATE"
+
+			resp.ChallengeMessage = quest_hex
+
+			err = c.WriteJSON(resp)
+
+			if err != nil {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth update: write: " + err.Error())
+			}
+
+		case "ROTATE":
+
+			email_context := req.ChallengeMessage
+
+			email_context_list := strings.Split(email_context, ":")
+
+			if len(email_context_list) != 4 {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth rotate: wrong format")
+			}
+
+			email := email_context_list[0]
+
+			cluster_id := email_context_list[1]
+
+			answer := email_context_list[2]
+
+			config := email_context_list[3]
+
+			token, err := models.GetConfigChallengeByEmailAndClusterID2(email, cluster_id)
+
+			if err != nil {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth rotate: get config: " + err.Error())
+			}
+
+			token_b := []byte(token)
+
+			if ANSWER != answer {
+
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth rotate: answer: " + err.Error())
+			}
+
+			config_hex, err := hex.DecodeString(config)
+
+			if err != nil {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth rotate: decode config: " + err.Error())
+			}
+
+			config_dec, err := modules.DecryptWithSymmetricKey(token_b, config_hex)
+
+			if err != nil {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth rotate: decrypt config: " + err.Error())
+			}
+
+			config_dec_string := string(config_dec)
+
+			err = models.AddClusterByEmailAndClusterID2(email, cluster_id, config_dec_string)
+
+			if err != nil {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth rotate: add cluster: " + err.Error())
+			}
+
+			resp.ChallengeID = "ROTATE"
+
+			resp.ChallengeMessage = "SUCCESS"
+
+			err = c.WriteJSON(resp)
+
+			if err != nil {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth rotate: write: " + err.Error())
+			}
+
+		case "ASK":
+
+			email_context := req.ChallengeMessage
+
+			email_context_list := strings.Split(email_context, ":")
+
+			if len(email_context_list) != 2 {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth ask: wrong format")
+			}
+
+			email := email_context_list[0]
+
+			cluster_id := email_context_list[1]
+
+			config_b, err := models.GetKubeconfigByEmailAndClusterID(email, cluster_id)
+
+			if err != nil {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth ask: get config: " + err.Error())
+			}
+
+			client_ca_pub_key := req.ChallengeData
+
+			chal_rec, err := modules.GenerateChallenge_Detached(config_b, client_ca_pub_key)
+
+			if err != nil {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth ask: gen chal: " + err.Error())
+			}
+
+			resp.ChallengeID = "ASK"
+			resp.ChallengeData = chal_rec
+
+			err = c.WriteJSON(&resp)
+
+			if err != nil {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth ask: write: " + err.Error())
+			}
+
+		case "ANS":
+
+			email_context := req.ChallengeMessage
+
+			email_context_list := strings.Split(email_context, ":")
+
+			if len(email_context_list) != 2 {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth ask: wrong format")
+			}
+
+			email := email_context_list[0]
+
+			cluster_id := email_context_list[1]
+
+			config_b, err := models.GetKubeconfigByEmailAndClusterID(email, cluster_id)
+
+			if err != nil {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth ans: get config: " + err.Error())
+			}
+
+			answer := req.ChallengeData
+
+			gen_key, key_rec, err := modules.VerifyChallange_Detached(config_b, answer)
+
+			if err != nil {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth ans: verify: " + err.Error())
+			}
+
+			server_c, okay := SERVER_CONNECTION[email_context]
+
+			if okay {
+
+				_ = server_c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				SERVER_CONNECTION[email_context] = c
+
+			} else {
+				SERVER_CONNECTION[email_context] = c
+			}
+
+			SERVER_CONNECTION_KEY[c] = gen_key
+
+			SERVER_CONNECTION_FRONT[c] = email
+
+			resp.ChallengeID = "ASK"
+			resp.ChallengeKey = key_rec
+
+			err = c.WriteJSON(&resp)
+
+			if err != nil {
+				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+				return "", fmt.Errorf("auth ans: write: " + err.Error())
+			}
+
+			this_cluster = cluster_id
+
+			auth_flag = 1
+
+		default:
+			_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
+
+			return "", fmt.Errorf("auth blank: default")
+
+		}
+
+		iter_count += 1
+
+	}
+
+	return this_cluster, nil
 }
 
 func KeyAuthChallenge(c *websocket.Conn) (string, error) {

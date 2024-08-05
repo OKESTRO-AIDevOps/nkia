@@ -13,12 +13,12 @@ var APIX_QUERY_MAP = "" +
 	/*a01*/ "set                                               : NKCTL-SETTO           " + "\n" +
 	/*a02*/ "set-opts                                          : NKCTL-SETAS           " + "\n" +
 	/*a03*/ "help                                              : NKCTL-HELP            " + "\n" +
-	/*b00*/ "orch-conncheck                                    : ORCH-CONNCHK          " + "\n" +
-	/*b01*/ "orch-keygen                                       : ORCH-KEYGEN           " + "\n" +
-	/*b02*/ "orch-get-cl                                       : ORCH-GETCL            " + "\n" +
-	/*b03*/ "orch-add-cl                                       : ORCH-ADDCL            " + "\n" +
-	/*b04*/ "orch-install-cl                                   : ORCH-INSTCL           " + "\n" +
-	/*b05*/ "orch-install-cl-log                               : ORCH-INSTCLLOG        " + "\n" +
+	/*b00*/ "orchio-conncheck                                    : ORCH-CONNCHK          " + "\n" +
+	/*b01*/ "orchio-keygen                                       : ORCH-KEYGEN           " + "\n" +
+	/*b02*/ "orchio-get-cl                                       : ORCH-GETCL            " + "\n" +
+	/*b03*/ "orchio-add-cl                                       : ORCH-ADDCL            " + "\n" +
+	/*b04*/ "orchio-install-cl                                   : ORCH-INSTCL           " + "\n" +
+	/*b05*/ "orchio-install-cl-log                               : ORCH-INSTCLLOG        " + "\n" +
 	/*c00*/ "io-connect-update                                 : NKLET-CONNUP          " + "\n" +
 	/*c01*/ "io-connect                                        : NKLET-CONN            " + "\n" +
 	/*d00*/ "install-mainctrl                                  : NKADM-INSTCTRL        " + "\n" +
@@ -32,18 +32,18 @@ var APIX_QUERY_MAP = "" +
 	/*f03*/ "admin-install-log                                 : ADMIN-INSTLOGOR       " + "\n" +
 	/*f04*/ "admin-init                                        : ADMIN-INIT            " + "\n" +
 	/*f05*/ "admin-init-log                                    : ADMIN-INITLOG         " + "\n" +
-	/*g00*/ "setting-create-namespace                          : SETTING-CRTNS         " + "\n" +
-	/*g01*/ "setting-set-repo                                  : SETTING-SETREPO       " + "\n" +
-	/*g02*/ "setting-set-reg                                   : SETTING-SETREG        " + "\n" +
-	/*g03*/ "setting-create-volume                             : SETTING-CRTVOL        " + "\n" +
-	/*g04*/ "setting-create-monitoring                         : SETTING-CRTMON        " + "\n" +
-	/*g05*/ "setting-create-monitoring-persist                 : SETTING-CRTMONPERS    " + "\n" +
-	/*h00*/ "toolkit-build                                     : TOOLKIT-BUILD         " + "\n" +
-	/*h01*/ "toolkit-build-log                                 : TOOLKIT-BUILDLOG      " + "\n" +
-	/*h02*/ "toolkit-pipe                                      : TOOLKIT-PIPE          " + "\n" +
-	/*h03*/ "toolkit-pipe-log                                  : TOOLKIT-PIPELOG       " + "\n" +
-	/*h04*/ "toolkit-pipe-set-var                              : TOOLKIT-PIPESETVAR    " + "\n" +
-	/*h05*/ "toolkit-pipe-get-var                              : TOOLKIT-PIPEGETVAR    " + "\n" +
+	/*g00*/ "orch-setting-create-namespace                          : ORCH-SETTING-CRTNS         " + "\n" +
+	/*g01*/ "orch-setting-set-repo                                  : ORCH-SETTING-SETREPO       " + "\n" +
+	/*g02*/ "orch-setting-set-reg                                   : ORCH-SETTING-SETREG        " + "\n" +
+	/*g03*/ "orch-setting-create-volume                             : ORCH-SETTING-CRTVOL        " + "\n" +
+	/*g04*/ "orch-setting-create-monitoring                         : ORCH-SETTING-CRTMON        " + "\n" +
+	/*g05*/ "orch-setting-create-monitoring-persist                 : ORCH-SETTING-CRTMONPERS    " + "\n" +
+	/*h00*/ "orch-toolkit-build                                     : ORCH-TOOLKIT-BUILD         " + "\n" +
+	/*h01*/ "orch-toolkit-build-log                                 : ORCH-TOOLKIT-BUILDLOG      " + "\n" +
+	/*h02*/ "orch-toolkit-pipe                                      : ORCH-TOOLKIT-PIPE          " + "\n" +
+	/*h03*/ "orch-toolkit-pipe-log                                  : ORCH-TOOLKIT-PIPELOG       " + "\n" +
+	/*h04*/ "orch-toolkit-pipe-set-var                              : ORCH-TOOLKIT-PIPESETVAR    " + "\n" +
+	/*h05*/ "orch-toolkit-pipe-get-var                              : ORCH-TOOLKIT-PIPEGETVAR    " + "\n" +
 	/*i00*/ "resource-nodes                                    : RESOURCE-NDS          " + "\n" +
 	/*i01*/ "resource-pods                                     : RESOURCE-PDS          " + "\n" +
 	/*i02*/ "resource-pods-log                                 : RESOURCE-PLOG         " + "\n" +

@@ -6,6 +6,8 @@ import (
 
 	models "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/models"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
+	"github.com/OKESTRO-AIDevOps/nkia/pkg/kubebase"
+	"github.com/OKESTRO-AIDevOps/nkia/pkg/kubetoolkit"
 )
 
 func RequestForwardHandler(email string, query string) (bool, []byte, error) {
@@ -256,5 +258,312 @@ func RequestForwardHandler(email string, query string) (bool, []byte, error) {
 	}
 
 	return true, nil, nil
+
+}
+
+func OrchestrationRequestHandler(email string, std_cmd apistandard.API_INPUT) ([]byte, error) {
+
+	cmd_id := std_cmd["id"]
+
+	switch cmd_id {
+	case "ORCH-SETTING-CRTNS":
+
+		ns := std_cmd["ns"]
+		repoaddr := std_cmd["repoaddr"]
+		regaddr := std_cmd["regaddr"]
+
+		b_out, cmd_err := kubebase.SettingCreateNamespace(ns, repoaddr, regaddr)
+
+		if cmd_err != nil {
+			return nil, fmt.Errorf("orchio failed: %s", cmd_err.Error())
+		}
+
+		out := apistandard.API_OUTPUT{
+			BODY: string(b_out),
+		}
+
+		result, err := json.Marshal(out)
+
+		if err != nil {
+
+			return nil, fmt.Errorf("orchio req: %s", err.Error())
+
+		}
+
+		return result, nil
+
+	case "SETTING-SETREPO":
+		ns := std_cmd["ns"]
+		repoaddr := std_cmd["repoaddr"]
+		repoid := std_cmd["repoid"]
+		repopw := std_cmd["repopw"]
+
+		b_out, cmd_err := kubebase.SettingRepoInfo(ns, repoaddr, repoid, repopw)
+
+		if cmd_err != nil {
+			return nil, fmt.Errorf("run failed: %s", cmd_err.Error())
+		}
+
+		out := apistandard.API_OUTPUT{
+			BODY: string(b_out),
+		}
+
+		result, err := json.Marshal(out)
+
+		if err != nil {
+
+			return nil, fmt.Errorf("orchio req: %s", err.Error())
+
+		}
+
+		return result, nil
+
+	case "SETTING-SETREG":
+		ns := std_cmd["ns"]
+		regaddr := std_cmd["regaddr"]
+		regid := std_cmd["regid"]
+		regpw := std_cmd["regpw"]
+
+		b_out, cmd_err := kubebase.SettingRegInfo(ns, regaddr, regid, regpw)
+
+		if cmd_err != nil {
+			return nil, fmt.Errorf("run failed: %s", cmd_err.Error())
+		}
+
+		out := apistandard.API_OUTPUT{
+			BODY: string(b_out),
+		}
+
+		result, err := json.Marshal(out)
+
+		if err != nil {
+
+			return nil, fmt.Errorf("orchio req: %s", err.Error())
+
+		}
+
+		return result, nil
+
+	case "SETTING-CRTVOL":
+
+		/*
+			main_ns := std_cmd["ns"]
+			target_ip := std_cmd["targetip"]
+
+			b_out, cmd_err := kubebase.SettingCreateVolume(main_ns, target_ip)
+
+			if cmd_err != nil {
+				return nil, fmt.Errorf("run failed: %s", cmd_err.Error())
+			}
+
+			out := apistandard.API_OUTPUT{
+				BODY: string(b_out),
+			}
+
+			result, err := json.Marshal(out)
+
+			if err != nil {
+
+				return nil, fmt.Errorf("orchio req: %s", err.Error())
+
+			}
+
+		*/
+
+		result := []byte("do not use: create vol\n")
+
+		return result, nil
+
+	case "SETTING-CRTMON":
+
+		/*
+			b_out, cmd_err := kubebase.SettingCreateMonitoring()
+
+			if cmd_err != nil {
+				return nil, fmt.Errorf("run failed: %s", cmd_err.Error())
+			}
+			out := apistandard.API_OUTPUT{
+				BODY: string(b_out),
+			}
+
+			result, err := json.Marshal(out)
+
+			if err != nil {
+
+				return nil, fmt.Errorf("orchio req: %s", err.Error())
+
+			}
+
+		*/
+		result := []byte("do not use: create mon\n")
+
+		return result, nil
+
+	case "SETTING-CRTMONPERS":
+
+		/*
+			b_out, cmd_err := kubebase.SettingCreateMonitoringPersistent()
+
+			if cmd_err != nil {
+				return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+			}
+
+			ret_api_out.BODY = string(b_out)
+
+		*/
+		result := []byte("do not use: create mon persistent\n")
+
+		return result, nil
+
+		//	case "SETTING-DELNS":
+		//	case "SUBMIT":
+		//	case "CALLME":
+		//	case "GITLOG":
+		//	case "PIPEHIST":
+		//	case "PIPE":
+		//	case "PIPELOG":
+	case "TOOLKIT-BUILD":
+
+		ns := std_cmd["ns"]
+		repoaddr := std_cmd["repoaddr"]
+		regaddr := std_cmd["regaddr"]
+
+		go kubetoolkit.ToolkitBuildImagesStart(ns, repoaddr, regaddr)
+
+		b_out := []byte("build images started\n")
+
+		out := apistandard.API_OUTPUT{
+			BODY: string(b_out),
+		}
+
+		result, err := json.Marshal(out)
+
+		if err != nil {
+
+			return nil, fmt.Errorf("orchio req: %s", err.Error())
+
+		}
+
+		return result, nil
+
+	case "TOOLKIT-BUILDLOG":
+
+		b_out, cmd_err := kubetoolkit.ToolkitBuildImagesGetLog()
+
+		if cmd_err != nil {
+			return nil, fmt.Errorf("run failed: %s", cmd_err.Error())
+		}
+
+		out := apistandard.API_OUTPUT{
+			BODY: string(b_out),
+		}
+
+		result, err := json.Marshal(out)
+
+		if err != nil {
+
+			return nil, fmt.Errorf("orchio req: %s", err.Error())
+
+		}
+
+		return result, nil
+
+	case "TOOLKIT-PIPE":
+
+		ns := std_cmd["ns"]
+		repoaddr := std_cmd["repoaddr"]
+		regaddr := std_cmd["regaddr"]
+
+		go kubetoolkit.PipelineBuildStart(ns, repoaddr, regaddr)
+
+		b_out := []byte("build pipeline started\n")
+
+		out := apistandard.API_OUTPUT{
+			BODY: string(b_out),
+		}
+
+		result, err := json.Marshal(out)
+
+		if err != nil {
+
+			return nil, fmt.Errorf("orchio req: %s", err.Error())
+
+		}
+
+		return result, nil
+
+	case "TOOLKIT-PIPELOG":
+
+		b_out, cmd_err := kubetoolkit.PipelineBuildGetLog()
+
+		if cmd_err != nil {
+			return nil, fmt.Errorf("run failed: %s", cmd_err.Error())
+		}
+
+		out := apistandard.API_OUTPUT{
+			BODY: string(b_out),
+		}
+
+		result, err := json.Marshal(out)
+
+		if err != nil {
+
+			return nil, fmt.Errorf("orchio req: %s", err.Error())
+
+		}
+
+		return result, nil
+
+	case "TOOLKIT-PIPESETVAR":
+
+		varnm := std_cmd["varnm"]
+		varval := std_cmd["varval"]
+
+		b_out, cmd_err := kubetoolkit.PipelineBuildSetVariablesEx(varnm, varval)
+
+		if cmd_err != nil {
+			return nil, fmt.Errorf("run failed: %s", cmd_err.Error())
+		}
+		out := apistandard.API_OUTPUT{
+			BODY: string(b_out),
+		}
+
+		result, err := json.Marshal(out)
+
+		if err != nil {
+
+			return nil, fmt.Errorf("orchio req: %s", err.Error())
+
+		}
+
+		return result, nil
+
+	case "TOOLKIT-PIPEGETVAR":
+
+		b_out, cmd_err := kubetoolkit.PipelineBuildGetVariableMapEx()
+
+		if cmd_err != nil {
+			return nil, fmt.Errorf("run failed: %s", cmd_err.Error())
+		}
+
+		out := apistandard.API_OUTPUT{
+			BODY: string(b_out),
+		}
+
+		result, err := json.Marshal(out)
+
+		if err != nil {
+
+			return nil, fmt.Errorf("orchio req: %s", err.Error())
+
+		}
+
+		return result, nil
+
+	default:
+
+		return nil, fmt.Errorf("failed to run: no such cmd id: %s", cmd_id)
+
+	}
 
 }
