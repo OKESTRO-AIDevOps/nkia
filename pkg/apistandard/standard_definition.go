@@ -17,40 +17,40 @@ type API_INPUT map[string]string
 type API_STD map[string][]string
 
 var API_DEFINITION string = "" +
-	/*a00*/ "NKCTL-INIT               :id                                                                                         " + "\n" +
-	/*a01*/ "NKCTL-SETTO              :id, to                                                                                     " + "\n" +
-	/*a02*/ "NKCTL-SETAS              :id, as                                                                                     " + "\n" +
-	/*a03*/ "NKCTL-HELP               :id, format                                                                                 " + "\n" +
-	/*b00*/ "ORCH-CONNCHK             :id                                                                                         " + "\n" +
-	/*b01*/ "ORCH-KEYGEN              :id                                                                                         " + "\n" +
-	/*b02*/ "ORCH-GETCL               :id                                                                                         " + "\n" +
-	/*b03*/ "ORCH-ADDCL               :id, clusterid                                                                              " + "\n" +
-	/*b04*/ "ORCH-INSTCL              :id, clusterid, targetip, targetid, targetpw, localip, osnm, cv, updatetoken                " + "\n" +
-	/*b05*/ "ORCH-INSTCLLOG           :id, clusterid, targetip, targetid, targetpw                                                " + "\n" +
-	/*c00*/ "NKLET-CONNUP             :id, clusterid, updatetoken                                                                 " + "\n" +
-	/*c01*/ "NKLET-CONN               :id, clusterid                                                                              " + "\n" +
-	/*d00*/ "NKADM-INSTCTRL           :id, localip, osnm, cv                                                                      " + "\n" +
-	/*d01*/ "NKADM-INSTWKOL           :id, localip, osnm, cv, token                                                               " + "\n" +
-	/*f00*/ "ADMIN-INSTWKOR           :id, targetip, targetid, targetpw, localip, osnm, cv, token                                 " + "\n" +
-	/*d02*/ "NKADM-INSTVOLOL          :id, localip                                                                                " + "\n" +
-	/*f01*/ "ADMIN-INSTVOLOR          :id, targetip, targetid, targetpw, localip                                                  " + "\n" +
-	/*d03*/ "NKADM-INSTTKOL           :id                                                                                         " + "\n" +
-	/*f02*/ "ADMIN-INSTTKOR           :id, targetip, targetid, targetpw                                                           " + "\n" +
-	/*d04*/ "NKADM-INSTLOGOL          :id                                                                                         " + "\n" +
-	/*f03*/ "ADMIN-INSTLOGOR          :id, targetip, targetid, targetpw                                                           " + "\n" +
-	/*f04*/ "ADMIN-INIT               :id                                                                                         " + "\n" +
-	/*f05*/ "ADMIN-INITLOG            :id                                                                                         " + "\n" +
+	/*a00*/ "NKCTL-INIT                    :id                                                                                         " + "\n" +
+	/*a01*/ "NKCTL-SETTO                   :id, to                                                                                     " + "\n" +
+	/*a02*/ "NKCTL-SETAS                   :id, as                                                                                     " + "\n" +
+	/*a03*/ "NKCTL-HELP                    :id, format                                                                                 " + "\n" +
+	/*b00*/ "ORCH-CONNCHK                  :id                                                                                         " + "\n" +
+	/*b01*/ "ORCH-KEYGEN                   :id                                                                                         " + "\n" +
+	/*b02*/ "ORCH-GETCL                    :id                                                                                         " + "\n" +
+	/*b03*/ "ORCH-ADDCL                    :id, clusterid                                                                              " + "\n" +
+	/*b04*/ "ORCH-INSTCL                   :id, clusterid, targetip, targetid, targetpw, localip, osnm, cv, updatetoken                " + "\n" +
+	/*b05*/ "ORCH-INSTCLLOG                :id, clusterid, targetip, targetid, targetpw                                                " + "\n" +
+	/*c00*/ "NKLET-CONNUP                  :id, clusterid, updatetoken                                                                 " + "\n" +
+	/*c01*/ "NKLET-CONN                    :id, clusterid                                                                              " + "\n" +
+	/*d00*/ "NKADM-INSTCTRL                :id, localip, osnm, cv                                                                      " + "\n" +
+	/*d01*/ "NKADM-INSTWKOL                :id, localip, osnm, cv, token                                                               " + "\n" +
+	/*f00*/ "ADMIN-INSTWKOR                :id, targetip, targetid, targetpw, localip, osnm, cv, token                                 " + "\n" +
+	/*d02*/ "NKADM-INSTVOLOL               :id, localip                                                                                " + "\n" +
+	/*f01*/ "ADMIN-INSTVOLOR               :id, targetip, targetid, targetpw, localip                                                  " + "\n" +
+	/*d03*/ "NKADM-INSTTKOL                :id                                                                                         " + "\n" +
+	/*f02*/ "ADMIN-INSTTKOR                :id, targetip, targetid, targetpw                                                           " + "\n" +
+	/*d04*/ "NKADM-INSTLOGOL               :id                                                                                         " + "\n" +
+	/*f03*/ "ADMIN-INSTLOGOR               :id, targetip, targetid, targetpw                                                           " + "\n" +
+	/*f04*/ "ADMIN-INIT                    :id                                                                                         " + "\n" +
+	/*f05*/ "ADMIN-INITLOG                 :id                                                                                         " + "\n" +
 	/*g00*/ "SETTING-CRTNS            :id, ns, repoaddr, regaddr                                                                  " + "\n" +
 	/*g01*/ "SETTING-SETREPO          :id, ns, repoaddr, repoid, repopw                                                           " + "\n" +
 	/*g02*/ "SETTING-SETREG           :id, ns, regaddr, regid, regpw                                                              " + "\n" +
 	/*g03*/ "SETTING-CRTVOL           :id, ns, targetip                                                                           " + "\n" +
 	/*g04*/ "SETTING-CRTMON           :id                                                                                         " + "\n" +
-	/*g05*/ "SETTING-CRTMONPERS       :id                                                                                         " + "\n" +
+	/*g05*/ "SETTING-CRTMONPERS       :id                                                                                        " + "\n" +
 	/*h00*/ "TOOLKIT-BUILD            :id, ns, repoaddr, regaddr                                                                  " + "\n" +
 	/*h01*/ "TOOLKIT-BUILDLOG         :id                                                                                         " + "\n" +
 	/*h02*/ "TOOLKIT-PIPE             :id, ns, repoaddr, regaddr                                                                  " + "\n" +
 	/*h03*/ "TOOLKIT-PIPELOG          :id                                                                                         " + "\n" +
-	/*h04*/ "TOOLKIT-PIPESETVAR       :id, varnm, varval                                                                             " + "\n" +
+	/*h04*/ "TOOLKIT-PIPESETVAR       :id, varnm, varval                                                                          " + "\n" +
 	/*h05*/ "TOOLKIT-PIPEGETVAR       :id                                                                                         " + "\n" +
 	/*i00*/ "RESOURCE-NDS             :id, ns                                                                                     " + "\n" +
 	/*i01*/ "RESOURCE-PDS             :id, ns                                                                                     " + "\n" +

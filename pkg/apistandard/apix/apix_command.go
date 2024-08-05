@@ -5,12 +5,12 @@ var APIX_COMMAND = "" +
 	/*a01*/ "set                                               : set nokubectl cluster id                " + "\n" +
 	/*a02*/ "set-opts                                          : set nokubectl options for orch io                " + "\n" +
 	/*a03*/ "help                                              : print all commands and related arguments with explanation                " + "\n" +
-	/*b00*/ "orch-conncheck                                    : checking orch.io connection                " + "\n" +
-	/*b01*/ "orch-keygen                                       : generate and receive private key                " + "\n" +
-	/*b02*/ "orch-get-cl                                       : receive cluster names that are available for communication" + "\n" +
-	/*b03*/ "orch-add-cl                                       : generate and receive token for connecting a working cluster  " + "\n" +
-	/*b04*/ "orch-install-cl                                   : install main control plane through orch.io       " + "\n" +
-	/*b05*/ "orch-install-cl-log                               : get installation log for the main control plane through orch.io     " + "\n" +
+	/*b00*/ "orchio-conncheck                                    : checking orch.io connection                " + "\n" +
+	/*b01*/ "orchio-keygen                                       : generate and receive private key                " + "\n" +
+	/*b02*/ "orchio-get-cl                                       : receive cluster names that are available for communication" + "\n" +
+	/*b03*/ "orchio-add-cl                                       : generate and receive token for connecting a working cluster  " + "\n" +
+	/*b04*/ "orchio-install-cl                                   : install main control plane through orch.io       " + "\n" +
+	/*b05*/ "orchio-install-cl-log                               : get installation log for the main control plane through orch.io     " + "\n" +
 	/*c00*/ "io-connect-update                                 : start nokubelt with update token         " + "\n" +
 	/*c01*/ "io-connect                                        : start nokubelt with token         " + "\n" +
 	/*d00*/ "install-mainctrl                                  : install control plane using nokubeadm        " + "\n" +
@@ -24,18 +24,18 @@ var APIX_COMMAND = "" +
 	/*f03*/ "admin-install-log                                 : remote hook for getting log       " + "\n" +
 	/*f04*/ "admin-init                                        : initiate admin function            " + "\n" +
 	/*f05*/ "admin-init-log                                    : get admin initiation log         " + "\n" +
-	/*g00*/ "setting-create-namespace                          : create namespace         " + "\n" +
-	/*g01*/ "setting-set-repo                                  : set repository per project       " + "\n" +
-	/*g02*/ "setting-set-reg                                   : set registry per project        " + "\n" +
-	/*g03*/ "setting-create-volume                             : set volume provisioner       " + "\n" +
-	/*g04*/ "setting-create-monitoring                         : set monitoring api without persistent data        " + "\n" +
-	/*g05*/ "setting-create-monitoring-persist                 : set monitoring api with persistent data    " + "\n" +
-	/*h00*/ "toolkit-build                                     : build from docker-compose.yaml         " + "\n" +
-	/*h01*/ "toolkit-build-log                                 : get build log      " + "\n" +
-	/*h02*/ "toolkit-pipe                                      : start pipe from .npia/build.yaml          " + "\n" +
-	/*h03*/ "toolkit-pipe-log                                  : get pipe log       " + "\n" +
-	/*h04*/ "toolkit-pipe-set-var                              : set pipe variable    " + "\n" +
-	/*h05*/ "toolkit-pipe-get-var                              : get variables set for pipe    " + "\n" +
+	/*g00*/ "orch-setting-create-namespace                          : create namespace         " + "\n" +
+	/*g01*/ "orch-setting-set-repo                                  : set repository per project       " + "\n" +
+	/*g02*/ "orch-setting-set-reg                                   : set registry per project        " + "\n" +
+	/*g03*/ "orch-setting-create-volume                             : set volume provisioner       " + "\n" +
+	/*g04*/ "orch-setting-create-monitoring                         : set monitoring api without persistent data        " + "\n" +
+	/*g05*/ "orch-setting-create-monitoring-persist                 : set monitoring api with persistent data    " + "\n" +
+	/*h00*/ "orch-toolkit-build                                     : build from docker-compose.yaml         " + "\n" +
+	/*h01*/ "orch-toolkit-build-log                                 : get build log      " + "\n" +
+	/*h02*/ "orch-toolkit-pipe                                      : start pipe from .npia/build.yaml          " + "\n" +
+	/*h03*/ "orch-toolkit-pipe-log                                  : get pipe log       " + "\n" +
+	/*h04*/ "orch-toolkit-pipe-set-var                              : set pipe variable    " + "\n" +
+	/*h05*/ "orch-toolkit-pipe-get-var                              : get variables set for pipe    " + "\n" +
 	/*i00*/ "resource-nodes                                    : get nodes          " + "\n" +
 	/*i01*/ "resource-pods                                     : get pods          " + "\n" +
 	/*i02*/ "resource-pods-log                                 : get logs from a specific pod         " + "\n" +
