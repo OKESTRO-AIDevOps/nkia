@@ -28,12 +28,13 @@ import (
 
 	goya "github.com/goccy/go-yaml"
 
+	bsource "github.com/OKESTRO-AIDevOps/nkia/pkg/builtinresource"
 	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	kalfs "github.com/OKESTRO-AIDevOps/nkia/pkg/kaleidofs"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/kubetoolkit"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/runtimefs"
+	runfs "github.com/OKESTRO-AIDevOps/nkia/pkg/runtimefs"
 	pkgutils "github.com/OKESTRO-AIDevOps/nkia/pkg/utils"
-
 	"golang.org/x/crypto/ssh"
 
 	"golang.org/x/term"
@@ -1870,6 +1871,179 @@ func test_pipe_log() {
 
 }
 
+func test_kaniko_build() {
+
+	repoaddr := "dd"
+	regaddr := "ff"
+
+	repo_id := "f"
+	repo_pw := "f"
+
+	reg_id := "a"
+	reg_pw := "a"
+
+	bid, err := runfs.SetBuildId()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	v_repoaddr := strings.ReplaceAll(repoaddr, "https://", "")
+	v_repoaddr = strings.ReplaceAll(v_repoaddr, "http://", "")
+	v_repoaddr = "git://" + v_repoaddr
+
+	v_regaddr := strings.ReplaceAll(regaddr, "https://", "")
+	v_regaddr = strings.ReplaceAll(v_regaddr, "http://", "")
+
+	ns_bid := "npia-build-ns-" + bid
+	sec_bid := "npia-build-secret-" + bid
+	pod_bid := "npia-build-pod-" + bid
+
+	cmd := exec.Command("kubectl", "create", "namespace", ns_bid)
+
+	cmd.Stdout = os.Stdout
+
+	cmd.Stderr = os.Stderr
+
+	err = cmd.Run()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	docker_server := "--docker-server=" + v_regaddr
+	docker_uname := "--docker-username=" + reg_id
+	docker_pword := "--docker-password=" + reg_pw
+
+	cmd = exec.Command("kubectl", "-n", ns_bid, "create", "secret", "docker-registry", sec_bid, docker_server, docker_uname, docker_pword)
+
+	cmd.Stdout = os.Stdout
+
+	cmd.Stderr = os.Stderr
+
+	err = cmd.Run()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	kb := bsource.KanikoBuilder{}
+
+	kb_c := bsource.KanikoBuilder_Container{}
+
+	kb_c_vm := bsource.KanikoBuilder_Container_VolumeMount{}
+
+	kb_c_e1 := bsource.KanikoBuilder_Container_Env{}
+	kb_c_e2 := bsource.KanikoBuilder_Container_Env{}
+
+	kb_v := bsource.KanikoBuilder_Volume{}
+
+	kb_v_i := bsource.KanikoBuilder_Volume_Item{}
+
+	kb.APIVersion = "v1"
+	kb.Kind = "Pod"
+	kb.Metadata.Name = pod_bid
+	kb.Spec.RestartPolicy = "Never"
+
+	kb_c.Name = pod_bid
+	kb_c.Image = "gcr.io/kaniko-project/executor:latest"
+	kb_c.Args = append(kb_c.Args, "--dockerfile=Dockerfile")
+	kb_c.Args = append(kb_c.Args, "--context="+v_repoaddr)
+	kb_c.Args = append(kb_c.Args, "--context-sub-path=f/")
+	kb_c.Args = append(kb_c.Args, "--destination="+v_regaddr)
+
+	kb_c_vm.MountPath = "/kaniko/.docker"
+	kb_c_vm.Name = "kaniko-secret"
+
+	kb_c_e1.Name = "GIT_USERNAME"
+	kb_c_e1.Value = repo_id
+
+	kb_c_e2.Name = "GIT_PASSWORD"
+	kb_c_e2.Value = repo_pw
+
+	kb_v.Name = "kaniko-secret"
+	kb_v.Secret.SecretName = sec_bid
+
+	kb_v_i.Key = ".dockerconfigjson"
+	kb_v_i.Path = "config.json"
+
+	kb_v.Secret.Items = append(kb_v.Secret.Items, kb_v_i)
+
+	kb_c.Env = append(kb_c.Env, kb_c_e1)
+	kb_c.Env = append(kb_c.Env, kb_c_e2)
+
+	kb_c.VolumeMounts = append(kb_c.VolumeMounts, kb_c_vm)
+
+	kb.Spec.Containers = append(kb.Spec.Containers, kb_c)
+	kb.Spec.Volumes = append(kb.Spec.Volumes, kb_v)
+
+	yb, err := goya.Marshal(kb)
+
+	if err != nil {
+
+		fmt.Println(err.Error())
+		return
+	}
+
+	build_yaml, err := runfs.SetBuildManifestPath(yb)
+
+	if err != nil {
+
+		fmt.Println(err.Error())
+		return
+	}
+
+	cmd = exec.Command("kubectl", "-n", ns_bid, "apply", "-f", build_yaml)
+
+	cmd.Stdout = os.Stdout
+
+	cmd.Stderr = os.Stderr
+
+	err = cmd.Run()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	for {
+
+		outb := bytes.Buffer{}
+		errb := bytes.Buffer{}
+
+		cmd = exec.Command("kubectl", "-n", ns_bid, "get", "pod", pod_bid, "--no-headers")
+
+		cmd.Stdout = &outb
+
+		cmd.Stderr = &errb
+
+		err = cmd.Run()
+
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+		stdout_str := outb.String()
+		stderr_str := errb.String()
+
+		fmt.Println("OUT:")
+		fmt.Println(stdout_str)
+		fmt.Println("ERR:")
+		fmt.Println(stderr_str)
+
+		if strings.Contains(stdout_str, "Completed") {
+			break
+		}
+
+		time.Sleep(time.Second * 3)
+	}
+
+}
+
 func main() {
 
 	//	ASgi := apistandard.ASgi
@@ -1936,5 +2110,7 @@ func main() {
 
 	//test_pipeline()
 
-	test_pipe_log()
+	//test_pipe_log()
+
+	test_kaniko_build()
 }

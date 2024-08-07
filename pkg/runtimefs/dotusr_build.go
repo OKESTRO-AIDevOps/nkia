@@ -254,6 +254,40 @@ func SetBuildManifestPath(buildyaml []byte) (string, error) {
 	return buildyaml_path, nil
 }
 
+func UpdateBuildLogExt(content []byte) error {
+
+	head_dir := ".usr/build/"
+
+	head, err := os.ReadFile(".usr/build/HEAD")
+
+	if err != nil {
+
+		return fmt.Errorf("failed to update build log ext: %s", err.Error())
+
+	}
+
+	head_value := string(head)
+
+	if err != nil {
+		return fmt.Errorf("failed to update build log ext: %s", err.Error())
+	}
+
+	head_dir += head_value + "/"
+
+	head_dir_log_ext := head_dir + "log_ext"
+
+	err = os.WriteFile(head_dir_log_ext, content, 0644)
+
+	if err != nil {
+
+		return fmt.Errorf("failed to update build log ext: %s", err.Error())
+
+	}
+
+	return nil
+
+}
+
 func GetUsrBuildLog() ([]byte, error) {
 
 	var ret_byte []byte
@@ -285,6 +319,45 @@ func GetUsrBuildLog() ([]byte, error) {
 	if err != nil {
 
 		return ret_byte, fmt.Errorf("failed to get usr build log: %s", err.Error())
+
+	}
+
+	ret_byte = log_b
+
+	return ret_byte, err
+}
+
+func GetUsrBuildLogExt() ([]byte, error) {
+
+	var ret_byte []byte
+
+	var err error
+
+	head_dir := ".usr/build/"
+
+	head, err := os.ReadFile(".usr/build/HEAD")
+
+	if err != nil {
+
+		return ret_byte, fmt.Errorf("failed to get usr build log ext: %s", err.Error())
+
+	}
+
+	head_value := string(head)
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get usr build log ext: %s", err.Error())
+	}
+
+	head_dir += head_value + "/"
+
+	head_dir_log := head_dir + "log_ext"
+
+	log_b, err := os.ReadFile(head_dir_log)
+
+	if err != nil {
+
+		return ret_byte, fmt.Errorf("failed to get usr build log ext: %s", err.Error())
 
 	}
 

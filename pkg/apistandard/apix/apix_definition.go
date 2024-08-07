@@ -32,18 +32,19 @@ var APIX_QUERY_MAP = "" +
 	/*f03*/ "admin-install-log                                 : ADMIN-INSTLOGOR       " + "\n" +
 	/*f04*/ "admin-init                                        : ADMIN-INIT            " + "\n" +
 	/*f05*/ "admin-init-log                                    : ADMIN-INITLOG         " + "\n" +
-	/*g00*/ "orch-setting-create-namespace                          : ORCH-SETTING-CRTNS         " + "\n" +
-	/*g01*/ "orch-setting-set-repo                                  : ORCH-SETTING-SETREPO       " + "\n" +
-	/*g02*/ "orch-setting-set-reg                                   : ORCH-SETTING-SETREG        " + "\n" +
-	/*g03*/ "orch-setting-create-volume                             : ORCH-SETTING-CRTVOL        " + "\n" +
-	/*g04*/ "orch-setting-create-monitoring                         : ORCH-SETTING-CRTMON        " + "\n" +
-	/*g05*/ "orch-setting-create-monitoring-persist                 : ORCH-SETTING-CRTMONPERS    " + "\n" +
-	/*h00*/ "orch-toolkit-build                                     : ORCH-TOOLKIT-BUILD         " + "\n" +
-	/*h01*/ "orch-toolkit-build-log                                 : ORCH-TOOLKIT-BUILDLOG      " + "\n" +
-	/*h02*/ "orch-toolkit-pipe                                      : ORCH-TOOLKIT-PIPE          " + "\n" +
-	/*h03*/ "orch-toolkit-pipe-log                                  : ORCH-TOOLKIT-PIPELOG       " + "\n" +
-	/*h04*/ "orch-toolkit-pipe-set-var                              : ORCH-TOOLKIT-PIPESETVAR    " + "\n" +
-	/*h05*/ "orch-toolkit-pipe-get-var                              : ORCH-TOOLKIT-PIPEGETVAR    " + "\n" +
+	/*g00*/ "orch-setting-create-namespace                          : SETTING-CRTNS         " + "\n" +
+	/*g01*/ "orch-setting-set-repo                                  : SETTING-SETREPO       " + "\n" +
+	/*g02*/ "orch-setting-set-reg                                   : SETTING-SETREG        " + "\n" +
+	/*g03*/ "orch-setting-create-volume                             : SETTING-CRTVOL        " + "\n" +
+	/*g04*/ "orch-setting-create-monitoring                         : SETTING-CRTMON        " + "\n" +
+	/*g05*/ "orch-setting-create-monitoring-persist                 : SETTING-CRTMONPERS    " + "\n" +
+	/*h00*/ "orch-toolkit-build                                     : TOOLKIT-BUILD         " + "\n" +
+	/*h01*/ "orch-toolkit-build-log                                 : TOOLKIT-BUILDLOG      " + "\n" +
+	/*h02*/ "orch-toolkit-build-log-ext                             : TOOLKIT-BUILDLOGEXT      " + "\n" +
+	/*h03*/ "orch-toolkit-pipe                                      : TOOLKIT-PIPE          " + "\n" +
+	/*h04*/ "orch-toolkit-pipe-log                                  : TOOLKIT-PIPELOG       " + "\n" +
+	/*h05*/ "orch-toolkit-pipe-set-var                              : TOOLKIT-PIPESETVAR    " + "\n" +
+	/*h06*/ "orch-toolkit-pipe-get-var                              : TOOLKIT-PIPEGETVAR    " + "\n" +
 	/*i00*/ "resource-nodes                                    : RESOURCE-NDS          " + "\n" +
 	/*i01*/ "resource-pods                                     : RESOURCE-PDS          " + "\n" +
 	/*i02*/ "resource-pods-log                                 : RESOURCE-PLOG         " + "\n" +

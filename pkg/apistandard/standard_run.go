@@ -224,6 +224,16 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 
 		ret_api_out.BODY = string(b_out)
 
+	case "TOOLKIT-BUILDLOGEXT":
+
+		b_out, cmd_err := kubetoolkit.ToolkitBuildImagesGetLogExt()
+
+		if cmd_err != nil {
+			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+		}
+
+		ret_api_out.BODY = string(b_out)
+
 	case "TOOLKIT-PIPE":
 
 		ns := std_cmd["ns"]
