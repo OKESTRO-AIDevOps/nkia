@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	pkgutils "github.com/OKESTRO-AIDevOps/nkia/pkg/utils"
 	goya "github.com/goccy/go-yaml"
 )
 
@@ -176,6 +177,81 @@ func GetUsrTargetPushList(regaddr string) ([][]string, error) {
 	}
 
 	return target_push_list, nil
+}
+
+func SetBuildId() (string, error) {
+
+	token, _ := pkgutils.RandomHex(16)
+
+	var err error
+
+	head_dir := ".usr/build/"
+
+	head, err := os.ReadFile(".usr/build/HEAD")
+
+	if err != nil {
+
+		return "", fmt.Errorf("failed to set usr build token: %s", err.Error())
+
+	}
+
+	head_value := string(head)
+
+	if err != nil {
+		return "", fmt.Errorf("failed to set usr build token: %s", err.Error())
+	}
+
+	head_dir += head_value + "/"
+
+	head_dir_build_token := head_dir + "build_id"
+
+	err = os.WriteFile(head_dir_build_token, []byte(token), 0644)
+
+	if err != nil {
+
+		return "", fmt.Errorf("failed to set usr build token: %s", err.Error())
+
+	}
+
+	return token, nil
+
+}
+
+func SetBuildManifestPath(buildyaml []byte) (string, error) {
+
+	var buildyaml_path string
+
+	head_dir := ".usr/build/"
+
+	head, err := os.ReadFile(".usr/build/HEAD")
+
+	if err != nil {
+
+		return "", fmt.Errorf("failed to set usr build manifest: %s", err.Error())
+
+	}
+
+	head_value := string(head)
+
+	if err != nil {
+		return "", fmt.Errorf("failed to set usr build manifest: %s", err.Error())
+	}
+
+	head_dir += head_value + "/"
+
+	head_dir_build_manifest := head_dir + "build_manifest.yaml"
+
+	err = os.WriteFile(head_dir_build_manifest, buildyaml, 0644)
+
+	if err != nil {
+
+		return "", fmt.Errorf("failed to set usr build manifest: %s", err.Error())
+
+	}
+
+	buildyaml_path = head_dir_build_manifest
+
+	return buildyaml_path, nil
 }
 
 func GetUsrBuildLog() ([]byte, error) {

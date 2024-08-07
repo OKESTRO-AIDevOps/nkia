@@ -95,7 +95,7 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 			}
 
 		*/
-		ret_api_out.BODY = string([]byte("do not use: remote"))
+		ret_api_out.BODY = string([]byte("do not use: install log remote"))
 
 	case "ADMIN-INIT":
 
@@ -158,37 +158,42 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 		//	case "SETTING-CRTNSVOL":
 
 	case "SETTING-CRTVOL":
+		/*
+			main_ns := std_cmd["ns"]
+			target_ip := std_cmd["targetip"]
 
-		main_ns := std_cmd["ns"]
-		target_ip := std_cmd["targetip"]
+			b_out, cmd_err := kubebase.SettingCreateVolume(main_ns, target_ip)
 
-		b_out, cmd_err := kubebase.SettingCreateVolume(main_ns, target_ip)
-
-		if cmd_err != nil {
-			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
-		}
-
-		ret_api_out.BODY = string(b_out)
+			if cmd_err != nil {
+				return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+			}
+		*/
+		ret_api_out.BODY = string([]byte("do not use: create vol"))
 
 	case "SETTING-CRTMON":
 
-		b_out, cmd_err := kubebase.SettingCreateMonitoring()
+		/*
+			b_out, cmd_err := kubebase.SettingCreateMonitoring()
 
-		if cmd_err != nil {
-			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
-		}
+			if cmd_err != nil {
+				return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+			}
 
-		ret_api_out.BODY = string(b_out)
+		*/
+
+		ret_api_out.BODY = string([]byte("do not use: create monitoring"))
 
 	case "SETTING-CRTMONPERS":
 
-		b_out, cmd_err := kubebase.SettingCreateMonitoringPersistent()
+		/*
+			b_out, cmd_err := kubebase.SettingCreateMonitoringPersistent()
 
-		if cmd_err != nil {
-			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
-		}
+			if cmd_err != nil {
+				return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+			}
+		*/
 
-		ret_api_out.BODY = string(b_out)
+		ret_api_out.BODY = string([]byte("do not use: create monitoring persist"))
 
 		//	case "SETTING-DELNS":
 		//	case "SUBMIT":
@@ -203,7 +208,7 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 		repoaddr := std_cmd["repoaddr"]
 		regaddr := std_cmd["regaddr"]
 
-		go kubetoolkit.ToolkitBuildImagesStart(ns, repoaddr, regaddr)
+		go kubetoolkit.ToolkitBuildImagesStart2(ns, repoaddr, regaddr)
 
 		b_out := []byte("build images started\n")
 
