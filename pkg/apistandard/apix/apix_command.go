@@ -32,10 +32,11 @@ var APIX_COMMAND = "" +
 	/*g05*/ "orch-setting-create-monitoring-persist                 : set monitoring api with persistent data    " + "\n" +
 	/*h00*/ "orch-toolkit-build                                     : build from docker-compose.yaml         " + "\n" +
 	/*h01*/ "orch-toolkit-build-log                                 : get build log      " + "\n" +
-	/*h02*/ "orch-toolkit-pipe                                      : start pipe from .npia/build.yaml          " + "\n" +
-	/*h03*/ "orch-toolkit-pipe-log                                  : get pipe log       " + "\n" +
-	/*h04*/ "orch-toolkit-pipe-set-var                              : set pipe variable    " + "\n" +
-	/*h05*/ "orch-toolkit-pipe-get-var                              : get variables set for pipe    " + "\n" +
+	/*h02*/ "orch-toolkit-build-log-ext                             : get build log extension     " + "\n" +
+	/*h03*/ "orch-toolkit-pipe                                      : start pipe from .npia/build.yaml          " + "\n" +
+	/*h04*/ "orch-toolkit-pipe-log                                  : get pipe log       " + "\n" +
+	/*h05*/ "orch-toolkit-pipe-set-var                              : set pipe variable    " + "\n" +
+	/*h06*/ "orch-toolkit-pipe-get-var                              : get variables set for pipe    " + "\n" +
 	/*i00*/ "resource-nodes                                    : get nodes          " + "\n" +
 	/*i01*/ "resource-pods                                     : get pods          " + "\n" +
 	/*i02*/ "resource-pods-log                                 : get logs from a specific pod         " + "\n" +

@@ -1,10 +1,12 @@
 package kubetoolkit
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	bsource "github.com/OKESTRO-AIDevOps/nkia/pkg/builtinresource"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/libinterface"
@@ -96,6 +98,7 @@ func ToolkitBuildImagesStart2(main_ns string, repoaddr string, regaddr string) {
 
 	if err != nil {
 		fp.Write([]byte(err.Error()))
+		ToolkitBuildCancelForce(ns_bid)
 		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, err.Error())
 		return
 	}
@@ -134,7 +137,7 @@ func ToolkitBuildImagesStart2(main_ns string, repoaddr string, regaddr string) {
 	kb_c_e2.Value = repo_pw
 
 	kb_v.Name = "kaniko-secret"
-	kb_v.Secret.SecretName = "regcred"
+	kb_v.Secret.SecretName = sec_bid
 
 	kb_v_i.Key = ".dockerconfigjson"
 	kb_v_i.Path = "config.json"
@@ -155,6 +158,7 @@ func ToolkitBuildImagesStart2(main_ns string, repoaddr string, regaddr string) {
 
 		close_msg := err.Error() + "\n"
 		fp.Write([]byte(close_msg))
+		ToolkitBuildCancelForce(ns_bid)
 		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, close_msg)
 		return
 	}
@@ -165,6 +169,7 @@ func ToolkitBuildImagesStart2(main_ns string, repoaddr string, regaddr string) {
 
 		close_msg := err.Error() + "\n"
 		fp.Write([]byte(close_msg))
+		ToolkitBuildCancelForce(ns_bid)
 		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, close_msg)
 		return
 	}
@@ -179,14 +184,122 @@ func ToolkitBuildImagesStart2(main_ns string, repoaddr string, regaddr string) {
 
 	if err != nil {
 		fp.Write([]byte(err.Error()))
+		ToolkitBuildCancelForce(ns_bid)
 		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, err.Error())
 		return
 	}
 
-	/*
-		TODO:
-			write to log til completed
-	*/
+	var outb, errb bytes.Buffer
+
+	for {
+
+		outb = bytes.Buffer{}
+		errb = bytes.Buffer{}
+
+		cmd = exec.Command("kubectl", "-n", ns_bid, "get", "pod", pod_bid, "--no-headers")
+
+		cmd.Stdout = &outb
+
+		cmd.Stderr = &errb
+
+		err = cmd.Run()
+
+		if err != nil {
+			fp.Write([]byte(err.Error()))
+			ToolkitBuildCancelForce(ns_bid)
+			_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, err.Error())
+			return
+		}
+
+		stdout_str := outb.String()
+		_ = errb.String()
+
+		if strings.Contains(stdout_str, "Completed") {
+
+			break
+		}
+
+		if strings.Contains(stdout_str, "Error") {
+
+			break
+		}
+
+		outb = bytes.Buffer{}
+
+		errb = bytes.Buffer{}
+
+		cmd = exec.Command("kubectl", "-n", ns_bid, "logs", pod_bid)
+
+		cmd.Stdout = &outb
+
+		cmd.Stderr = &errb
+
+		err = cmd.Run()
+
+		if err != nil {
+			fp.Write([]byte(err.Error()))
+			ToolkitBuildCancelForce(ns_bid)
+			_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, err.Error())
+			return
+		}
+
+		stdout_b := outb.Bytes()
+		_ = errb.String()
+
+		err = runfs.UpdateBuildLogExt(stdout_b)
+
+		if err != nil {
+			fp.Write([]byte(err.Error()))
+			ToolkitBuildCancelForce(ns_bid)
+			_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, err.Error())
+			return
+		}
+
+		time.Sleep(time.Millisecond * 100)
+
+	}
+
+	outb = bytes.Buffer{}
+
+	errb = bytes.Buffer{}
+
+	cmd = exec.Command("kubectl", "-n", ns_bid, "logs", pod_bid)
+
+	cmd.Stdout = &outb
+
+	cmd.Stderr = &errb
+
+	err = cmd.Run()
+
+	if err != nil {
+		fp.Write([]byte(err.Error()))
+		ToolkitBuildCancelForce(ns_bid)
+		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, err.Error())
+		return
+	}
+
+	stdout_b := outb.Bytes()
+	_ = errb.String()
+
+	err = runfs.UpdateBuildLogExt(stdout_b)
+
+	if err != nil {
+		fp.Write([]byte(err.Error()))
+		ToolkitBuildCancelForce(ns_bid)
+		_ = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, err.Error())
+		return
+	}
+
+	err = runfs.CloseFilePointerForUsrBuildLogAndMarkDone(fp, "SUCCESS")
+
+	if err != nil {
+		ToolkitBuildCancelForce(ns_bid)
+		return
+	}
+	ToolkitBuildCancelForce(ns_bid)
+
+	return
+
 }
 
 func ToolkitBuildImagesStart(main_ns string, repoaddr string, regaddr string) {
@@ -341,14 +454,6 @@ func ToolkitBuildImagesStart_Push(fp *os.File, regaddr string, regid string, reg
 
 }
 
-func ToolkitBuildImagesGetLog2() ([]byte, error) {
-
-	var ret_byte []byte
-
-	return ret_byte, nil
-
-}
-
 func ToolkitBuildImagesGetLog() ([]byte, error) {
 
 	var ret_byte []byte
@@ -362,4 +467,27 @@ func ToolkitBuildImagesGetLog() ([]byte, error) {
 	ret_byte = log_b
 
 	return ret_byte, nil
+}
+
+func ToolkitBuildImagesGetLogExt() ([]byte, error) {
+
+	var ret_byte []byte
+
+	log_b, err := runfs.GetUsrBuildLogExt()
+
+	if err != nil {
+		return ret_byte, fmt.Errorf("failed to get log ext: %s", err.Error())
+	}
+
+	ret_byte = log_b
+
+	return ret_byte, nil
+
+}
+
+func ToolkitBuildCancelForce(ns string) {
+
+	cmd := exec.Command("kubectl", "delete", "namespace", ns)
+
+	_ = cmd.Run()
 }

@@ -48,10 +48,11 @@ var API_DEFINITION string = "" +
 	/*g05*/ "SETTING-CRTMONPERS       :id                                                                                        " + "\n" +
 	/*h00*/ "TOOLKIT-BUILD            :id, ns, repoaddr, regaddr                                                                  " + "\n" +
 	/*h01*/ "TOOLKIT-BUILDLOG         :id                                                                                         " + "\n" +
-	/*h02*/ "TOOLKIT-PIPE             :id, ns, repoaddr, regaddr                                                                  " + "\n" +
-	/*h03*/ "TOOLKIT-PIPELOG          :id                                                                                         " + "\n" +
-	/*h04*/ "TOOLKIT-PIPESETVAR       :id, varnm, varval                                                                          " + "\n" +
-	/*h05*/ "TOOLKIT-PIPEGETVAR       :id                                                                                         " + "\n" +
+	/*h02*/ "TOOLKIT-BUILDLOGEXT      :id                                                                                         " + "\n" +
+	/*h03*/ "TOOLKIT-PIPE             :id, ns, repoaddr, regaddr                                                                  " + "\n" +
+	/*h04*/ "TOOLKIT-PIPELOG          :id                                                                                         " + "\n" +
+	/*h05*/ "TOOLKIT-PIPESETVAR       :id, varnm, varval                                                                          " + "\n" +
+	/*h06*/ "TOOLKIT-PIPEGETVAR       :id                                                                                         " + "\n" +
 	/*i00*/ "RESOURCE-NDS             :id, ns                                                                                     " + "\n" +
 	/*i01*/ "RESOURCE-PDS             :id, ns                                                                                     " + "\n" +
 	/*i02*/ "RESOURCE-PLOG            :id, ns, podnm                                                                              " + "\n" +
