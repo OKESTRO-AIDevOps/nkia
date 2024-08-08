@@ -1,4 +1,4 @@
-package promquery
+package metricquery
 
 type PQOutputFormat struct {
 	DataLabel string

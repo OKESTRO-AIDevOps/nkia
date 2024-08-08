@@ -1,4 +1,4 @@
-package promquery
+package metricquery
 
 import (
 	"fmt"

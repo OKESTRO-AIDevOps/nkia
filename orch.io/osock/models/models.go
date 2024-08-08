@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
@@ -27,6 +28,19 @@ type OrchClusterRecord struct {
 	ClusterId    string `json:"cluster_id"`
 	Config       string `json:"config"`
 	ConfigStatus string `json:"config_status"`
+}
+
+type InstallSession struct {
+	Mu sync.Mutex
+
+	INST_SESSION map[string]*[]byte
+
+	INST_RESULT map[string]string
+}
+
+var FI_SESSIONS = InstallSession{
+	INST_SESSION: make(map[string]*[]byte),
+	INST_RESULT:  make(map[string]string),
 }
 
 func DbQuery(query string, args []any) (*sql.Rows, error) {

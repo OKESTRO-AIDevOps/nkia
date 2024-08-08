@@ -1,11 +1,14 @@
 package cmd
 
 import (
+	"crypto/x509"
 	"encoding/json"
+	"encoding/pem"
 	"fmt"
 
 	models "github.com/OKESTRO-AIDevOps/nkia/orch.io/osock/models"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard"
+	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/kubebase"
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/kubetoolkit"
 )
@@ -54,55 +57,42 @@ func RequestForwardHandler(email string, query string) (bool, []byte, error) {
 
 	case "ORCH-KEYGEN":
 
-		/*
-			privkey, pubkey, err := modules.GenerateKeyPair(4096)
+		privkey, pubkey, err := modules.GenerateKeyPair(4096)
 
-			if err != nil {
-				return false, result, fmt.Errorf("admin req: %s", err.Error())
-			}
+		if err != nil {
+			return false, result, fmt.Errorf("admin req: %s", err.Error())
+		}
 
-			priv_pem := pem.EncodeToMemory(
-				&pem.Block{
-					Type:  "RSA PRIVATE KEY",
-					Bytes: x509.MarshalPKCS1PrivateKey(privkey),
-				},
-			)
+		priv_pem := pem.EncodeToMemory(
+			&pem.Block{
+				Type:  "RSA PRIVATE KEY",
+				Bytes: x509.MarshalPKCS1PrivateKey(privkey),
+			},
+		)
 
-			pub_b, err := x509.MarshalPKIXPublicKey(pubkey)
+		pub_b, err := x509.MarshalPKIXPublicKey(pubkey)
 
-			if err != nil {
-				return false, result, fmt.Errorf("admin req: %s", err.Error())
-			}
+		if err != nil {
+			return false, result, fmt.Errorf("admin req: %s", err.Error())
+		}
 
-			pub_pem := pem.EncodeToMemory(
-				&pem.Block{
-					Type:  "PUBLIC KEY",
-					Bytes: pub_b,
-				},
-			)
+		pub_pem := pem.EncodeToMemory(
+			&pem.Block{
+				Type:  "PUBLIC KEY",
+				Bytes: pub_b,
+			},
+		)
 
-			pub_pem_str := string(pub_pem)
+		pub_pem_str := string(pub_pem)
 
-			err = models.UpdatePubkeyByEmail2(email, pub_pem_str)
+		err = models.UpdatePubkeyByEmail2(email, pub_pem_str)
 
-			if err != nil {
-				return false, result, fmt.Errorf("admin req: %s", err.Error())
-			}
+		if err != nil {
+			return false, result, fmt.Errorf("admin req: %s", err.Error())
+		}
 
-			out := apistandard.API_OUTPUT{
-				BODY: string(priv_pem),
-			}
-
-			result, err := json.Marshal(out)
-
-			if err != nil {
-
-				return false, nil, fmt.Errorf("admin req: %s", err.Error())
-
-			}
-		*/
 		out := apistandard.API_OUTPUT{
-			BODY: "do not use it for now",
+			BODY: string(priv_pem),
 		}
 
 		result, err := json.Marshal(out)
@@ -155,48 +145,35 @@ func RequestForwardHandler(email string, query string) (bool, []byte, error) {
 
 	case "ORCH-INSTCL":
 
-		/*
-			if len(sctrl.FI_SESSIONS.INST_SESSION) > 100 {
-				return false, result, fmt.Errorf("admin req: too many remote install sessions")
-			}
+		if len(models.FI_SESSIONS.INST_SESSION) > 100 {
+			return false, result, fmt.Errorf("admin req: too many remote install sessions")
+		}
 
-			clusterid := api_input["clusterid"]
-			targetip := api_input["targetip"]
-			targetid := api_input["targetid"]
-			targetpw := api_input["targetpw"]
-			localip := api_input["localip"]
-			osnm := api_input["osnm"]
-			cv := api_input["cv"]
-			updatetoken := api_input["updatetoken"]
+		clusterid := api_input["clusterid"]
+		targetip := api_input["targetip"]
+		targetid := api_input["targetid"]
+		targetpw := api_input["targetpw"]
+		localip := api_input["localip"]
+		osnm := api_input["osnm"]
+		cv := api_input["cv"]
+		updatetoken := api_input["updatetoken"]
 
-			session_key := email + ":" + clusterid
+		session_key := email + ":" + clusterid
 
-			_, okay := sctrl.FI_SESSIONS.INST_SESSION[session_key]
+		_, okay := models.FI_SESSIONS.INST_SESSION[session_key]
 
-			if okay {
-				return false, result, fmt.Errorf("admin req: already an ongoing installation")
-			}
+		if okay {
+			return false, result, fmt.Errorf("admin req: already an ongoing installation")
+		}
 
-			sctrl.FI_SESSIONS.INST_SESSION[session_key] = &[]byte{}
+		models.FI_SESSIONS.INST_SESSION[session_key] = &[]byte{}
 
-			sctrl.FI_SESSIONS.INST_RESULT[session_key] = "-"
+		models.FI_SESSIONS.INST_RESULT[session_key] = "-"
 
-			go sctrl.InstallCluster(session_key, clusterid, targetip, targetid, targetpw, localip, osnm, cv, updatetoken)
+		go models.InstallCluster(session_key, clusterid, targetip, targetid, targetpw, localip, osnm, cv, updatetoken)
 
-			out := apistandard.API_OUTPUT{
-				BODY: "remote cluster installation started\n",
-			}
-
-			result, err := json.Marshal(out)
-
-			if err != nil {
-
-				return false, nil, fmt.Errorf("admin req: %s", err.Error())
-
-			}
-		*/
 		out := apistandard.API_OUTPUT{
-			BODY: "do not use it for now",
+			BODY: "remote cluster installation started\n",
 		}
 
 		result, err := json.Marshal(out)
@@ -206,6 +183,7 @@ func RequestForwardHandler(email string, query string) (bool, []byte, error) {
 			return false, nil, fmt.Errorf("admin req: %s", err.Error())
 
 		}
+
 		return false, result, nil
 
 	case "ORCH-INSTCLLOG":

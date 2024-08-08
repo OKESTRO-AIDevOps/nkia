@@ -28,74 +28,66 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 
 	case "ADMIN-INSTWKOR":
 
-		/*
-			targetip := std_cmd["targetip"]
-			targetid := std_cmd["targetid"]
-			targetpw := std_cmd["targetpw"]
-			localip := std_cmd["localip"]
-			osnm := std_cmd["osnm"]
-			cv := std_cmd["cv"]
-			token := std_cmd["token"]
+		targetip := std_cmd["targetip"]
+		targetid := std_cmd["targetid"]
+		targetpw := std_cmd["targetpw"]
+		localip := std_cmd["localip"]
+		osnm := std_cmd["osnm"]
+		cv := std_cmd["cv"]
+		token := std_cmd["token"]
 
-			var cmd_err error
+		var cmd_err error
 
-			if token == "-" {
+		if token == "-" {
 
-				token, cmd_err = kubebase.GetJoinToken()
+			token, cmd_err = kubebase.GetJoinToken()
 
-				if cmd_err != nil {
-					return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
-				}
-
+			if cmd_err != nil {
+				return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
 			}
 
-			go kubebase.InstallWorkerOnRemote(targetip, targetid, targetpw, localip, osnm, cv, token)
+		}
 
-		*/
-		ret_api_out.BODY = string([]byte("do not use: remote worker installation\n"))
+		go kubebase.InstallWorkerOnRemote(targetip, targetid, targetpw, localip, osnm, cv, token)
+
+		ret_api_out.BODY = string([]byte("install worker started"))
 
 	case "ADMIN-INSTVOLOR":
 
-		/*
-			targetip := std_cmd["targetip"]
-			targetid := std_cmd["targetid"]
-			targetpw := std_cmd["targetpw"]
-			localip := std_cmd["localip"]
+		targetip := std_cmd["targetip"]
+		targetid := std_cmd["targetid"]
+		targetpw := std_cmd["targetpw"]
+		localip := std_cmd["localip"]
 
-			go kubebase.InstallVolumeOnRemote(targetip, targetid, targetpw, localip)
-		*/
+		go kubebase.InstallVolumeOnRemote(targetip, targetid, targetpw, localip)
 
-		ret_api_out.BODY = string([]byte("do not use: remote volume installation\n"))
+		ret_api_out.BODY = string([]byte("install volume started"))
 
 	case "ADMIN-INSTTKOR":
 
-		/*
-			targetip := std_cmd["targetip"]
-			targetid := std_cmd["targetid"]
-			targetpw := std_cmd["targetpw"]
+		targetip := std_cmd["targetip"]
+		targetid := std_cmd["targetid"]
+		targetpw := std_cmd["targetpw"]
 
-			go kubebase.InstallToolKitOnRemote(targetip, targetid, targetpw)
+		go kubebase.InstallToolKitOnRemote(targetip, targetid, targetpw)
 
-		*/
-		ret_api_out.BODY = string([]byte("do not use: remote toolkit installation\n"))
+		ret_api_out.BODY = string([]byte("install toolkit started"))
 
 	case "ADMIN-INSTLOGOR":
 
-		/*
-			targetip := std_cmd["targetip"]
-			targetid := std_cmd["targetid"]
-			targetpw := std_cmd["targetpw"]
+		targetip := std_cmd["targetip"]
+		targetid := std_cmd["targetid"]
+		targetpw := std_cmd["targetpw"]
 
-			b_out, cmd_err := kubebase.InstallLogOnRemote(targetip, targetid, targetpw)
+		b_out, cmd_err := kubebase.InstallLogOnRemote(targetip, targetid, targetpw)
 
-			if cmd_err != nil {
+		if cmd_err != nil {
 
-				return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
 
-			}
+		}
 
-		*/
-		ret_api_out.BODY = string([]byte("do not use: install log remote"))
+		ret_api_out.BODY = string(b_out)
 
 	case "ADMIN-INIT":
 
@@ -158,43 +150,37 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 		//	case "SETTING-CRTNSVOL":
 
 	case "SETTING-CRTVOL":
-		/*
-			main_ns := std_cmd["ns"]
-			target_ip := std_cmd["targetip"]
 
-			b_out, cmd_err := kubebase.SettingCreateVolume(main_ns, target_ip)
+		main_ns := std_cmd["ns"]
+		target_ip := std_cmd["targetip"]
 
-			if cmd_err != nil {
-				return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
-			}
-		*/
-		ret_api_out.BODY = string([]byte("do not use: create vol"))
+		b_out, cmd_err := kubebase.SettingCreateVolume(main_ns, target_ip)
+
+		if cmd_err != nil {
+			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+		}
+
+		ret_api_out.BODY = string(b_out)
 
 	case "SETTING-CRTMON":
 
-		/*
-			b_out, cmd_err := kubebase.SettingCreateMonitoring()
+		b_out, cmd_err := kubebase.SettingCreateMonitoring()
 
-			if cmd_err != nil {
-				return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
-			}
+		if cmd_err != nil {
+			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+		}
 
-		*/
-
-		ret_api_out.BODY = string([]byte("do not use: create monitoring"))
+		ret_api_out.BODY = string(b_out)
 
 	case "SETTING-CRTMONPERS":
 
-		/*
-			b_out, cmd_err := kubebase.SettingCreateMonitoringPersistent()
+		b_out, cmd_err := kubebase.SettingCreateMonitoringPersistent()
 
-			if cmd_err != nil {
-				return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
-			}
-		*/
+		if cmd_err != nil {
+			return ret_api_out, fmt.Errorf("run failed: %s", cmd_err.Error())
+		}
 
-		ret_api_out.BODY = string([]byte("do not use: create monitoring persist"))
-
+		ret_api_out.BODY = string(b_out)
 		//	case "SETTING-DELNS":
 		//	case "SUBMIT":
 		//	case "CALLME":
@@ -402,7 +388,7 @@ func (asgi API_STD) Run(std_cmd API_INPUT) (API_OUTPUT, error) {
 
 		ret_api_out.BODY = string(b_out)
 
-	//case "RESOURCE-PRJPRB":
+		//case "RESOURCE-PRJPRB":
 	case "RESOURCE-PSCH":
 
 		ns := std_cmd["ns"]
