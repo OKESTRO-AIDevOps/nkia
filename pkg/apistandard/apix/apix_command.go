@@ -5,25 +5,27 @@ var APIX_COMMAND = "" +
 	/*a01*/ "set                                               : set nokubectl cluster id                " + "\n" +
 	/*a02*/ "set-opts                                          : set nokubectl options for orch io                " + "\n" +
 	/*a03*/ "help                                              : print all commands and related arguments with explanation                " + "\n" +
-	/*b00*/ "orchio-conncheck                                    : checking orch.io connection                " + "\n" +
-	/*b01*/ "orchio-keygen                                       : generate and receive private key                " + "\n" +
-	/*b02*/ "orchio-get-cl                                       : receive cluster names that are available for communication" + "\n" +
-	/*b03*/ "orchio-add-cl                                       : generate and receive token for connecting a working cluster  " + "\n" +
-	/*b04*/ "orchio-install-cl                                   : install main control plane through orch.io       " + "\n" +
-	/*b05*/ "orchio-install-cl-log                               : get installation log for the main control plane through orch.io     " + "\n" +
+	/*b00*/ "orch-conncheck                                    : checking orch.io connection                " + "\n" +
+	/*b01*/ "orch-keygen                                       : generate and receive private key                " + "\n" +
+	/*b02*/ "orch-get-cl                                       : receive cluster names that are available for communication" + "\n" +
+	/*b03*/ "orch-add-cl                                       : generate and receive token for connecting a working cluster  " + "\n" +
+	//	/*b04*/ "orchio-install-cl                                   : install main control plane through orch.io       " + "\n" +
+	//	/*b05*/ "orchio-install-cl-log                               : get installation log for the main control plane through orch.io     " + "\n" +
+	"" +
 	/*c00*/ "io-connect-update                                 : start nokubelt with update token         " + "\n" +
 	/*c01*/ "io-connect                                        : start nokubelt with token         " + "\n" +
-	/*d00*/ "install-mainctrl                                  : install control plane using nokubeadm        " + "\n" +
-	/*d01*/ "install-worker                                    : install worker using nokubeadm        " + "\n" +
-	/*f00*/ "admin-install-worker                              : remote hook for installing worker        " + "\n" +
-	/*d02*/ "install-volume                                    : install volume using nokubeadm       " + "\n" +
-	/*f01*/ "admin-install-volume                              : remote hook for installing worker       " + "\n" +
-	/*d03*/ "install-toolkit                                   : install build toolkit using nokubeadm        " + "\n" +
-	/*f02*/ "admin-install-toolkit                             : remote hook for installing toolkit       " + "\n" +
-	/*d04*/ "install-log                                       : get install log using nokubeadm       " + "\n" +
-	/*f03*/ "admin-install-log                                 : remote hook for getting log       " + "\n" +
-	/*f04*/ "admin-init                                        : initiate admin function            " + "\n" +
-	/*f05*/ "admin-init-log                                    : get admin initiation log         " + "\n" +
+	//	/*d00*/ "install-mainctrl                                  : install control plane using nokubeadm        " + "\n" +
+	//	/*d01*/ "install-worker                                    : install worker using nokubeadm        " + "\n" +
+	//	/*f00*/ "admin-install-worker                              : remote hook for installing worker        " + "\n" +
+	//	/*d02*/ "install-volume                                    : install volume using nokubeadm       " + "\n" +
+	//	/*f01*/ "admin-install-volume                              : remote hook for installing worker       " + "\n" +
+	//	/*d03*/ "install-toolkit                                   : install build toolkit using nokubeadm        " + "\n" +
+	//	/*f02*/ "admin-install-toolkit                             : remote hook for installing toolkit       " + "\n" +
+	//	/*d04*/ "install-log                                       : get install log using nokubeadm       " + "\n" +
+	//	/*f03*/ "admin-install-log                                 : remote hook for getting log       " + "\n" +
+	//	/*f04*/ "admin-init                                        : initiate admin function            " + "\n" +
+	//	/*f05*/ "admin-init-log                                    : get admin initiation log         " + "\n" +
+	"" +
 	/*g00*/ "orch-setting-create-namespace                          : create namespace         " + "\n" +
 	/*g01*/ "orch-setting-set-repo                                  : set repository per project       " + "\n" +
 	/*g02*/ "orch-setting-set-reg                                   : set registry per project        " + "\n" +
@@ -47,29 +49,30 @@ var APIX_COMMAND = "" +
 	/*i07*/ "resource-namespace                                : get namespace         " + "\n" +
 	/*i08*/ "resource-ingress                                  : get ingress        " + "\n" +
 	/*i09*/ "resource-nodeport                                 : get nodeport       " + "\n" +
-	/*i10*/ "resource-pod-scheduled                            : get json info on scheduled pods         " + "\n" +
-	/*i11*/ "resource-pod-unscheduled                          : get json info on unscheduled pods       " + "\n" +
-	/*i12*/ "resource-container-cpu                            : get json info on cpu usage by containers         " + "\n" +
-	/*i13*/ "resource-container-mem                            : get json info on memory usage by containers         " + "\n" +
-	/*i14*/ "resource-container-fs-read                        : get json info on filesystem read by containers         " + "\n" +
-	/*i15*/ "resource-container-fs-write                       : get json info on filesystem write by containers         " + "\n" +
-	/*i16*/ "resource-container-net-receive                    : get json info on network receive by containers        " + "\n" +
-	/*i17*/ "resource-container-net-transmit                   : get json info on network transmission by containers        " + "\n" +
-	/*i18*/ "resource-volume-available                         : get json info on volume availability    " + "\n" +
-	/*i19*/ "resource-volume-capacity                          : get json info on volume capacity       " + "\n" +
-	/*i20*/ "resource-volume-used                              : get json info on volume usage       " + "\n" +
-	/*i21*/ "resource-node-temperature                         : get json info on node temperature        " + "\n" +
-	/*i22*/ "resource-node-temperature-change                  : get json info on node temperature change      " + "\n" +
-	/*i23*/ "resource-node-temperature-average                 : get json info on node temperature average      " + "\n" +
-	/*i24*/ "resource-node-process                             : get json info on node processes       " + "\n" +
-	/*i25*/ "resource-node-cores                               : get json info on node cores       " + "\n" +
-	/*i26*/ "resource-node-mem                                 : get json info on node memory         " + "\n" +
-	/*i27*/ "resource-node-mem-total                           : get json info on total node memory      " + "\n" +
-	/*i28*/ "resource-node-disk-read                           : get json info on node disk read       " + "\n" +
-	/*i29*/ "resource-node-disk-write                          : get json info on node disk write       " + "\n" +
-	/*i30*/ "resource-node-net-receive                         : get json info on network receive       " + "\n" +
-	/*i31*/ "resource-node-net-transmit                        : get json info on network transmission        " + "\n" +
-	/*i32*/ "resource-node-disk-written                        : get json info on bytes written per node      " + "\n" +
+	//	/*i10*/ "resource-pod-scheduled                            : get json info on scheduled pods         " + "\n" +
+	//	/*i11*/ "resource-pod-unscheduled                          : get json info on unscheduled pods       " + "\n" +
+	//	/*i12*/ "resource-container-cpu                            : get json info on cpu usage by containers         " + "\n" +
+	//	/*i13*/ "resource-container-mem                            : get json info on memory usage by containers         " + "\n" +
+	//	/*i14*/ "resource-container-fs-read                        : get json info on filesystem read by containers         " + "\n" +
+	//	/*i15*/ "resource-container-fs-write                       : get json info on filesystem write by containers         " + "\n" +
+	//	/*i16*/ "resource-container-net-receive                    : get json info on network receive by containers        " + "\n" +
+	//	/*i17*/ "resource-container-net-transmit                   : get json info on network transmission by containers        " + "\n" +
+	//	/*i18*/ "resource-volume-available                         : get json info on volume availability    " + "\n" +
+	//	/*i19*/ "resource-volume-capacity                          : get json info on volume capacity       " + "\n" +
+	//	/*i20*/ "resource-volume-used                              : get json info on volume usage       " + "\n" +
+	//	/*i21*/ "resource-node-temperature                         : get json info on node temperature        " + "\n" +
+	//	/*i22*/ "resource-node-temperature-change                  : get json info on node temperature change      " + "\n" +
+	//	/*i23*/ "resource-node-temperature-average                 : get json info on node temperature average      " + "\n" +
+	//	/*i24*/ "resource-node-process                             : get json info on node processes       " + "\n" +
+	//	/*i25*/ "resource-node-cores                               : get json info on node cores       " + "\n" +
+	//	/*i26*/ "resource-node-mem                                 : get json info on node memory         " + "\n" +
+	//	/*i27*/ "resource-node-mem-total                           : get json info on total node memory      " + "\n" +
+	//	/*i28*/ "resource-node-disk-read                           : get json info on node disk read       " + "\n" +
+	//	/*i29*/ "resource-node-disk-write                          : get json info on node disk write       " + "\n" +
+	//	/*i30*/ "resource-node-net-receive                         : get json info on network receive       " + "\n" +
+	//	/*i31*/ "resource-node-net-transmit                        : get json info on network transmission        " + "\n" +
+	//	/*i32*/ "resource-node-disk-written                        : get json info on bytes written per node      " + "\n" +
+	"" +
 	/*j00*/ "apply-reg-secret                                  : add registry secret to a cluster          " + "\n" +
 	/*j01*/ "apply-distro                                      : deploy a project onto a cluster            " + "\n" +
 	/*j02*/ "apply-create-operation-source                     : create operation source file for various actions       " + "\n" +

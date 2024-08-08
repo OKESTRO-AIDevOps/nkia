@@ -25,21 +25,23 @@ var API_DEFINITION string = "" +
 	/*b01*/ "ORCH-KEYGEN                   :id                                                                                         " + "\n" +
 	/*b02*/ "ORCH-GETCL                    :id                                                                                         " + "\n" +
 	/*b03*/ "ORCH-ADDCL                    :id, clusterid                                                                              " + "\n" +
-	/*b04*/ "ORCH-INSTCL                   :id, clusterid, targetip, targetid, targetpw, localip, osnm, cv, updatetoken                " + "\n" +
-	/*b05*/ "ORCH-INSTCLLOG                :id, clusterid, targetip, targetid, targetpw                                                " + "\n" +
+	//	/*b04*/ "ORCH-INSTCL                   :id, clusterid, targetip, targetid, targetpw, localip, osnm, cv, updatetoken                " + "\n" +
+	//	/*b05*/ "ORCH-INSTCLLOG                :id, clusterid, targetip, targetid, targetpw                                                " + "\n" +
+	"" +
 	/*c00*/ "NKLET-CONNUP                  :id, clusterid, updatetoken                                                                 " + "\n" +
 	/*c01*/ "NKLET-CONN                    :id, clusterid                                                                              " + "\n" +
-	/*d00*/ "NKADM-INSTCTRL                :id, localip, osnm, cv                                                                      " + "\n" +
-	/*d01*/ "NKADM-INSTWKOL                :id, localip, osnm, cv, token                                                               " + "\n" +
-	/*f00*/ "ADMIN-INSTWKOR                :id, targetip, targetid, targetpw, localip, osnm, cv, token                                 " + "\n" +
-	/*d02*/ "NKADM-INSTVOLOL               :id, localip                                                                                " + "\n" +
-	/*f01*/ "ADMIN-INSTVOLOR               :id, targetip, targetid, targetpw, localip                                                  " + "\n" +
-	/*d03*/ "NKADM-INSTTKOL                :id                                                                                         " + "\n" +
-	/*f02*/ "ADMIN-INSTTKOR                :id, targetip, targetid, targetpw                                                           " + "\n" +
-	/*d04*/ "NKADM-INSTLOGOL               :id                                                                                         " + "\n" +
-	/*f03*/ "ADMIN-INSTLOGOR               :id, targetip, targetid, targetpw                                                           " + "\n" +
-	/*f04*/ "ADMIN-INIT                    :id                                                                                         " + "\n" +
-	/*f05*/ "ADMIN-INITLOG                 :id                                                                                         " + "\n" +
+	//	/*d00*/ "NKADM-INSTCTRL                :id, localip, osnm, cv                                                                      " + "\n" +
+	//	/*d01*/ "NKADM-INSTWKOL                :id, localip, osnm, cv, token                                                               " + "\n" +
+	//	/*f00*/ "ADMIN-INSTWKOR                :id, targetip, targetid, targetpw, localip, osnm, cv, token                                 " + "\n" +
+	//	/*d02*/ "NKADM-INSTVOLOL               :id, localip                                                                                " + "\n" +
+	//	/*f01*/ "ADMIN-INSTVOLOR               :id, targetip, targetid, targetpw, localip                                                  " + "\n" +
+	//	/*d03*/ "NKADM-INSTTKOL                :id                                                                                         " + "\n" +
+	//	/*f02*/ "ADMIN-INSTTKOR                :id, targetip, targetid, targetpw                                                           " + "\n" +
+	//	/*d04*/ "NKADM-INSTLOGOL               :id                                                                                         " + "\n" +
+	//	/*f03*/ "ADMIN-INSTLOGOR               :id, targetip, targetid, targetpw                                                           " + "\n" +
+	//	/*f04*/ "ADMIN-INIT                    :id                                                                                         " + "\n" +
+	//	/*f05*/ "ADMIN-INITLOG                 :id                                                                                         " + "\n" +
+	"" +
 	/*g00*/ "SETTING-CRTNS            :id, ns, repoaddr, regaddr                                                                  " + "\n" +
 	/*g01*/ "SETTING-SETREPO          :id, ns, repoaddr, repoid, repopw                                                           " + "\n" +
 	/*g02*/ "SETTING-SETREG           :id, ns, regaddr, regid, regpw                                                              " + "\n" +
@@ -63,29 +65,30 @@ var API_DEFINITION string = "" +
 	/*i07*/ "RESOURCE-NSPC            :id, ns                                                                                     " + "\n" +
 	/*i08*/ "RESOURCE-INGR            :id, ns                                                                                     " + "\n" +
 	/*i09*/ "RESOURCE-NDPORT          :id, ns                                                                                     " + "\n" +
-	/*i10*/ "RESOURCE-PSCH            :id, ns                                                                                     " + "\n" +
-	/*i11*/ "RESOURCE-PUNSCH          :id, ns                                                                                     " + "\n" +
-	/*i12*/ "RESOURCE-CCPU            :id, ns                                                                                     " + "\n" +
-	/*i13*/ "RESOURCE-CMEM            :id, ns                                                                                     " + "\n" +
-	/*i14*/ "RESOURCE-CFSR            :id, ns                                                                                     " + "\n" +
-	/*i15*/ "RESOURCE-CFSW            :id, ns                                                                                     " + "\n" +
-	/*i16*/ "RESOURCE-CNETR           :id, ns                                                                                     " + "\n" +
-	/*i17*/ "RESOURCE-CNETT           :id, ns                                                                                     " + "\n" +
-	/*i18*/ "RESOURCE-VOLAVAIL        :id                                                                                         " + "\n" +
-	/*i19*/ "RESOURCE-VOLCAP          :id                                                                                         " + "\n" +
-	/*i20*/ "RESOURCE-VOLUSD          :id                                                                                         " + "\n" +
-	/*i21*/ "RESOURCE-NTEMP           :id                                                                                         " + "\n" +
-	/*i22*/ "RESOURCE-NTEMPCH         :id                                                                                         " + "\n" +
-	/*i23*/ "RESOURCE-NTEMPAV         :id                                                                                         " + "\n" +
-	/*i24*/ "RESOURCE-NPROCS          :id                                                                                         " + "\n" +
-	/*i25*/ "RESOURCE-NCORES          :id                                                                                         " + "\n" +
-	/*i26*/ "RESOURCE-NMEM            :id                                                                                         " + "\n" +
-	/*i27*/ "RESOURCE-NMEMTOT         :id                                                                                         " + "\n" +
-	/*i28*/ "RESOURCE-NDISKR          :id                                                                                         " + "\n" +
-	/*i29*/ "RESOURCE-NDISKW          :id                                                                                         " + "\n" +
-	/*i30*/ "RESOURCE-NNETR           :id                                                                                         " + "\n" +
-	/*i31*/ "RESOURCE-NNETT           :id                                                                                         " + "\n" +
-	/*i32*/ "RESOURCE-NDISKWT         :id                                                                                         " + "\n" +
+	//	/*i10*/ "RESOURCE-PSCH            :id, ns                                                                                     " + "\n" +
+	//	/*i11*/ "RESOURCE-PUNSCH          :id, ns                                                                                     " + "\n" +
+	//	/*i12*/ "RESOURCE-CCPU            :id, ns                                                                                     " + "\n" +
+	//	/*i13*/ "RESOURCE-CMEM            :id, ns                                                                                     " + "\n" +
+	//	/*i14*/ "RESOURCE-CFSR            :id, ns                                                                                     " + "\n" +
+	//	/*i15*/ "RESOURCE-CFSW            :id, ns                                                                                     " + "\n" +
+	//	/*i16*/ "RESOURCE-CNETR           :id, ns                                                                                     " + "\n" +
+	//	/*i17*/ "RESOURCE-CNETT           :id, ns                                                                                     " + "\n" +
+	//	/*i18*/ "RESOURCE-VOLAVAIL        :id                                                                                         " + "\n" +
+	//	/*i19*/ "RESOURCE-VOLCAP          :id                                                                                         " + "\n" +
+	//	/*i20*/ "RESOURCE-VOLUSD          :id                                                                                         " + "\n" +
+	//	/*i21*/ "RESOURCE-NTEMP           :id                                                                                         " + "\n" +
+	//	/*i22*/ "RESOURCE-NTEMPCH         :id                                                                                         " + "\n" +
+	//	/*i23*/ "RESOURCE-NTEMPAV         :id                                                                                         " + "\n" +
+	//	/*i24*/ "RESOURCE-NPROCS          :id                                                                                         " + "\n" +
+	//	/*i25*/ "RESOURCE-NCORES          :id                                                                                         " + "\n" +
+	//	/*i26*/ "RESOURCE-NMEM            :id                                                                                         " + "\n" +
+	//	/*i27*/ "RESOURCE-NMEMTOT         :id                                                                                         " + "\n" +
+	//	/*i28*/ "RESOURCE-NDISKR          :id                                                                                         " + "\n" +
+	//	/*i29*/ "RESOURCE-NDISKW          :id                                                                                         " + "\n" +
+	//	/*i30*/ "RESOURCE-NNETR           :id                                                                                         " + "\n" +
+	//	/*i31*/ "RESOURCE-NNETT           :id                                                                                         " + "\n" +
+	//	/*i32*/ "RESOURCE-NDISKWT         :id                                                                                         " + "\n" +
+	"" +
 	/*j00*/ "APPLY-REGSEC             :id, ns                                                                                     " + "\n" +
 	/*j01*/ "APPLY-DIST               :id, ns, repoaddr, regaddr                                                                  " + "\n" +
 	/*j02*/ "APPLY-CRTOPSSRC          :id, ns, repoaddr, regaddr                                                                  " + "\n" +

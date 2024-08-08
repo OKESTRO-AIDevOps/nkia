@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"os"
 	"strings"
-	"sync"
 	"time"
 
 	ctrl "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
@@ -25,19 +24,6 @@ type ConfigJSON struct {
 	DB_PW       string `json:"DB_PW"`
 	DB_NAME     string `json:"DB_NAME"`
 	DB_HOST_DEV string `json:"DB_HOST_DEV"`
-}
-
-type InstallSession struct {
-	mu sync.Mutex
-
-	INST_SESSION map[string]*[]byte
-
-	INST_RESULT map[string]string
-}
-
-var FI_SESSIONS = InstallSession{
-	INST_SESSION: make(map[string]*[]byte),
-	INST_RESULT:  make(map[string]string),
 }
 
 func LoadConfig() {
