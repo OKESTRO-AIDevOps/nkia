@@ -82,10 +82,6 @@ func RequestForwardHandler(api_input apistandard.API_INPUT) (bool, string, error
 
 		return false, result, nil
 
-	default:
-
-		fmt.Println("forward")
-
 	}
 
 	return true, "", nil

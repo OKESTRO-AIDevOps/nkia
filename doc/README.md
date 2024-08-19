@@ -76,8 +76,8 @@ Requirements:
 ```shell
 
 # assumption:
-# you have a host computer running linux ubuntu 20 or 22
-# you have a target computer running linux ubuntu 20 or 22
+# you have a host computer to run orch.io and nokubectl
+# you have a target kubernetes cluster
 
 
 # clone this repository on host computer
@@ -130,18 +130,8 @@ make build-noctl
 ./nokubectl orch conncheck
 
 # if okay, now we have to connect target computer's nokubelet to host computer server
-# on target computer
 
-cd ./nokubeadm
-
-sudo ./nokubeadm install mainctrl
-
-# on target computer terminal 2
-
-cd ./nokubeadm
-
-sudo ./nokubeadm install log
-
+# on host computer
 # now, get one-time token by adding a cluster on host computer
 
 ./nokubectl orch add cl --clusterid test-cs
@@ -156,7 +146,7 @@ sudo ./nkletd io connect update --clusterid test-cs --updatetoken 384996074c7370
 
 # now on host computer
 
-./nokubectl set --to test-cs
+# see below examples
 
 
 
@@ -166,24 +156,12 @@ sudo ./nkletd io connect update --clusterid test-cs --updatetoken 384996074c7370
 
 ```shell
 
-# help, shows all the available commands in plain text
+# set target cluster (or manually put --to in every command)
 
-./nokubectl help --format pretty
+./nokubectl set --to test-cs
 
-# check connection info
+# get nodes
 
-./nokubectl --as admin orch conncheck
-
-# create cluster
-
-./nokubectl --as admin orch add cl --clusterid test-cs
-
-# install cluster
-
-./nokubectl --as admin orch install cl --clusterid test-cs --targetip 192.168.50.94:22 --targetid ubuntu --targetpw ubuntu --localip 192.168.50.94 --osnm ubuntu --cv 1.27 --updatetoken 13e24636f0e94334fbbaa25d24113aa9
-
-# get log for installing cluter
-
-./nokubectl --as admin orch install cl log --clusterid test-cs --targetip 192.168.50.94:22 --targetid ubuntu --targetpw ubuntu
+./nokubectl resource nodes --ns -
 
 ```

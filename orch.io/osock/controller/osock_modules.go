@@ -224,20 +224,17 @@ func OnData(c *websocket.Conn, cluster_id string) {
 
 	res_orchestrator.QueryResult = resp_dec
 
-	if res_orchestrator.ServerMessage != "SUCCESS" {
+	err = front_c.WriteJSON(res_orchestrator)
 
-		err = front_c.WriteJSON(&res_orchestrator)
-
-		if err != nil {
-			ServerDestructor(c)
-			c.Close()
-			EventLogger("on data:" + err.Error())
-
-			return
-		}
+	if err != nil {
+		ServerDestructor(c)
+		c.Close()
+		EventLogger("on data:" + err.Error())
 
 		return
 	}
+
+	return
 
 }
 

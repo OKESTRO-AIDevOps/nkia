@@ -860,7 +860,7 @@ func CreateCert(template, parent *x509.Certificate, pub interface{}, parentPriv 
 	return
 }
 
-func NewCertsPipeline() *CertSet {
+func NewCertsPipeline(server_name string, client_name string) *CertSet {
 	// generate a new key-pair
 	rootKey, rootPub := GenKeyPair(4096)
 
@@ -900,7 +900,7 @@ func NewCertsPipeline() *CertSet {
 
 	log.Println("----------server cert")
 	// create a template for the server
-	servCertTmpl, err := CertTemplate("localhost", 1)
+	servCertTmpl, err := CertTemplate(server_name, 1)
 	if err != nil {
 		log.Fatalf("creating cert template: %v", err)
 	}
@@ -932,7 +932,7 @@ func NewCertsPipeline() *CertSet {
 	log.Println("----------client cert")
 
 	// create a template for the client
-	clientCertTmpl, err := CertTemplate("client", 1)
+	clientCertTmpl, err := CertTemplate(client_name, 1)
 	if err != nil {
 		log.Fatalf("creating cert template: %v", err)
 	}

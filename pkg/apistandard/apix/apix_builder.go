@@ -12,6 +12,8 @@ func (axgi API_X) BuildOrchRequest(apix_id string, apix_options API_X_OPTIONS) (
 
 	var to string = ""
 
+	var as string = ""
+
 	oreq := OrchestratorRequest{}
 
 	apistd_in := make(apistd.API_INPUT)
@@ -22,7 +24,9 @@ func (axgi API_X) BuildOrchRequest(apix_id string, apix_options API_X_OPTIONS) (
 		return oreq, fmt.Errorf("builder: %s", "no matching api std for: "+apix_id)
 	}
 
-	if !strings.Contains(apistd_id, "ORCH") {
+	to, okay = apix_options["to"]
+
+	if !okay && !strings.Contains(apistd_id, "ORCH") {
 
 		to_b, err := os.ReadFile(".npia/.to")
 
@@ -46,13 +50,20 @@ func (axgi API_X) BuildOrchRequest(apix_id string, apix_options API_X_OPTIONS) (
 
 	}
 
-	as_b, err := os.ReadFile(".npia/.as")
+	as, okay = apix_options["as"]
 
-	as := string(as_b)
+	if !okay {
 
-	if err != nil {
+		as_b, err := os.ReadFile(".npia/.as")
 
-		as = ""
+		if err != nil {
+
+			as = ""
+
+		} else {
+
+			as = string(as_b)
+		}
 
 	}
 

@@ -13,7 +13,7 @@ var APIX_QUERY_MAP = "" +
 	/*a01*/ "set                                               : NKCTL-SETTO           " + "\n" +
 	/*a02*/ "set-opts                                          : NKCTL-SETAS           " + "\n" +
 	/*a03*/ "help                                              : NKCTL-HELP            " + "\n" +
-	/*b00*/ "orchio-conncheck                                    : ORCH-CONNCHK          " + "\n" +
+	/*b00*/ "orch-conncheck                                    : ORCH-CONNCHK          " + "\n" +
 	/*b01*/ "orch-keygen                                       : ORCH-KEYGEN           " + "\n" +
 	/*b02*/ "orch-get-cl                                       : ORCH-GETCL            " + "\n" +
 	/*b03*/ "orch-add-cl                                       : ORCH-ADDCL            " + "\n" +

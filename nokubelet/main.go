@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/exec"
 	"os/user"
-	"time"
 
 	"fmt"
 
@@ -359,47 +358,17 @@ func main() {
 		err_init := InitNpiaServerDefault()
 
 		if err_init != nil {
+
 			fmt.Println(err_init.Error())
+
+			return
 		}
 
-		go kubebase.AdminInitNPIA()
+		err_init = kubebase.InitNPIAData()
 
-		t_start := time.Now()
+		if err_init != nil {
 
-		done := 0
-
-		for time.Now().Sub(t_start).Seconds() < 30 {
-
-			if _, err := os.Stat(".npia/.init"); err == nil {
-
-				done = 1
-				break
-
-			}
-
-		}
-
-		if done == 1 {
-			b, _ := kubebase.AdminGetInitLog()
-
-			fmt.Println("-----INITLOG-----")
-
-			fmt.Println(string(b))
-
-			fmt.Println("-----------------")
-
-			fmt.Println("successfully initiated")
-		} else {
-
-			b, _ := kubebase.AdminGetInitLog()
-
-			fmt.Println("-----FAILLOG-----")
-
-			fmt.Println(string(b))
-
-			fmt.Println("-----------------")
-
-			fmt.Println("initiation timeout")
+			fmt.Println(err_init.Error())
 
 			return
 		}

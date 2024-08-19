@@ -10,6 +10,76 @@ import (
 	"github.com/OKESTRO-AIDevOps/nkia/pkg/utils"
 )
 
+func InitNPIAData() error {
+
+	if _, err := os.Stat("lib"); err != nil {
+
+		return fmt.Errorf("lib doesn't exist")
+
+	}
+
+	if _, err := os.Stat(".usr"); err == nil {
+
+		return fmt.Errorf("failed to init: .usr exists")
+
+	}
+
+	if _, err := os.Stat(".etc"); err == nil {
+
+		return fmt.Errorf("failed to init: .etc exists")
+	}
+
+	cmd := exec.Command("mkdir", "-p", ".usr")
+
+	cmd.Stdout = os.Stdout
+
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+
+	if err != nil {
+
+		ResetNPIAData()
+
+		return fmt.Errorf("error .usr: %s", err.Error())
+	}
+
+	cmd = exec.Command("mkdir", "-p", ".etc")
+
+	cmd.Stdout = os.Stdout
+
+	cmd.Stderr = os.Stderr
+
+	err = cmd.Run()
+
+	if err != nil {
+
+		ResetNPIAData()
+
+		return fmt.Errorf("error .etc: %s", err.Error())
+	}
+
+	err = runfs.CreateAdmOrigin()
+
+	if err != nil {
+
+		ResetNPIAData()
+
+		return fmt.Errorf("error creating adm: %s", err.Error())
+	}
+
+	err = os.WriteFile(".npia/.init", []byte("initiated"), 0644)
+
+	if err != nil {
+
+		ResetNPIAData()
+
+		return fmt.Errorf("failed marking init: %s", err.Error())
+	}
+
+	return nil
+}
+
 func AdminInitNPIA() {
 
 	outfile, err := os.Create(".npia/.init_log")
@@ -205,6 +275,22 @@ func AdminGetInitLog() ([]byte, error) {
 	}
 
 	return ret_byte, err
+
+}
+
+func ResetNPIAData() {
+
+	cmd := exec.Command("rm", "-r", ".usr")
+
+	_ = cmd.Run()
+
+	cmd = exec.Command("rm", "-r", ".etc")
+
+	_ = cmd.Run()
+
+	cmd = exec.Command("rm", "-r", ".npia/.init")
+
+	_ = cmd.Run()
 
 }
 
