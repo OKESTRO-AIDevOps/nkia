@@ -253,7 +253,7 @@ func RemoteAccessAuthChallenge(c *websocket.Conn) (string, error) {
 
 			cluster_id := email_context_list[1]
 
-			config_b, err := models.GetKubeconfigByEmailAndClusterID(email, cluster_id)
+			config_b, err := models.GetKubeconfigByEmailAndClusterID2(email, cluster_id)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))
@@ -298,7 +298,7 @@ func RemoteAccessAuthChallenge(c *websocket.Conn) (string, error) {
 
 			cluster_id := email_context_list[1]
 
-			config_b, err := models.GetKubeconfigByEmailAndClusterID(email, cluster_id)
+			config_b, err := models.GetKubeconfigByEmailAndClusterID2(email, cluster_id)
 
 			if err != nil {
 				_ = c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Connection Close"))

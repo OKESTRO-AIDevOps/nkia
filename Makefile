@@ -32,6 +32,7 @@ orch.io-up:
 
 
 build:
+
 	make -C nokubeadm build 
 
 	make -C nokubelet build 
@@ -44,11 +45,9 @@ build:
 
 	/bin/cp -Rf lib nokubelet/
 
-#	echo ""  > nokubeadm/.npia/.init
+	sudo rm -rf nokubeadm/.usr nokubeadm/.etc nokubeadm/.npia/.init
 
-#	echo ""  > nokubelet/.npia/.init
-
-#	echo ""  > nokubectl/.npia/.init
+	sudo rm -rf nokubelet/.usr nokubelet/.etc nokubelet/.npia/.init
 
 	cp orch.io/certs.tar.gz.gpg nokubectl/.npia/
 
@@ -70,67 +69,12 @@ build-noctl:
 
 	/bin/cp -Rf lib nokubelet/
 
-#	echo ""  > nokubeadm/.npia/.init
+	sudo rm -rf nokubeadm/.usr nokubeadm/.etc nokubeadm/.npia/.init
+	
+	sudo rm -rf nokubelet/.usr nokubelet/.etc nokubelet/.npia/.init
 
-#	echo ""  > nokubelet/.npia/.init
 
 	rm -r lib
-
-release:
-
-	make -C nokubeadm build 
-
-	make -C nokubectl build
-
-	make -C nokubelet build
-
-	mkdir -p nkia/nokubeadm
-
-	mkdir -p nkia/nokubectl
-
-	mkdir -p nkia/nokubelet
-
-	/bin/cp -Rf nokubeadm/.npia nkia/nokubeadm/
-
-	rm -f nkia/nokubeadm/.npia/.init
-
-	/bin/cp -Rf nokubectl/.npia nkia/nokubectl/
-
-	rm -f nkia/nokubectl/.npia/.init
-
-	rm -f nkia/nokubectl/.npia/.priv
-
-	/bin/cp -Rf nokubelet/.npia nkia/nokubelet/
-
-	rm -f nkia/nokubelet/.npia/.init
-
-	/bin/cp -Rf nokubelet/nkletd nkia/nokubelet/nkletd
-
-	mv nokubeadm/nokubeadm nkia/nokubeadm/
-
-	mv nokubectl/nokubectl nkia/nokubectl/
-
-	mv nokubelet/nokubelet nkia/nokubelet/
-
-	cd hack && ./libgen.sh && mv lib ..
-
-	/bin/cp -Rf ./hack/binupdate.sh ./nkia/
-
-	tar -czvf lib.tgz lib
-
-	tar -czvf nkia.tgz nkia
-
-	rm -r lib
-
-	rm -r nkia
-
-
-.PHONY: hack/release
-hack/release:
-
-	cd hack/release/x86_64-ubuntu-20 && docker compose up --build && cp -Rf _output ../../../_x86_64-ubuntu-20.out
-
-	cd hack/release/x86_64-ubuntu-22 && docker compose up --build && cp -Rf _output ../../../_x86_64-ubuntu-22.out
 
 .PHONY: infra
 infra:

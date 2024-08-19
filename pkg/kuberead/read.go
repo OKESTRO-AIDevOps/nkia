@@ -89,7 +89,7 @@ func ReadNode(main_ns string) ([]byte, error) {
 
 	var ret_byte []byte
 
-	cmd := exec.Command("kubectl", "get", "nodes")
+	cmd := exec.Command("kubectl", "get", "nodes", "-o", "json")
 
 	out, err := cmd.Output()
 

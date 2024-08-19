@@ -106,7 +106,7 @@ func main() {
 
 	var cs *modules.CertSet
 
-	cs = modules.NewCertsPipeline()
+	cs = modules.NewCertsPipeline("localhost", "seantywork@gmail.com")
 
 	err := ToFile(cs)
 
