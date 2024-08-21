@@ -1,4 +1,16 @@
-# nkia
+# NOTICE
+
+**THIS PROJECT IS NO LONGER ACTIVELY MAINTAINED**
+
+See [karmada](https://github.com/karmada-io/karmada) instead \
+if you're serious about managing Kubernetes multi-cluster environment. 
+ 
+However, we're continuing to develop container lifecycle and CI/CD pipeline management tool \
+for Kubernetes multi-cluster environment \
+at [idontkare](https://github.com/OKESTRO-AIDevOps/idontkare), 
+focusing more on project management feature. 
+
+## nkia
 
 don't get me wrong. I love Kubernetes. it's just that i have a lot of spare time.
 
